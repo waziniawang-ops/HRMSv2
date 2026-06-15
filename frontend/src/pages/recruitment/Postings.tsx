@@ -115,8 +115,8 @@ export default function Postings() {
       opening_date: form.opening_date || null,
       closing_date: form.closing_date || null,
     }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
-    else create.mutate(payload as typeof emptyForm)
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
+    else create.mutate(payload as unknown as typeof emptyForm)
   }
 
   function handleDelete(p: Posting) {

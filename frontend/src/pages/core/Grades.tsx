@@ -119,9 +119,9 @@ export default function Grades() {
       pay_band_max: form.pay_band_max || null,
     }
     if (editing) {
-      update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
+      update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
     } else {
-      create.mutate(payload as typeof emptyForm)
+      create.mutate(payload as unknown as typeof emptyForm)
     }
   }
 

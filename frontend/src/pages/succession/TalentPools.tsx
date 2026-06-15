@@ -66,7 +66,7 @@ export default function TalentPools() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const payload = { ...form, is_active: form.is_active === 'true' }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
     else create.mutate(payload)
   }
 

@@ -72,7 +72,7 @@ export default function Notifications() {
 
           {statusFilter === 'SENT' && unreadCount > 0 && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => markAllRead.mutate()}
               disabled={markAllRead.isPending}

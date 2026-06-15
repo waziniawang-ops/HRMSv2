@@ -81,8 +81,8 @@ export default function Courses() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const payload = { ...form, duration_hours: Number(form.duration_hours), passing_score: Number(form.passing_score), is_mandatory: form.is_mandatory === 'true' }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
-    else create.mutate(payload as typeof emptyForm)
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
+    else create.mutate(payload as unknown as typeof emptyForm)
   }
 
   function handleDelete(c: Course) {

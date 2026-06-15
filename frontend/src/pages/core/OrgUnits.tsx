@@ -129,9 +129,9 @@ export default function OrgUnits() {
     e.preventDefault()
     const payload = { ...form, parent: form.parent || null, head_employee: form.head_employee || null }
     if (editing) {
-      update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
+      update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
     } else {
-      create.mutate(payload as typeof emptyForm)
+      create.mutate(payload as unknown as typeof emptyForm)
     }
   }
 

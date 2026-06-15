@@ -106,8 +106,8 @@ export default function Interviews() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const payload = { ...form, round_number: Number(form.round_number) }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
-    else create.mutate(payload as typeof emptyForm)
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
+    else create.mutate(payload as unknown as typeof emptyForm)
   }
 
   function handleDelete(iv: Interview) {

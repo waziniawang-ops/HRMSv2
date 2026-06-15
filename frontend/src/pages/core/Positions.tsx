@@ -156,9 +156,9 @@ export default function Positions() {
       reporting_to: form.reporting_to || null,
     }
     if (editing) {
-      update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
+      update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
     } else {
-      create.mutate(payload as typeof emptyForm)
+      create.mutate(payload as unknown as typeof emptyForm)
     }
   }
 

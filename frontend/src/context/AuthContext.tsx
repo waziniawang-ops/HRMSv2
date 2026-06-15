@@ -70,7 +70,7 @@ function normalise(raw: Record<string, unknown>): User {
     : raw.role
       ? [raw.role as string]
       : []
-  return { ...(raw as User), roles }
+  return { ...(raw as unknown as User), roles }
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

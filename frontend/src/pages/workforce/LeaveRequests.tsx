@@ -94,7 +94,7 @@ export default function LeaveRequests() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const payload = { ...form, days_requested: Number(form.days_requested) }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
     else create.mutate(payload)
   }
 

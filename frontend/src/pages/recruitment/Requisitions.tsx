@@ -112,8 +112,8 @@ export default function Requisitions() {
       headcount: Number(form.headcount),
       target_start_date: form.target_start_date || null,
     }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
-    else create.mutate(payload as typeof emptyForm)
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
+    else create.mutate(payload as unknown as typeof emptyForm)
   }
 
   function handleDelete(r: Requisition) {

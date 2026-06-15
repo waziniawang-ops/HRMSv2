@@ -86,8 +86,8 @@ export default function Assignments() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const payload = { ...form, due_date: form.due_date || null }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
-    else create.mutate(payload as typeof emptyForm)
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
+    else create.mutate(payload as unknown as typeof emptyForm)
   }
 
   function handleDelete(a: Assignment) {

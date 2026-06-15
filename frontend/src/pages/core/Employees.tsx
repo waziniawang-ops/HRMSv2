@@ -214,8 +214,8 @@ export default function Employees() {
     }
     if (editing) {
       const personPayload = { ...personForm, date_of_birth: personForm.date_of_birth || null }
-      await updatePerson.mutateAsync({ id: editing.person, ...personPayload })
-      updateEmployee.mutate({ id: editing.id, ...payload } as typeof emptyEmpForm & { id: string })
+      await updatePerson.mutateAsync({ id: editing.person, ...personPayload } as unknown as Parameters<typeof updatePerson.mutateAsync>[0])
+      updateEmployee.mutate({ id: editing.id, ...payload } as unknown as typeof emptyEmpForm & { id: string })
     } else {
       createEmployee.mutate({ ...payload, person: createdPersonId })
     }

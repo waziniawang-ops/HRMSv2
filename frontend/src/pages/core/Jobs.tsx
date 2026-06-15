@@ -112,8 +112,8 @@ export default function Jobs() {
   function handleJobSubmit(e: React.FormEvent) {
     e.preventDefault()
     const payload = { ...jobForm, job_family: jobForm.job_family || null, is_active: jobForm.is_active === 'true' }
-    if (editingJob) updateJob.mutate({ id: editingJob.id, ...payload } as typeof emptyJobForm & { id: string })
-    else createJob.mutate(payload as typeof emptyJobForm)
+    if (editingJob) updateJob.mutate({ id: editingJob.id, ...payload } as unknown as typeof emptyJobForm & { id: string })
+    else createJob.mutate(payload as unknown as typeof emptyJobForm)
   }
 
   function handleDeleteJob(j: Job) {

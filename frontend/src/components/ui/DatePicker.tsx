@@ -51,7 +51,7 @@ export function DatePicker({
       )}
       <ReactDatePicker
         selected={parseDate(value)}
-        onChange={(d) => d ? onChange(toDateStr(d)) : onChange('')}
+        onChange={(d: Date | null) => d ? onChange(toDateStr(d)) : onChange('')}
         dateFormat="dd/MM/yyyy"
         placeholderText={placeholder ?? 'dd/mm/yyyy'}
         disabled={disabled}
@@ -91,7 +91,7 @@ export function DateTimePicker({
       )}
       <ReactDatePicker
         selected={parseDate(value)}
-        onChange={(d) => d ? onChange(toDateTimeStr(d)) : onChange('')}
+        onChange={(d: Date | null) => d ? onChange(toDateTimeStr(d)) : onChange('')}
         showTimeSelect
         timeFormat="HH:mm"
         timeIntervals={15}

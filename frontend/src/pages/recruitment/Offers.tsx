@@ -137,8 +137,8 @@ export default function Offers() {
       start_date: form.start_date || null,
       expiry_date: form.expiry_date || null,
     }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
-    else create.mutate(payload as typeof emptyForm)
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
+    else create.mutate(payload as unknown as typeof emptyForm)
   }
 
   function handleDelete(o: Offer) {

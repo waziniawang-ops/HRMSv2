@@ -83,7 +83,7 @@ export default function LeaveTypes() {
       days_per_year: Number(form.days_per_year),
       max_carry_days: Number(form.max_carry_days),
     }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
     else create.mutate(payload)
   }
 

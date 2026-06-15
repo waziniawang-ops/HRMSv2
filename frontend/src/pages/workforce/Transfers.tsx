@@ -107,7 +107,7 @@ export default function Transfers() {
       from_grade: form.from_grade || null,
       to_grade: form.to_grade || null,
     }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
     else create.mutate(payload)
   }
 

@@ -83,8 +83,8 @@ export default function Cycles() {
       year_end_start: form.year_end_start || null,
       year_end_end: form.year_end_end || null,
     }
-    if (editing) update.mutate({ id: editing.id, ...payload } as typeof emptyForm & { id: string })
-    else create.mutate(payload as typeof emptyForm)
+    if (editing) update.mutate({ id: editing.id, ...payload } as unknown as typeof emptyForm & { id: string })
+    else create.mutate(payload as unknown as typeof emptyForm)
   }
 
   function handleDelete(c: Cycle) {

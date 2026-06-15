@@ -17,7 +17,7 @@ export function Tbody({ children }: { children: ReactNode }) {
   return <tbody className="divide-y divide-gray-100">{children}</tbody>
 }
 
-export function Th({ children, className }: { children: ReactNode; className?: string }) {
+export function Th({ children, className }: { children?: ReactNode; className?: string }) {
   return (
     <th className={cn('px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide', className)}>
       {children}
