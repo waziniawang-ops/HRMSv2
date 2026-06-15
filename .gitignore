@@ -1,4 +1,34 @@
-.venv
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Django
 .env
+*.log
+staticfiles/
+media/
+db.sqlite3
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Misc
 demo_seed.py
 .playwright-mcp
+*.Zone.Identifier
