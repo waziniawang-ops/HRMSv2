@@ -35,7 +35,7 @@ export default function PortalJobs() {
       {/* Hero */}
       <div className="text-center mb-10">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Open Vacancies</h1>
-        <p className="text-gray-500">Find your next opportunity at Nexus Corp Berhad</p>
+        <p className="text-gray-500">Find your next opportunity at Visionaries Sdn Bhd</p>
       </div>
 
       {/* Search */}

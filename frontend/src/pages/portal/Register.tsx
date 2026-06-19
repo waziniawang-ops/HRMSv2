@@ -50,7 +50,7 @@ export default function PortalRegister() {
             <Briefcase size={22} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
-          <p className="text-sm text-gray-500 mt-1">Join Nexus Corp Berhad's talent pool</p>
+          <p className="text-sm text-gray-500 mt-1">Join Visionaries Sdn Bhd's talent pool</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 space-y-4">

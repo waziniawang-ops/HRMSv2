@@ -226,7 +226,7 @@ export function Sidebar() {
       </nav>
 
       <div className="px-3 py-3 border-t border-slate-800">
-        <p className="text-[10px] text-slate-500 text-center">Nexus Corp Berhad © 2026</p>
+        <p className="text-[10px] text-slate-500 text-center">Visionaries Sdn Bhd © 2026</p>
       </div>
     </aside>
   )

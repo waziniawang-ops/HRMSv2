@@ -60,10 +60,10 @@ class Command(BaseCommand):
         ))
 
         # ── 2. ORG STRUCTURE ─────────────────────────────────────
-        self.stdout.write('\n[2/9] Building org structure (Nexus Corp Berhad)...')
+        self.stdout.write('\n[2/9] Building org structure (Visionaries Sdn Bhd)...')
         from apps.core_hr.models import OrgUnit, CostCenter, JobFamily, Job, Grade
 
-        hq,_      = gc(OrgUnit, {'code':'HQ'},    name='Nexus Corp Berhad',      type='COMPANY',    status='ACTIVE')
+        hq,_      = gc(OrgUnit, {'code':'HQ'},    name='Visionaries Sdn Bhd',      type='COMPANY',    status='ACTIVE')
         it_div,_  = gc(OrgUnit, {'code':'IT'},    name='Information Technology', type='DIVISION',   status='ACTIVE', parent=hq)
         hr_div,_  = gc(OrgUnit, {'code':'HR'},    name='Human Resources',        type='DIVISION',   status='ACTIVE', parent=hq)
         fin_div,_ = gc(OrgUnit, {'code':'FIN'},   name='Finance',                type='DIVISION',   status='ACTIVE', parent=hq)
