@@ -1,3 +1,4 @@
+import os
 from .base import *
 
 DEBUG = False
@@ -12,6 +13,13 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Always allow GitHub Pages frontend; also honour any extra origins from env
+_extra = [o.strip() for o in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()]
+CORS_ALLOWED_ORIGINS = list({
+    'https://waziniawang-ops.github.io',
+    *_extra,
+})
 
 # Cloudinary for media files
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
