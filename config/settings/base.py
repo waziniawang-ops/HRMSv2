@@ -106,6 +106,8 @@ def parse_db_url(url):
         'HOST': result.hostname or '',
         'PORT': str(result.port) if result.port else '',
     }
+    if result.hostname and result.hostname not in ('localhost', '127.0.0.1'):
+        cfg['OPTIONS'] = {'sslmode': 'require'}
     return cfg
 
 DATABASES = {
