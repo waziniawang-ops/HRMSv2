@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const portalApi = axios.create({
-  baseURL: '/api/v1',
+  baseURL: import.meta.env.VITE_API_URL || '/api/v1',
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -20,7 +20,8 @@ portalApi.interceptors.response.use(
       const refresh = localStorage.getItem('portal_refresh')
       if (refresh) {
         try {
-          const { data } = await axios.post('/api/v1/auth/token/refresh/', { refresh })
+          const apiBase = import.meta.env.VITE_API_URL || '/api/v1'
+          const { data } = await axios.post(`${apiBase}/auth/token/refresh/`, { refresh })
           localStorage.setItem('portal_access', data.access)
           original.headers.Authorization = `Bearer ${data.access}`
           return portalApi(original)
