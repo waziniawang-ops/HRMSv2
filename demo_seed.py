@@ -851,30 +851,31 @@ t3,_ = gc(HRTicket, {'ticket_number':'TKT-2026-0025'},
     resolution_notes='Leave balance confirmed: 17 days remaining as of 30 Jun 2026.', satisfaction_score=4)
 
 # Knowledge base
-kc_hr,_  = gc(KnowledgeCategory, {'code':'KB-HR'},   name='HR Policies & Procedures')
-kc_it,_  = gc(KnowledgeCategory, {'code':'KB-IT'},   name='IT & Systems')
-kc_pay,_ = gc(KnowledgeCategory, {'code':'KB-PAY'},  name='Payroll & Benefits')
+kc_hr,_  = gc(KnowledgeCategory, {'name':'HR Policies & Procedures'})
+kc_it,_  = gc(KnowledgeCategory, {'name':'IT & Systems'})
+kc_pay,_ = gc(KnowledgeCategory, {'name':'Payroll & Benefits'})
 
-for slug, title, cat, content, views in [
-    ('how-to-apply-annual-leave','How to Apply for Annual Leave','KB-HR',
+_kc_map = {'HR': kc_hr, 'IT': kc_it, 'PAY': kc_pay}
+
+for slug, title, cat_key, content, views in [
+    ('how-to-apply-annual-leave','How to Apply for Annual Leave','HR',
      'Log into the HR Portal → Workforce → Leave Requests → New Request. Select leave type "Annual Leave", enter dates, and submit. Your line manager will receive an approval notification.',
      142),
-    ('employee-expense-claim-process','Employee Expense Claim Process','KB-PAY',
+    ('employee-expense-claim-process','Employee Expense Claim Process','PAY',
      'All expense claims must be submitted within 30 days of incurrence. Attach original receipts. Claims above RM500 require manager pre-approval via a Travel Request before travel. Submit via HR Portal → Claims.',
      89),
-    ('vpn-access-setup-guide','VPN Access Setup Guide','KB-IT',
+    ('vpn-access-setup-guide','VPN Access Setup Guide','IT',
      'Download Cisco AnyConnect from the IT portal. Use your company email and LDAP password. Server: vpn.nexuscorp.my. Contact IT Help Desk (ext 200) for first-time setup assistance.',
      213),
-    ('medical-panel-clinics-list','Medical Panel Clinics List','KB-PAY',
+    ('medical-panel-clinics-list','Medical Panel Clinics List','PAY',
      'Allianz panel clinics are accessible via the Allianz Smart Health app. Present your staff ID and Allianz card. Outpatient limit: RM1,500/year. Dental covered up to RM500/year at designated panel dentists.',
      67),
-    ('understanding-your-payslip','Understanding Your Payslip','KB-PAY',
+    ('understanding-your-payslip','Understanding Your Payslip','PAY',
      'Your payslip is generated on the 25th each month. Basic Salary × 9% = EPF (Employee). SOCSO is flat rate based on salary band. Housing (RM500) and Transport (RM300) allowances are tax-exempt.',
      198),
 ]:
-    kcat = gc(KnowledgeCategory, {'code':cat})[0]
     gc(KnowledgeArticle, {'slug':slug},
-       title=title, category=kcat, content=content,
+       title=title, category=_kc_map[cat_key], content=content,
        status='PUBLISHED', is_featured=(views>150),
        views_count=views, author=hr_admin_u,
        published_at=timezone.now()-timedelta(days=90))
