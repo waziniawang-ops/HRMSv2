@@ -53,6 +53,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
       { label: 'Assignments', path: '/core/assignments' },
       { label: 'Job Grades', path: '/core/grades' },
       { label: 'Jobs', path: '/core/jobs' },
+      { label: 'Cost Centres', path: '/core/cost-centers' },
     ],
   },
   {

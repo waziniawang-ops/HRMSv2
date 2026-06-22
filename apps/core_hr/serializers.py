@@ -25,10 +25,12 @@ class OrgUnitSerializer(serializers.ModelSerializer):
 
 
 class CostCenterSerializer(serializers.ModelSerializer):
+    org_unit_name = serializers.CharField(source='org_unit.name', read_only=True)
+
     class Meta:
         model = CostCenter
-        fields = ['id', 'code', 'name', 'org_unit', 'is_active', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        fields = ['id', 'code', 'name', 'org_unit', 'org_unit_name', 'is_active', 'created_at']
+        read_only_fields = ['id', 'org_unit_name', 'created_at']
 
 
 class JobFamilySerializer(serializers.ModelSerializer):

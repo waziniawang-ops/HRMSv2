@@ -25,6 +25,7 @@ import Employees from '@/pages/core/Employees'
 import Grades from '@/pages/core/Grades'
 import Jobs from '@/pages/core/Jobs'
 import EmployeeAssignments from '@/pages/core/EmployeeAssignments'
+import CostCenters from '@/pages/core/CostCenters'
 
 // Recruitment
 import Requisitions from '@/pages/recruitment/Requisitions'
@@ -185,6 +186,7 @@ export default function App() {
                   <Route path="/core/grades" element={<Grades />} />
                   <Route path="/core/jobs" element={<Jobs />} />
                   <Route path="/core/assignments" element={<EmployeeAssignments />} />
+                  <Route path="/core/cost-centers" element={<CostCenters />} />
 
                   <Route path="/recruitment/requisitions" element={<Requisitions />} />
                   <Route path="/recruitment/postings" element={<Postings />} />

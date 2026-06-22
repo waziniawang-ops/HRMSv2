@@ -29,6 +29,5 @@ Thumbs.db
 *.swp
 
 # Misc
-demo_seed.py
 .playwright-mcp
 *.Zone.Identifier
