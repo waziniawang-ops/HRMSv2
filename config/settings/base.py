@@ -54,6 +54,19 @@ LOCAL_APPS = [
     'apps.notification',
     'apps.reporting',
     'apps.attendance',
+    # New modules
+    'apps.payroll',
+    'apps.compensation',
+    'apps.benefits',
+    'apps.ess',
+    'apps.service_desk',
+    'apps.employee_relations',
+    'apps.documents',
+    'apps.offboarding',
+    'apps.engagement',
+    'apps.hse',
+    'apps.claims',
+    'apps.skills',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

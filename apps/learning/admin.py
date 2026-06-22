@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Course, LearningPath, LearningPathCourse, AssignmentRule, LearningAssignment,
     CourseSession, Enrollment, Assessment, CourseCompletion, Certificate,
-    TrainingRequest, SkillGap,
+    TrainingRequest, SkillGap, LearningTranscript,
 )
 
 
@@ -84,3 +84,9 @@ class SkillGapAdmin(admin.ModelAdmin):
     list_display = ['employee', 'skill_name', 'required_level', 'current_level', 'gap', 'is_closed']
     list_filter = ['is_closed']
     raw_id_fields = ['employee', 'recommended_course']
+
+
+@admin.register(LearningTranscript)
+class LearningTranscriptAdmin(admin.ModelAdmin):
+    list_display = ['employee', 'total_courses_completed', 'total_hours_completed', 'total_certificates_earned', 'mandatory_completion_rate', 'last_updated']
+    raw_id_fields = ['employee']

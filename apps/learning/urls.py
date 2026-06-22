@@ -13,6 +13,7 @@ router.register('assessments', views.AssessmentViewSet, basename='assessment')
 router.register('completions', views.CourseCompletionViewSet, basename='course-completion')
 router.register('training-requests', views.TrainingRequestViewSet, basename='training-request')
 router.register('skill-gaps', views.SkillGapViewSet, basename='skill-gap')
+router.register('transcripts', views.LearningTranscriptViewSet, basename='learning-transcript')
 
 urlpatterns = [
     path('', include(router.urls)),

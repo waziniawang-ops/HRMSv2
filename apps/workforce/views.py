@@ -12,11 +12,15 @@ from apps.workflow.serializers import WorkflowRequestSerializer
 from .models import (
     WorkforcePlan, AttendancePolicy, AttendanceLog, LeaveType, LeaveBalance,
     LeaveRequest, OvertimeRequest, Roster, Transfer, Separation,
+    ShiftTemplate, AttendanceException, HolidayCalendar, HolidayCalendarEntry,
+    LeavePolicy, LeaveDocument,
 )
 from .serializers import (
     WorkforcePlanSerializer, AttendancePolicySerializer, AttendanceLogSerializer,
     LeaveTypeSerializer, LeaveBalanceSerializer, LeaveRequestSerializer,
     OvertimeRequestSerializer, RosterSerializer, TransferSerializer, SeparationSerializer,
+    ShiftTemplateSerializer, AttendanceExceptionSerializer, HolidayCalendarSerializer,
+    HolidayCalendarEntrySerializer, LeavePolicySerializer, LeaveDocumentSerializer,
 )
 
 
@@ -437,3 +441,59 @@ class SeparationViewSet(AuditMixin, ModelViewSet):
         sep.save()
         log_action(request, 'COMPLETE', 'Separation', str(sep.id), module='workforce')
         return Response(SeparationSerializer(sep).data)
+
+
+class ShiftTemplateViewSet(AuditMixin, ModelViewSet):
+    queryset = ShiftTemplate.objects.select_related('policy').order_by('name')
+    serializer_class = ShiftTemplateSerializer
+    permission_classes = [IsHRStaff]
+    filterset_fields = ['is_active', 'policy']
+    search_fields = ['name']
+
+
+class AttendanceExceptionViewSet(AuditMixin, ModelViewSet):
+    queryset = AttendanceException.objects.select_related('log__employee__person', 'resolved_by').order_by('-detected_at')
+    serializer_class = AttendanceExceptionSerializer
+    permission_classes = [IsHRStaff]
+    filterset_fields = ['exception_type', 'is_resolved', 'log__employee']
+
+    @action(detail=True, methods=['post'])
+    def resolve(self, request, pk=None):
+        exc = self.get_object()
+        from django.utils import timezone
+        exc.is_resolved = True
+        exc.resolution_notes = request.data.get('resolution_notes', '')
+        exc.resolved_by = request.user
+        exc.resolved_at = timezone.now()
+        exc.save()
+        log_action(request, 'UPDATE', 'AttendanceException', str(exc.id), module='workforce')
+        return Response(AttendanceExceptionSerializer(exc).data)
+
+
+class HolidayCalendarViewSet(AuditMixin, ModelViewSet):
+    queryset = HolidayCalendar.objects.all().order_by('-year', 'country')
+    serializer_class = HolidayCalendarSerializer
+    permission_classes = [IsHRStaff]
+    filterset_fields = ['year', 'country', 'is_active']
+
+
+class HolidayCalendarEntryViewSet(AuditMixin, ModelViewSet):
+    queryset = HolidayCalendarEntry.objects.select_related('calendar').order_by('date')
+    serializer_class = HolidayCalendarEntrySerializer
+    permission_classes = [IsHRStaff]
+    filterset_fields = ['calendar', 'holiday_type', 'is_paid']
+
+
+class LeavePolicyViewSet(AuditMixin, ModelViewSet):
+    queryset = LeavePolicy.objects.select_related('leave_type', 'grade').order_by('leave_type', 'grade')
+    serializer_class = LeavePolicySerializer
+    permission_classes = [IsHRStaff]
+    filterset_fields = ['leave_type', 'grade', 'employment_type', 'is_active']
+
+
+class LeaveDocumentViewSet(AuditMixin, ModelViewSet):
+    queryset = LeaveDocument.objects.select_related('leave_request').order_by('-uploaded_at')
+    serializer_class = LeaveDocumentSerializer
+    permission_classes = [IsInternalUser]
+    filterset_fields = ['leave_request', 'document_type']
+    http_method_names = ['get', 'post', 'head', 'options']

@@ -277,3 +277,28 @@ class DevelopmentActivity(models.Model):
 
     def __str__(self):
         return f"{self.activity_type}: {self.title}"
+
+
+class CriticalRole(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    position = models.OneToOneField(
+        'core_hr.Position', on_delete=models.CASCADE, related_name='critical_role'
+    )
+    rationale = models.TextField(blank=True)
+    risk_level = models.CharField(max_length=20, choices=[
+        ('LOW', 'Low'), ('MEDIUM', 'Medium'), ('HIGH', 'High'), ('CRITICAL', 'Critical')
+    ], default='MEDIUM')
+    time_to_fill_days = models.PositiveIntegerField(default=90)
+    has_identified_successor = models.BooleanField(default=False)
+    minimum_successors_required = models.PositiveIntegerField(default=2)
+    review_date = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'suc_critical_role'
+        ordering = ['position__title']
+
+    def __str__(self):
+        return f"Critical: {self.position}"

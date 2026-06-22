@@ -404,3 +404,187 @@ class Separation(models.Model):
 
     def __str__(self):
         return f"{self.employee} — {self.separation_type}"
+
+
+class ShiftTemplate(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    shift_start = models.TimeField()
+    shift_end = models.TimeField()
+    days_of_week = models.JSONField(
+        default=list,
+        help_text='List of day numbers: 0=Monday, 1=Tuesday, ..., 6=Sunday'
+    )
+    policy = models.ForeignKey(
+        AttendancePolicy, null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='shift_templates'
+    )
+    is_active = models.BooleanField(default=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='shift_templates_created'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'wf_shift_template'
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class AttendanceException(models.Model):
+    EXCEPTION_LATE_ARRIVAL = 'LATE_ARRIVAL'
+    EXCEPTION_EARLY_DEPARTURE = 'EARLY_DEPARTURE'
+    EXCEPTION_ABSENT = 'ABSENT'
+    EXCEPTION_INCOMPLETE = 'INCOMPLETE'
+    EXCEPTION_BREAK_EXCEEDED = 'BREAK_EXCEEDED'
+
+    EXCEPTION_CHOICES = [
+        (EXCEPTION_LATE_ARRIVAL, 'Late Arrival'),
+        (EXCEPTION_EARLY_DEPARTURE, 'Early Departure'),
+        (EXCEPTION_ABSENT, 'Absent'),
+        (EXCEPTION_INCOMPLETE, 'Incomplete Record'),
+        (EXCEPTION_BREAK_EXCEEDED, 'Break Time Exceeded'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    log = models.ForeignKey(
+        AttendanceLog, on_delete=models.CASCADE, related_name='exceptions'
+    )
+    exception_type = models.CharField(max_length=30, choices=EXCEPTION_CHOICES)
+    detected_at = models.DateTimeField(auto_now_add=True)
+    is_resolved = models.BooleanField(default=False)
+    resolution_notes = models.TextField(blank=True)
+    resolved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='attendance_exceptions_resolved'
+    )
+    resolved_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'wf_attendance_exception'
+        ordering = ['-detected_at']
+
+    def __str__(self):
+        return f"{self.log.employee} — {self.exception_type} on {self.log.date}"
+
+
+class HolidayCalendar(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    year = models.PositiveIntegerField()
+    country = models.CharField(max_length=100, blank=True)
+    description = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'wf_holiday_calendar'
+        unique_together = [['year', 'country']]
+        ordering = ['-year', 'country']
+
+    def __str__(self):
+        return f"{self.name} ({self.year})"
+
+
+class HolidayCalendarEntry(models.Model):
+    TYPE_PUBLIC = 'PUBLIC'
+    TYPE_RESTRICTED = 'RESTRICTED'
+    TYPE_COMPANY = 'COMPANY'
+
+    TYPE_CHOICES = [
+        (TYPE_PUBLIC, 'Public Holiday'),
+        (TYPE_RESTRICTED, 'Restricted Holiday'),
+        (TYPE_COMPANY, 'Company Holiday'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    calendar = models.ForeignKey(
+        HolidayCalendar, on_delete=models.CASCADE, related_name='entries'
+    )
+    date = models.DateField()
+    name = models.CharField(max_length=255)
+    holiday_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default=TYPE_PUBLIC)
+    is_paid = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'wf_holiday_entry'
+        unique_together = [['calendar', 'date']]
+        ordering = ['date']
+
+    def __str__(self):
+        return f"{self.name} ({self.date})"
+
+
+class LeavePolicy(models.Model):
+    ACCRUAL_NONE = 'NONE'
+    ACCRUAL_MONTHLY = 'MONTHLY'
+    ACCRUAL_YEARLY = 'YEARLY'
+    ACCRUAL_ANNUAL = 'ANNUAL'
+
+    ACCRUAL_CHOICES = [
+        (ACCRUAL_NONE, 'None - Full entitlement upfront'),
+        (ACCRUAL_MONTHLY, 'Monthly Accrual'),
+        (ACCRUAL_YEARLY, 'Yearly Accrual'),
+        (ACCRUAL_ANNUAL, 'Annual Award'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    leave_type = models.ForeignKey(
+        LeaveType, on_delete=models.PROTECT, related_name='policies'
+    )
+    grade = models.ForeignKey(
+        'core_hr.Grade', null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='leave_policies'
+    )
+    employment_type = models.CharField(
+        max_length=20, blank=True,
+        choices=[('FULL_TIME', 'Full Time'), ('PART_TIME', 'Part Time'), ('CONTRACT', 'Contract'), ('INTERN', 'Intern')]
+    )
+    gender = models.CharField(
+        max_length=10, blank=True,
+        choices=[('', 'All'), ('MALE', 'Male'), ('FEMALE', 'Female')]
+    )
+    days_entitled = models.DecimalField(max_digits=5, decimal_places=2)
+    accrual_method = models.CharField(max_length=20, choices=ACCRUAL_CHOICES, default=ACCRUAL_ANNUAL)
+    max_carry_forward = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    requires_medical_cert = models.BooleanField(default=False)
+    min_service_months = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'wf_leave_policy'
+        ordering = ['leave_type', 'grade']
+
+    def __str__(self):
+        return f"{self.leave_type} policy — {self.days_entitled} days"
+
+
+class LeaveDocument(models.Model):
+    DOC_MEDICAL_CERT = 'MEDICAL_CERTIFICATE'
+    DOC_SUPPORTING = 'SUPPORTING_DOCUMENT'
+    DOC_OTHER = 'OTHER'
+
+    DOC_CHOICES = [
+        (DOC_MEDICAL_CERT, 'Medical Certificate'),
+        (DOC_SUPPORTING, 'Supporting Document'),
+        (DOC_OTHER, 'Other'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    leave_request = models.ForeignKey(
+        LeaveRequest, on_delete=models.CASCADE, related_name='documents'
+    )
+    document = models.FileField(upload_to='leave/documents/')
+    document_type = models.CharField(max_length=30, choices=DOC_CHOICES, default=DOC_SUPPORTING)
+    description = models.CharField(max_length=255, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'wf_leave_document'
+        ordering = ['-uploaded_at']
+
+    def __str__(self):
+        return f"{self.leave_request} — {self.document_type}"

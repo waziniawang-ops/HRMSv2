@@ -4,6 +4,8 @@ from . import views
 
 router = DefaultRouter()
 router.register('rules', views.WorkflowRuleViewSet, basename='workflow-rule')
+router.register('attachments', views.WorkflowAttachmentViewSet, basename='workflow-attachment')
+router.register('actors', views.WorkflowActorViewSet, basename='workflow-actor')
 
 urlpatterns = [
     path('', include(router.urls)),

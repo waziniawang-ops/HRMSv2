@@ -13,6 +13,8 @@ router.register('review-forms', views.ReviewFormViewSet, basename='review-form')
 router.register('review-ratings', views.ReviewRatingViewSet, basename='review-rating')
 router.register('calibration-sessions', views.CalibrationSessionViewSet, basename='calibration-session')
 router.register('calibrated-ratings', views.CalibratedRatingViewSet, basename='calibrated-rating')
+router.register('check-ins', views.CheckInViewSet, basename='check-in')
+router.register('cycle-population', views.CyclePopulationViewSet, basename='cycle-population')
 router.register('final-outcomes', views.FinalOutcomeViewSet, basename='final-outcome')
 router.register('improvement-plans', views.ImprovementPlanViewSet, basename='improvement-plan')
 

@@ -2,6 +2,8 @@ from django.contrib import admin
 from .models import (
     WorkforcePlan, AttendancePolicy, AttendanceLog, LeaveType, LeaveBalance,
     LeaveRequest, OvertimeRequest, Roster, Transfer, Separation,
+    ShiftTemplate, AttendanceException, HolidayCalendar, HolidayCalendarEntry,
+    LeavePolicy, LeaveDocument,
 )
 
 
@@ -72,3 +74,43 @@ class SeparationAdmin(admin.ModelAdmin):
     list_display = ['employee', 'separation_type', 'notice_date', 'last_working_date', 'status']
     list_filter = ['status', 'separation_type']
     raw_id_fields = ['employee', 'initiated_by', 'approved_by']
+
+
+@admin.register(ShiftTemplate)
+class ShiftTemplateAdmin(admin.ModelAdmin):
+    list_display = ['name', 'shift_start', 'shift_end', 'is_active']
+    list_filter = ['is_active']
+
+
+@admin.register(AttendanceException)
+class AttendanceExceptionAdmin(admin.ModelAdmin):
+    list_display = ['log', 'exception_type', 'detected_at', 'is_resolved']
+    list_filter = ['exception_type', 'is_resolved']
+    raw_id_fields = ['log', 'resolved_by']
+
+
+@admin.register(HolidayCalendar)
+class HolidayCalendarAdmin(admin.ModelAdmin):
+    list_display = ['name', 'year', 'country', 'is_active']
+    list_filter = ['year', 'is_active']
+
+
+@admin.register(HolidayCalendarEntry)
+class HolidayCalendarEntryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'date', 'calendar', 'holiday_type', 'is_paid']
+    list_filter = ['holiday_type', 'is_paid', 'calendar']
+    raw_id_fields = ['calendar']
+
+
+@admin.register(LeavePolicy)
+class LeavePolicyAdmin(admin.ModelAdmin):
+    list_display = ['leave_type', 'grade', 'employment_type', 'days_entitled', 'accrual_method', 'is_active']
+    list_filter = ['is_active', 'accrual_method', 'employment_type']
+    raw_id_fields = ['leave_type', 'grade']
+
+
+@admin.register(LeaveDocument)
+class LeaveDocumentAdmin(admin.ModelAdmin):
+    list_display = ['leave_request', 'document_type', 'uploaded_at']
+    list_filter = ['document_type']
+    raw_id_fields = ['leave_request']

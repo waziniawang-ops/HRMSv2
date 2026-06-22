@@ -82,6 +82,55 @@ import HiringFunnel from '@/pages/reports/HiringFunnel'
 import PerformanceReport from '@/pages/reports/PerformanceReport'
 import LearningReport from '@/pages/reports/LearningReport'
 
+// Payroll
+import PayrollCalendars from '@/pages/payroll/PayrollCalendars'
+import PayrollRuns from '@/pages/payroll/PayrollRuns'
+import Payslips from '@/pages/payroll/Payslips'
+import PayrollElements from '@/pages/payroll/PayrollElements'
+
+// Compensation
+import CompensationPackages from '@/pages/compensation/Packages'
+import BonusCycles from '@/pages/compensation/BonusCycles'
+
+// Benefits
+import BenefitPlans from '@/pages/benefits/BenefitPlans'
+import BenefitEnrollments from '@/pages/benefits/Enrollments'
+
+// ESS
+import ESSRequests from '@/pages/ess/ESSRequests'
+import MyESSRequests from '@/pages/ess/MyRequests'
+import ProfileChanges from '@/pages/ess/ProfileChanges'
+
+// Service Desk
+import HRTickets from '@/pages/service_desk/Tickets'
+import KnowledgeBase from '@/pages/service_desk/KnowledgeBase'
+
+// Employee Relations
+import ERCases from '@/pages/er/ERCases'
+import ERCaseDetail from '@/pages/er/ERCaseDetail'
+
+// Documents
+import DocRecords from '@/pages/documents/DocRecords'
+import DocPolicies from '@/pages/documents/DocPolicies'
+
+// Offboarding
+import OffboardingCases from '@/pages/offboarding/OffboardingCases'
+
+// Engagement
+import RecognitionNominations from '@/pages/engagement/RecognitionNominations'
+import EngagementSurveys from '@/pages/engagement/EngagementSurveys'
+
+// HSE
+import HSEIncidents from '@/pages/hse/HSEIncidents'
+import WellbeingPrograms from '@/pages/hse/WellbeingPrograms'
+
+// Claims
+import ClaimRequests from '@/pages/claims/ClaimRequests'
+
+// Skills
+import SkillInventory from '@/pages/skills/SkillInventory'
+import EmployeeSkills from '@/pages/skills/EmployeeSkills'
+
 const qc = new QueryClient({ defaultOptions: { queries: { staleTime: 30000, retry: 1 } } })
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -182,6 +231,43 @@ export default function App() {
                   <Route path="/reports/hiring-funnel" element={<HiringFunnel />} />
                   <Route path="/reports/performance" element={<PerformanceReport />} />
                   <Route path="/reports/learning" element={<LearningReport />} />
+
+                  <Route path="/payroll/calendars" element={<PayrollCalendars />} />
+                  <Route path="/payroll/runs" element={<PayrollRuns />} />
+                  <Route path="/payroll/payslips" element={<Payslips />} />
+                  <Route path="/payroll/elements" element={<PayrollElements />} />
+
+                  <Route path="/compensation/packages" element={<CompensationPackages />} />
+                  <Route path="/compensation/bonus-cycles" element={<BonusCycles />} />
+
+                  <Route path="/benefits/plans" element={<BenefitPlans />} />
+                  <Route path="/benefits/enrollments" element={<BenefitEnrollments />} />
+
+                  <Route path="/ess/requests" element={<ESSRequests />} />
+                  <Route path="/ess/my-requests" element={<MyESSRequests />} />
+                  <Route path="/ess/profile-changes" element={<ProfileChanges />} />
+
+                  <Route path="/service-desk/tickets" element={<HRTickets />} />
+                  <Route path="/service-desk/knowledge-base" element={<KnowledgeBase />} />
+
+                  <Route path="/er/cases" element={<ERCases />} />
+                  <Route path="/er/cases/:id" element={<ERCaseDetail />} />
+
+                  <Route path="/documents/records" element={<DocRecords />} />
+                  <Route path="/documents/policies" element={<DocPolicies />} />
+
+                  <Route path="/offboarding/cases" element={<OffboardingCases />} />
+
+                  <Route path="/engagement/nominations" element={<RecognitionNominations />} />
+                  <Route path="/engagement/surveys" element={<EngagementSurveys />} />
+
+                  <Route path="/hse/incidents" element={<HSEIncidents />} />
+                  <Route path="/hse/wellbeing" element={<WellbeingPrograms />} />
+
+                  <Route path="/claims/requests" element={<ClaimRequests />} />
+
+                  <Route path="/skills/inventory" element={<SkillInventory />} />
+                  <Route path="/skills/employee-skills" element={<EmployeeSkills />} />
 
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

@@ -10,11 +10,11 @@ from apps.audit.utils import log_action
 from apps.workflow.engine import WorkflowEngine
 from apps.workflow.models import WorkflowRequest
 from apps.workflow.serializers import WorkflowRequestSerializer
-from .models import OrgUnit, CostCenter, JobFamily, Job, Grade, Position, Person, Employee, EmployeeAssignment, SystemSetting
+from .models import OrgUnit, CostCenter, JobFamily, Job, Grade, Position, Person, Employee, EmployeeAssignment, SystemSetting, Location, EmploymentContract
 from .serializers import (
     OrgUnitSerializer, CostCenterSerializer, JobFamilySerializer, JobSerializer,
     GradeSerializer, PositionSerializer, PersonSerializer, EmployeeSerializer,
-    EmployeeAssignmentSerializer, SystemSettingSerializer,
+    EmployeeAssignmentSerializer, SystemSettingSerializer, LocationSerializer, EmploymentContractSerializer,
 )
 
 
@@ -348,3 +348,47 @@ class SystemSettingViewSet(AuditMixin, ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
+
+
+class LocationViewSet(AuditMixin, ModelViewSet):
+    queryset = Location.objects.all().order_by('name')
+    serializer_class = LocationSerializer
+    filterset_fields = ['is_active', 'country', 'city']
+    search_fields = ['code', 'name', 'city', 'country']
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [IsInternalUser()]
+        return [IsHRStaff()]
+
+
+class EmploymentContractViewSet(AuditMixin, ModelViewSet):
+    queryset = EmploymentContract.objects.select_related(
+        'employee__person', 'created_by'
+    ).order_by('-start_date')
+    serializer_class = EmploymentContractSerializer
+    permission_classes = [IsHRStaff]
+    filterset_fields = ['employee', 'contract_type', 'status', 'is_signed']
+    search_fields = ['employee__employee_number', 'employee__person__legal_name']
+
+    @action(detail=True, methods=['post'])
+    def submit_for_approval(self, request, pk=None):
+        obj = self.get_object()
+        engine = WorkflowEngine('EMPLOYMENT_CONTRACT_APPROVAL')
+        if not obj.workflow_request:
+            wf_req = engine.create_request(request.user, 'EmploymentContract', obj.id)
+            obj.workflow_request = wf_req
+            obj.save(update_fields=['workflow_request'])
+        wf_req = engine.submit(request, obj.workflow_request)
+        return Response(WorkflowRequestSerializer(wf_req).data)
+
+    @action(detail=True, methods=['post'])
+    def mark_signed(self, request, pk=None):
+        from django.utils import timezone
+        obj = self.get_object()
+        obj.is_signed = True
+        obj.signed_at = timezone.now()
+        obj.save(update_fields=['is_signed', 'signed_at'])
+        log_action(request, 'UPDATE', 'EmploymentContract', str(obj.id), module='core_hr',
+                   after_json={'is_signed': True})
+        return Response(EmploymentContractSerializer(obj, context={'request': request}).data)

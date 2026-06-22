@@ -12,13 +12,13 @@ from apps.workflow.serializers import WorkflowRequestSerializer
 from .models import (
     Course, LearningPath, AssignmentRule, LearningAssignment,
     CourseSession, Enrollment, Assessment, CourseCompletion, Certificate,
-    TrainingRequest, SkillGap,
+    TrainingRequest, SkillGap, LearningTranscript,
 )
 from .serializers import (
     CourseSerializer, LearningPathSerializer, AssignmentRuleSerializer,
     LearningAssignmentSerializer, CourseSessionSerializer, EnrollmentSerializer,
     AssessmentSerializer, CourseCompletionSerializer, CertificateSerializer,
-    TrainingRequestSerializer, SkillGapSerializer,
+    TrainingRequestSerializer, SkillGapSerializer, LearningTranscriptSerializer,
 )
 
 
@@ -301,3 +301,13 @@ class SkillGapViewSet(AuditMixin, ModelViewSet):
         engine = WorkflowEngine('SKILL_GAP_PLAN_APPROVAL')
         wf_req = engine.reject(request, obj.workflow_request, request.data.get('comment', ''))
         return Response(WorkflowRequestSerializer(wf_req).data)
+
+
+class LearningTranscriptViewSet(AuditMixin, ModelViewSet):
+    queryset = LearningTranscript.objects.select_related('employee__person').order_by('employee__employee_number')
+    serializer_class = LearningTranscriptSerializer
+    filterset_fields = ['employee']
+    http_method_names = ['get', 'head', 'options']
+
+    def get_permissions(self):
+        return [IsInternalUser()]

@@ -413,3 +413,54 @@ class ImprovementPlan(models.Model):
 
     def __str__(self):
         return f"PIP: {self.employee} ({self.start_date} to {self.end_date})"
+
+
+class CheckIn(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    employee = models.ForeignKey(
+        'core_hr.Employee', on_delete=models.CASCADE, related_name='check_ins'
+    )
+    manager = models.ForeignKey(
+        'core_hr.Employee', on_delete=models.PROTECT, related_name='check_ins_as_manager'
+    )
+    cycle = models.ForeignKey(
+        PerformanceCycle, null=True, blank=True, on_delete=models.SET_NULL, related_name='check_ins'
+    )
+    check_in_date = models.DateField()
+    goals_discussed = models.JSONField(default=list, help_text='List of goal IDs discussed')
+    achievements = models.TextField(blank=True)
+    challenges = models.TextField(blank=True)
+    next_steps = models.TextField(blank=True)
+    overall_rating = models.CharField(
+        max_length=20, blank=True,
+        choices=[('ON_TRACK', 'On Track'), ('AT_RISK', 'At Risk'), ('OFF_TRACK', 'Off Track')]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'perf_check_in'
+        ordering = ['-check_in_date']
+
+    def __str__(self):
+        return f"Check-in: {self.employee} with {self.manager} on {self.check_in_date}"
+
+
+class CyclePopulation(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    cycle = models.ForeignKey(
+        PerformanceCycle, on_delete=models.CASCADE, related_name='population'
+    )
+    employee = models.ForeignKey(
+        'core_hr.Employee', on_delete=models.CASCADE, related_name='performance_cycle_memberships'
+    )
+    is_eligible = models.BooleanField(default=True)
+    inclusion_reason = models.CharField(max_length=255, blank=True)
+    exclusion_reason = models.CharField(max_length=255, blank=True)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'perf_cycle_population'
+        unique_together = [['cycle', 'employee']]
+
+    def __str__(self):
+        return f"{self.employee} in {self.cycle}"

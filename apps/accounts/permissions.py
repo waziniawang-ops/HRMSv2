@@ -102,3 +102,38 @@ class IsManagerOrAbove(BasePermission):
             CustomUser.ROLE_HR_MAKER, CustomUser.ROLE_HR_CHECKER,
             CustomUser.ROLE_HR_ADMIN, CustomUser.ROLE_SYSTEM_ADMIN
         )
+
+
+class IsPayrollOfficer(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.has_role(
+            CustomUser.ROLE_PAYROLL_OFFICER, CustomUser.ROLE_HR_ADMIN, CustomUser.ROLE_SYSTEM_ADMIN
+        )
+
+
+class IsHSEOfficer(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.has_role(
+            CustomUser.ROLE_HSE_OFFICER, CustomUser.ROLE_HR_ADMIN, CustomUser.ROLE_SYSTEM_ADMIN
+        )
+
+
+class IsServiceDeskAgent(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.has_role(
+            CustomUser.ROLE_SERVICE_DESK_AGENT, CustomUser.ROLE_HR_ADMIN, CustomUser.ROLE_SYSTEM_ADMIN
+        )
+
+
+class IsERStaff(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.has_role(
+            CustomUser.ROLE_ER_OFFICER, CustomUser.ROLE_HR_ADMIN, CustomUser.ROLE_SYSTEM_ADMIN
+        )
+
+
+class IsBenefitsAdmin(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.has_role(
+            CustomUser.ROLE_BENEFITS_ADMIN, CustomUser.ROLE_HR_ADMIN, CustomUser.ROLE_SYSTEM_ADMIN
+        )

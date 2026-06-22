@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     PerformanceCycle, CompetencyModel, Competency, GoalPlan, Goal, GoalProgress,
     ReviewForm, ReviewRating, CalibrationSession, CalibratedRating,
-    FinalOutcome, ImprovementPlan,
+    FinalOutcome, ImprovementPlan, CheckIn, CyclePopulation,
 )
 
 

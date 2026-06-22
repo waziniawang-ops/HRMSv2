@@ -153,6 +153,9 @@ class Position(models.Model):
     job = models.ForeignKey(Job, on_delete=models.PROTECT, related_name='positions')
     org_unit = models.ForeignKey(OrgUnit, on_delete=models.PROTECT, related_name='positions')
     cost_center = models.ForeignKey(CostCenter, on_delete=models.PROTECT, related_name='positions')
+    location = models.ForeignKey(
+        'Location', null=True, blank=True, on_delete=models.SET_NULL, related_name='positions'
+    )
     grade = models.ForeignKey(Grade, on_delete=models.PROTECT, related_name='positions')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_DRAFT)
     incumbent_employee = models.ForeignKey(
@@ -229,11 +232,25 @@ class Employee(models.Model):
         (STATUS_RETIRED, 'Retired'),
     ]
 
+    EMPLOYMENT_FULL_TIME = 'FULL_TIME'
+    EMPLOYMENT_PART_TIME = 'PART_TIME'
+    EMPLOYMENT_CONTRACT = 'CONTRACT'
+    EMPLOYMENT_INTERN = 'INTERN'
+    EMPLOYMENT_TEMPORARY = 'TEMPORARY'
+    EMPLOYMENT_TYPE_CHOICES = [
+        (EMPLOYMENT_FULL_TIME, 'Full Time'),
+        (EMPLOYMENT_PART_TIME, 'Part Time'),
+        (EMPLOYMENT_CONTRACT, 'Contract'),
+        (EMPLOYMENT_INTERN, 'Intern'),
+        (EMPLOYMENT_TEMPORARY, 'Temporary'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     person = models.OneToOneField(Person, on_delete=models.PROTECT, related_name='employee')
     employee_number = models.CharField(max_length=50, unique=True)
     hire_date = models.DateField()
     employment_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PROBATION)
+    employment_type = models.CharField(max_length=20, choices=EMPLOYMENT_TYPE_CHOICES, default=EMPLOYMENT_FULL_TIME)
     manager = models.ForeignKey(
         'self', null=True, blank=True, on_delete=models.SET_NULL, related_name='direct_reports'
     )
@@ -324,3 +341,80 @@ class SystemSetting(models.Model):
 
     def __str__(self):
         return f"{self.key} = {self.value}"
+
+
+class Location(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    code = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=255)
+    address = models.TextField(blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=100, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'core_location'
+        ordering = ['name']
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class EmploymentContract(models.Model):
+    CONTRACT_PERMANENT = 'PERMANENT'
+    CONTRACT_FIXED_TERM = 'FIXED_TERM'
+    CONTRACT_PART_TIME = 'PART_TIME'
+    CONTRACT_TEMPORARY = 'TEMPORARY'
+    CONTRACT_INTERNSHIP = 'INTERNSHIP'
+
+    CONTRACT_TYPE_CHOICES = [
+        (CONTRACT_PERMANENT, 'Permanent'),
+        (CONTRACT_FIXED_TERM, 'Fixed Term'),
+        (CONTRACT_PART_TIME, 'Part Time'),
+        (CONTRACT_TEMPORARY, 'Temporary'),
+        (CONTRACT_INTERNSHIP, 'Internship'),
+    ]
+
+    STATUS_DRAFT = 'DRAFT'
+    STATUS_ACTIVE = 'ACTIVE'
+    STATUS_EXPIRED = 'EXPIRED'
+    STATUS_TERMINATED = 'TERMINATED'
+
+    STATUS_CHOICES = [
+        (STATUS_DRAFT, 'Draft'),
+        (STATUS_ACTIVE, 'Active'),
+        (STATUS_EXPIRED, 'Expired'),
+        (STATUS_TERMINATED, 'Terminated'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    employee = models.ForeignKey(
+        Employee, on_delete=models.PROTECT, related_name='contracts'
+    )
+    contract_type = models.CharField(max_length=20, choices=CONTRACT_TYPE_CHOICES, default=CONTRACT_PERMANENT)
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
+    notice_period_days = models.PositiveIntegerField(default=30)
+    probation_period_days = models.PositiveIntegerField(default=90)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_ACTIVE)
+    contract_document = models.FileField(upload_to='contracts/', null=True, blank=True)
+    is_signed = models.BooleanField(default=False)
+    signed_at = models.DateTimeField(null=True, blank=True)
+    notes = models.TextField(blank=True)
+    workflow_request = models.ForeignKey(
+        'workflow.WorkflowRequest', null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='+'
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='contracts_created'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'core_employment_contract'
+        ordering = ['-start_date']
+
+    def __str__(self):
+        return f"{self.employee} — {self.contract_type} from {self.start_date}"

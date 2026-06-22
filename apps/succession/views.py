@@ -11,12 +11,13 @@ from apps.workflow.models import WorkflowRequest
 from apps.workflow.serializers import WorkflowRequestSerializer
 from .models import (
     SuccessionPlan, SuccessorNomination, TalentPool, TalentProfile,
-    DevelopmentPlan, DevelopmentActivity,
+    DevelopmentPlan, DevelopmentActivity, CriticalRole,
 )
 from .serializers import (
     SuccessionPlanSerializer, SuccessorNominationSerializer,
     TalentPoolSerializer, TalentProfileSerializer,
     DevelopmentPlanSerializer, DevelopmentActivitySerializer,
+    CriticalRoleSerializer,
 )
 
 
@@ -225,3 +226,11 @@ class DevelopmentActivityViewSet(AuditMixin, ModelViewSet):
         activity.outcome_notes = request.data.get('outcome_notes', '')
         activity.save()
         return Response(DevelopmentActivitySerializer(activity).data)
+
+
+class CriticalRoleViewSet(AuditMixin, ModelViewSet):
+    queryset = CriticalRole.objects.select_related('position').order_by('position__title')
+    serializer_class = CriticalRoleSerializer
+    permission_classes = [IsHRStaff]
+    filterset_fields = ['risk_level', 'has_identified_successor', 'is_active']
+    search_fields = ['position__title', 'rationale']

@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import (
     WorkforcePlan, AttendancePolicy, AttendanceLog, LeaveType, LeaveBalance,
     LeaveRequest, OvertimeRequest, Roster, Transfer, Separation,
+    ShiftTemplate, AttendanceException, HolidayCalendar, HolidayCalendarEntry,
+    LeavePolicy, LeaveDocument,
 )
 
 
@@ -130,6 +132,62 @@ class TransferSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['initiated_by'] = self.context['request'].user
         return super().create(validated_data)
+
+
+class ShiftTemplateSerializer(serializers.ModelSerializer):
+    policy_name = serializers.CharField(source='policy.name', read_only=True, allow_null=True, default=None)
+
+    class Meta:
+        model = ShiftTemplate
+        fields = ['id', 'name', 'shift_start', 'shift_end', 'days_of_week', 'policy', 'policy_name', 'is_active', 'created_by', 'created_at']
+        read_only_fields = ['id', 'created_by', 'created_at']
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
+
+class AttendanceExceptionSerializer(serializers.ModelSerializer):
+    employee_name = serializers.CharField(source='log.employee.person.legal_name', read_only=True)
+    log_date = serializers.DateField(source='log.date', read_only=True)
+
+    class Meta:
+        model = AttendanceException
+        fields = ['id', 'log', 'employee_name', 'log_date', 'exception_type', 'detected_at', 'is_resolved', 'resolution_notes', 'resolved_by', 'resolved_at']
+        read_only_fields = ['id', 'detected_at']
+
+
+class HolidayCalendarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HolidayCalendar
+        fields = ['id', 'name', 'year', 'country', 'description', 'is_active', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class HolidayCalendarEntrySerializer(serializers.ModelSerializer):
+    calendar_name = serializers.CharField(source='calendar.name', read_only=True)
+
+    class Meta:
+        model = HolidayCalendarEntry
+        fields = ['id', 'calendar', 'calendar_name', 'date', 'name', 'holiday_type', 'is_paid']
+        read_only_fields = ['id']
+
+
+class LeavePolicySerializer(serializers.ModelSerializer):
+    leave_type_name = serializers.CharField(source='leave_type.name', read_only=True)
+    grade_display = serializers.CharField(source='grade.grade_name', read_only=True, allow_null=True, default=None)
+
+    class Meta:
+        model = LeavePolicy
+        fields = ['id', 'leave_type', 'leave_type_name', 'grade', 'grade_display', 'employment_type', 'gender', 'days_entitled', 'accrual_method', 'max_carry_forward', 'requires_medical_cert', 'min_service_months', 'is_active', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class LeaveDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LeaveDocument
+        fields = ['id', 'leave_request', 'document', 'document_type', 'description', 'uploaded_at']
+        read_only_fields = ['id', 'uploaded_at']
 
 
 class SeparationSerializer(serializers.ModelSerializer):

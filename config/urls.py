@@ -22,6 +22,20 @@ urlpatterns = [
     path('api/v1/attendance/', include('apps.attendance.urls')),
     path('api/v1/audit/', include('apps.audit.urls')),
 
+    # New modules
+    path('api/v1/payroll/', include('apps.payroll.urls')),
+    path('api/v1/compensation/', include('apps.compensation.urls')),
+    path('api/v1/benefits/', include('apps.benefits.urls')),
+    path('api/v1/ess/', include('apps.ess.urls')),
+    path('api/v1/service-desk/', include('apps.service_desk.urls')),
+    path('api/v1/er/', include('apps.employee_relations.urls')),
+    path('api/v1/documents/', include('apps.documents.urls')),
+    path('api/v1/offboarding/', include('apps.offboarding.urls')),
+    path('api/v1/engagement/', include('apps.engagement.urls')),
+    path('api/v1/hse/', include('apps.hse.urls')),
+    path('api/v1/claims/', include('apps.claims.urls')),
+    path('api/v1/skills/', include('apps.skills.urls')),
+
     # OpenAPI docs
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),

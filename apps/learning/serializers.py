@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import (
     Course, LearningPath, LearningPathCourse, AssignmentRule, LearningAssignment,
     CourseSession, Enrollment, Assessment, CourseCompletion, Certificate,
-    TrainingRequest, SkillGap,
+    TrainingRequest, SkillGap, LearningTranscript,
 )
 
 
@@ -166,3 +166,18 @@ class SkillGapSerializer(serializers.ModelSerializer):
             'is_closed', 'assessed_at', 'closed_at',
         ]
         read_only_fields = ['id', 'gap', 'assessed_at']
+
+
+class LearningTranscriptSerializer(serializers.ModelSerializer):
+    employee_name = serializers.CharField(source='employee.person.legal_name', read_only=True, default='')
+    employee_number = serializers.CharField(source='employee.employee_number', read_only=True, default='')
+
+    class Meta:
+        model = LearningTranscript
+        fields = [
+            'id', 'employee', 'employee_name', 'employee_number',
+            'total_hours_completed', 'total_courses_completed',
+            'total_certificates_earned', 'mandatory_completion_rate',
+            'last_completion_date', 'last_updated',
+        ]
+        read_only_fields = ['id', 'last_updated']

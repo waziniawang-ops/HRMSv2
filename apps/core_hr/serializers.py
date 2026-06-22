@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import OrgUnit, CostCenter, JobFamily, Job, Grade, Position, Person, Employee, EmployeeAssignment, SystemSetting
+from .models import OrgUnit, CostCenter, JobFamily, Job, Grade, Position, Person, Employee, EmployeeAssignment, SystemSetting, Location, EmploymentContract
 
 
 class OrgUnitSerializer(serializers.ModelSerializer):
@@ -59,16 +59,18 @@ class PositionSerializer(serializers.ModelSerializer):
     org_unit_display = serializers.CharField(source='org_unit.name', read_only=True)
     grade_display = serializers.CharField(source='grade.grade_name', read_only=True)
     reporting_to_display = serializers.CharField(source='reporting_to.title', read_only=True, allow_null=True, default=None)
+    location_display = serializers.CharField(source='location.name', read_only=True, allow_null=True, default=None)
 
     class Meta:
         model = Position
         fields = [
             'id', 'position_code', 'title', 'job', 'job_display',
             'org_unit', 'org_unit_display', 'cost_center', 'grade', 'grade_display',
+            'location', 'location_display',
             'status', 'is_critical', 'headcount_budget', 'incumbent_employee',
             'reporting_to', 'reporting_to_display', 'workflow_request', 'created_by', 'created_at', 'updated_at',
         ]
-        read_only_fields = ['id', 'created_by', 'workflow_request', 'reporting_to_display', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_by', 'workflow_request', 'reporting_to_display', 'location_display', 'created_at', 'updated_at']
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -98,7 +100,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = [
             'id', 'employee_number', 'full_name', 'person', 'person_detail',
-            'hire_date', 'employment_status', 'manager', 'manager_display',
+            'hire_date', 'employment_status', 'employment_type', 'manager', 'manager_display',
             'position', 'position_display', 'org_unit', 'org_unit_display',
             'grade', 'grade_display', 'termination_date', 'created_at',
         ]
@@ -129,3 +131,37 @@ class SystemSettingSerializer(serializers.ModelSerializer):
         model = SystemSetting
         fields = ['key', 'value', 'description', 'updated_at']
         read_only_fields = ['key', 'updated_at']
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ['id', 'code', 'name', 'address', 'city', 'country', 'is_active', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class EmploymentContractSerializer(serializers.ModelSerializer):
+    employee_name = serializers.CharField(source='employee.person.legal_name', read_only=True)
+    employee_number = serializers.CharField(source='employee.employee_number', read_only=True)
+    created_by_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EmploymentContract
+        fields = [
+            'id', 'employee', 'employee_name', 'employee_number',
+            'contract_type', 'start_date', 'end_date',
+            'notice_period_days', 'probation_period_days',
+            'status', 'contract_document', 'is_signed', 'signed_at',
+            'notes', 'workflow_request', 'created_by', 'created_by_display',
+            'created_at', 'updated_at',
+        ]
+        read_only_fields = ['id', 'created_by', 'workflow_request', 'created_at', 'updated_at']
+
+    def get_created_by_display(self, obj):
+        if not obj.created_by:
+            return None
+        return obj.created_by.get_full_name() or obj.created_by.username
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)

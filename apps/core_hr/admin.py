@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OrgUnit, CostCenter, JobFamily, Job, Grade, Position, Person, Employee, EmployeeAssignment
+from .models import OrgUnit, CostCenter, JobFamily, Job, Grade, Position, Person, Employee, EmployeeAssignment, Location, EmploymentContract
 
 
 @admin.register(OrgUnit)
@@ -62,8 +62,23 @@ class EmployeeAssignmentInline(admin.TabularInline):
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ['employee_number', 'full_name', 'employment_status', 'hire_date', 'org_unit', 'grade']
-    list_filter = ['employment_status', 'org_unit', 'grade']
+    list_display = ['employee_number', 'full_name', 'employment_status', 'employment_type', 'hire_date', 'org_unit', 'grade']
+    list_filter = ['employment_status', 'employment_type', 'org_unit', 'grade']
     search_fields = ['employee_number', 'person__legal_name', 'person__email']
     raw_id_fields = ['person', 'manager', 'position', 'org_unit', 'grade']
     inlines = [EmployeeAssignmentInline]
+
+
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ['code', 'name', 'city', 'country', 'is_active']
+    list_filter = ['is_active', 'country']
+    search_fields = ['code', 'name', 'city', 'country']
+
+
+@admin.register(EmploymentContract)
+class EmploymentContractAdmin(admin.ModelAdmin):
+    list_display = ['employee', 'contract_type', 'start_date', 'end_date', 'status', 'is_signed']
+    list_filter = ['contract_type', 'status', 'is_signed']
+    search_fields = ['employee__employee_number', 'employee__person__legal_name']
+    raw_id_fields = ['employee', 'created_by']

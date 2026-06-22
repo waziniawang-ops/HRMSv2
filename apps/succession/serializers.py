@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     SuccessionPlan, SuccessorNomination, TalentPool, TalentProfile,
-    DevelopmentPlan, DevelopmentActivity,
+    DevelopmentPlan, DevelopmentActivity, CriticalRole,
 )
 
 
@@ -96,3 +96,18 @@ class TalentProfileSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at',
         ]
         read_only_fields = ['id', 'assessed_by', 'assessed_by_display', 'last_assessed_at', 'workflow_request', 'created_at', 'updated_at']
+
+
+class CriticalRoleSerializer(serializers.ModelSerializer):
+    position_title = serializers.CharField(source='position.title', read_only=True, default='')
+    risk_level_display = serializers.CharField(source='get_risk_level_display', read_only=True)
+
+    class Meta:
+        model = CriticalRole
+        fields = [
+            'id', 'position', 'position_title', 'rationale',
+            'risk_level', 'risk_level_display', 'time_to_fill_days',
+            'has_identified_successor', 'minimum_successors_required',
+            'review_date', 'is_active', 'created_at', 'updated_at',
+        ]
+        read_only_fields = ['id', 'position_title', 'risk_level_display', 'created_at', 'updated_at']

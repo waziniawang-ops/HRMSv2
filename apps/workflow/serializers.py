@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import WorkflowRule, WorkflowRequest, WorkflowStep, WorkflowComment, WorkflowHistory
+from .models import WorkflowRule, WorkflowRequest, WorkflowStep, WorkflowComment, WorkflowHistory, WorkflowAttachment, WorkflowActor
 
 
 class WorkflowRuleSerializer(serializers.ModelSerializer):
@@ -84,3 +84,37 @@ class WorkflowActionSerializer(serializers.Serializer):
 
 class WorkflowRejectSerializer(serializers.Serializer):
     comment = serializers.CharField(required=True, min_length=5)
+
+
+class WorkflowAttachmentSerializer(serializers.ModelSerializer):
+    uploaded_by_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = WorkflowAttachment
+        fields = [
+            'id', 'workflow_request', 'file', 'original_filename',
+            'description', 'uploaded_by', 'uploaded_by_display', 'uploaded_at',
+        ]
+        read_only_fields = ['id', 'uploaded_by', 'uploaded_by_display', 'uploaded_at']
+
+    def get_uploaded_by_display(self, obj):
+        return obj.uploaded_by.get_full_name() or obj.uploaded_by.username
+
+    def create(self, validated_data):
+        validated_data['uploaded_by'] = self.context['request'].user
+        validated_data['original_filename'] = validated_data.get('file').name
+        return super().create(validated_data)
+
+
+class WorkflowActorSerializer(serializers.ModelSerializer):
+    user_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = WorkflowActor
+        fields = [
+            'id', 'workflow_request', 'user', 'user_display', 'role', 'assigned_at',
+        ]
+        read_only_fields = ['id', 'user_display', 'assigned_at']
+
+    def get_user_display(self, obj):
+        return obj.user.get_full_name() or obj.user.username

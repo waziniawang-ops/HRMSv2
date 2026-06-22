@@ -12,14 +12,14 @@ from apps.workflow.serializers import WorkflowRequestSerializer
 from .models import (
     PerformanceCycle, CompetencyModel, Competency, GoalPlan, Goal, GoalProgress,
     ReviewForm, ReviewRating, CalibrationSession, CalibratedRating,
-    FinalOutcome, ImprovementPlan,
+    FinalOutcome, ImprovementPlan, CheckIn, CyclePopulation,
 )
 from .serializers import (
     PerformanceCycleSerializer, CompetencyModelSerializer, CompetencySerializer,
     GoalPlanSerializer, GoalSerializer, GoalProgressSerializer,
     ReviewFormSerializer, ReviewRatingSerializer,
     CalibrationSessionSerializer, CalibratedRatingSerializer,
-    FinalOutcomeSerializer, ImprovementPlanSerializer,
+    FinalOutcomeSerializer, ImprovementPlanSerializer, CheckInSerializer, CyclePopulationSerializer,
 )
 
 
@@ -367,3 +367,31 @@ class ImprovementPlanViewSet(AuditMixin, ModelViewSet):
     serializer_class = ImprovementPlanSerializer
     permission_classes = [IsHRPerformance]
     filterset_fields = ['status', 'employee', 'cycle']
+
+
+class CheckInViewSet(AuditMixin, ModelViewSet):
+    queryset = CheckIn.objects.select_related(
+        'employee__person', 'manager__person', 'cycle'
+    ).order_by('-check_in_date')
+    serializer_class = CheckInSerializer
+    permission_classes = [IsInternalUser]
+    filterset_fields = ['employee', 'manager', 'cycle', 'overall_rating']
+
+    @action(detail=False, methods=['get'])
+    def my_check_ins(self, request):
+        from apps.core_hr.models import Employee
+        try:
+            emp = Employee.objects.get(person__user=request.user)
+        except Employee.DoesNotExist:
+            return Response({'detail': 'No employee record found.'}, status=404)
+        qs = CheckIn.objects.filter(employee=emp).order_by('-check_in_date')
+        return Response(CheckInSerializer(qs, many=True).data)
+
+
+class CyclePopulationViewSet(AuditMixin, ModelViewSet):
+    queryset = CyclePopulation.objects.select_related(
+        'cycle', 'employee__person'
+    ).order_by('cycle', 'employee__employee_number')
+    serializer_class = CyclePopulationSerializer
+    permission_classes = [IsHRPerformance]
+    filterset_fields = ['cycle', 'employee', 'is_eligible']

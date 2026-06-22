@@ -43,6 +43,11 @@ class CustomUser(AbstractUser):
     ROLE_MANAGER = 'MANAGER'
     ROLE_EMPLOYEE = 'EMPLOYEE'
     ROLE_APPLICANT = 'APPLICANT'
+    ROLE_PAYROLL_OFFICER = 'PAYROLL_OFFICER'
+    ROLE_HSE_OFFICER = 'HSE_OFFICER'
+    ROLE_SERVICE_DESK_AGENT = 'SERVICE_DESK_AGENT'
+    ROLE_ER_OFFICER = 'ER_OFFICER'
+    ROLE_BENEFITS_ADMIN = 'BENEFITS_ADMIN'
 
     ROLE_CHOICES = [
         (ROLE_SYSTEM_ADMIN, 'System Admin'),
@@ -60,6 +65,11 @@ class CustomUser(AbstractUser):
         (ROLE_MANAGER, 'Manager'),
         (ROLE_EMPLOYEE, 'Employee'),
         (ROLE_APPLICANT, 'Applicant'),
+        (ROLE_PAYROLL_OFFICER, 'Payroll Officer'),
+        (ROLE_HSE_OFFICER, 'HSE Officer'),
+        (ROLE_SERVICE_DESK_AGENT, 'Service Desk Agent'),
+        (ROLE_ER_OFFICER, 'Employee Relations Officer'),
+        (ROLE_BENEFITS_ADMIN, 'Benefits Administrator'),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -391,3 +391,22 @@ class SkillGap(models.Model):
 
     def __str__(self):
         return f"{self.employee} — {self.skill_name} gap: {self.gap}"
+
+
+class LearningTranscript(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    employee = models.OneToOneField(
+        'core_hr.Employee', on_delete=models.CASCADE, related_name='learning_transcript'
+    )
+    total_hours_completed = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    total_courses_completed = models.PositiveIntegerField(default=0)
+    total_certificates_earned = models.PositiveIntegerField(default=0)
+    mandatory_completion_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    last_completion_date = models.DateField(null=True, blank=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'lms_transcript'
+
+    def __str__(self):
+        return f"Transcript: {self.employee} ({self.total_courses_completed} courses)"

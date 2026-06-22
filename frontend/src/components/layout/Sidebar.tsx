@@ -2,7 +2,9 @@ import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Users, Building2, Briefcase, UserPlus,
   UserCheck, Calendar, BarChart3, GitBranch, TrendingUp,
-  BookOpen, Bell, Shield, ChevronDown, ChevronRight, ScanFace, Settings2
+  BookOpen, Bell, Shield, ChevronDown, ChevronRight, ScanFace, Settings2,
+  DollarSign, Gift, Inbox, HeadphonesIcon, Scale, FileText, LogOut,
+  Heart, AlertTriangle, Receipt, Zap, Award
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
@@ -27,6 +29,12 @@ interface NavItem {
 // Role group shorthands
 const ADMIN = ['SYSTEM_ADMIN', 'HR_ADMIN']
 const ALL_HR = [...ADMIN, 'HR_MAKER', 'HR_CHECKER']
+const PAYROLL = [...ADMIN, 'PAYROLL_OFFICER', 'FINANCE_CHECKER']
+const BENEFITS_ROLES = [...ADMIN, 'BENEFITS_ADMIN', 'HR_MAKER']
+const ER_ROLES = [...ADMIN, 'ER_OFFICER']
+const HSE_ROLES = [...ADMIN, 'HSE_OFFICER']
+const SD_ROLES = [...ADMIN, 'SERVICE_DESK_AGENT', 'HR_MAKER', 'EMPLOYEE', 'MANAGER']
+const ALL_INTERNAL = [...ALL_HR, 'MANAGER', 'EMPLOYEE', 'RECRUITER', 'HIRING_MANAGER', 'INTERVIEWER', 'FINANCE_CHECKER', 'TALENT_COMMITTEE', 'HR_PERFORMANCE', 'LD_OFFICER', 'LD_CHECKER', 'PAYROLL_OFFICER', 'HSE_OFFICER', 'SERVICE_DESK_AGENT', 'ER_OFFICER', 'BENEFITS_ADMIN']
 const RECRUITMENT = [...ALL_HR, 'RECRUITER', 'HIRING_MANAGER', 'INTERVIEWER', 'FINANCE_CHECKER']
 const LD = [...ADMIN, 'LD_OFFICER', 'LD_CHECKER']
 const SUCCESSION = [...ALL_HR, 'TALENT_COMMITTEE', 'MANAGER']
@@ -123,6 +131,90 @@ const ALL_NAV_ITEMS: NavItem[] = [
       { label: 'Hiring Funnel', path: '/reports/hiring-funnel', roles: [...ALL_HR, 'RECRUITER', 'HIRING_MANAGER'] },
       { label: 'Performance', path: '/reports/performance', roles: [...ADMIN, 'HR_PERFORMANCE'] },
       { label: 'Learning', path: '/reports/learning', roles: LD },
+    ],
+  },
+  {
+    label: 'Payroll', icon: DollarSign, roles: PAYROLL,
+    children: [
+      { label: 'Calendars', path: '/payroll/calendars', roles: PAYROLL },
+      { label: 'Payroll Runs', path: '/payroll/runs', roles: PAYROLL },
+      { label: 'Payslips', path: '/payroll/payslips', roles: PAYROLL },
+      { label: 'Elements', path: '/payroll/elements', roles: PAYROLL },
+    ],
+  },
+  {
+    label: 'Compensation', icon: BarChart3, roles: [...ADMIN, 'PAYROLL_OFFICER', 'FINANCE_CHECKER'],
+    children: [
+      { label: 'Packages', path: '/compensation/packages' },
+      { label: 'Bonus Cycles', path: '/compensation/bonus-cycles' },
+    ],
+  },
+  {
+    label: 'Benefits', icon: Gift, roles: BENEFITS_ROLES,
+    children: [
+      { label: 'Benefit Plans', path: '/benefits/plans' },
+      { label: 'Enrollments', path: '/benefits/enrollments' },
+    ],
+  },
+  {
+    label: 'ESS', icon: Inbox, roles: ALL_INTERNAL,
+    children: [
+      { label: 'All Requests', path: '/ess/requests', roles: ALL_HR },
+      { label: 'My Requests', path: '/ess/my-requests' },
+      { label: 'Profile Changes', path: '/ess/profile-changes' },
+    ],
+  },
+  {
+    label: 'Service Desk', icon: HeadphonesIcon, roles: SD_ROLES,
+    children: [
+      { label: 'Tickets', path: '/service-desk/tickets' },
+      { label: 'Knowledge Base', path: '/service-desk/knowledge-base' },
+    ],
+  },
+  {
+    label: 'Employee Relations', icon: Scale, roles: ER_ROLES,
+    children: [
+      { label: 'ER Cases', path: '/er/cases' },
+    ],
+  },
+  {
+    label: 'Documents', icon: FileText, roles: ALL_HR,
+    children: [
+      { label: 'Records', path: '/documents/records' },
+      { label: 'Policies', path: '/documents/policies' },
+    ],
+  },
+  {
+    label: 'Offboarding', icon: LogOut, roles: ALL_HR,
+    children: [
+      { label: 'Cases', path: '/offboarding/cases' },
+    ],
+  },
+  {
+    label: 'Engagement', icon: Award, roles: ALL_HR,
+    children: [
+      { label: 'Recognition', path: '/engagement/nominations' },
+      { label: 'Surveys', path: '/engagement/surveys' },
+    ],
+  },
+  {
+    label: 'HSE', icon: AlertTriangle, roles: HSE_ROLES,
+    children: [
+      { label: 'Incidents', path: '/hse/incidents' },
+      { label: 'Wellbeing', path: '/hse/wellbeing' },
+    ],
+  },
+  {
+    label: 'Claims', icon: Receipt, roles: [...ALL_HR, 'MANAGER', 'EMPLOYEE'],
+    children: [
+      { label: 'Claim Requests', path: '/claims/requests' },
+    ],
+  },
+  {
+    label: 'Skills', icon: Zap, roles: [...ALL_HR, 'MANAGER'],
+    children: [
+      { label: 'Skill Inventory', path: '/skills/inventory', roles: ALL_HR },
+      { label: 'Employee Skills', path: '/skills/employee-skills' },
     ],
   },
   { label: 'Users', path: '/users', icon: Users, roles: ADMIN },

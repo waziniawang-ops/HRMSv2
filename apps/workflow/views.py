@@ -7,10 +7,11 @@ from apps.audit.mixins import AuditMixin
 
 from apps.accounts.permissions import IsSystemAdmin, IsHRStaff, IsInternalUser
 from .engine import WorkflowEngine
-from .models import WorkflowRule, WorkflowRequest, WorkflowComment
+from .models import WorkflowRule, WorkflowRequest, WorkflowComment, WorkflowAttachment, WorkflowActor
 from .serializers import (
     WorkflowRuleSerializer, WorkflowRequestSerializer,
     WorkflowCommentSerializer, WorkflowActionSerializer, WorkflowRejectSerializer,
+    WorkflowAttachmentSerializer, WorkflowActorSerializer,
 )
 
 
@@ -105,3 +106,23 @@ class WorkflowAddCommentView(generics.CreateAPIView):
     def perform_create(self, serializer):
         wf_request = WorkflowRequest.objects.get(pk=self.kwargs['pk'])
         serializer.save(workflow_request=wf_request, user=self.request.user)
+
+
+class WorkflowAttachmentViewSet(AuditMixin, ModelViewSet):
+    queryset = WorkflowAttachment.objects.select_related('workflow_request', 'uploaded_by').order_by('uploaded_at')
+    serializer_class = WorkflowAttachmentSerializer
+    filterset_fields = ['workflow_request']
+    http_method_names = ['get', 'post', 'delete', 'head', 'options']
+
+    def get_permissions(self):
+        return [IsInternalUser()]
+
+
+class WorkflowActorViewSet(AuditMixin, ModelViewSet):
+    queryset = WorkflowActor.objects.select_related('workflow_request', 'user').order_by('assigned_at')
+    serializer_class = WorkflowActorSerializer
+    filterset_fields = ['workflow_request', 'role', 'user']
+    http_method_names = ['get', 'post', 'delete', 'head', 'options']
+
+    def get_permissions(self):
+        return [IsHRStaff()]

@@ -13,6 +13,8 @@ router.register('persons', views.PersonViewSet, basename='person')
 router.register('employees', views.EmployeeViewSet, basename='employee')
 router.register('assignments', views.EmployeeAssignmentViewSet, basename='assignment')
 router.register('settings', views.SystemSettingViewSet, basename='system-setting')
+router.register('locations', views.LocationViewSet, basename='location')
+router.register('contracts', views.EmploymentContractViewSet, basename='employment-contract')
 
 urlpatterns = [
     path('settings/currency/', views.CurrencySettingView.as_view(), name='currency-setting'),

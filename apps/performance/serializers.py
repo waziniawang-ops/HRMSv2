@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import (
     PerformanceCycle, CompetencyModel, Competency, GoalPlan, Goal, GoalProgress,
     ReviewForm, ReviewRating, CalibrationSession, CalibratedRating,
-    FinalOutcome, ImprovementPlan,
+    FinalOutcome, ImprovementPlan, CheckIn, CyclePopulation,
 )
 
 
@@ -158,3 +158,32 @@ class ImprovementPlanSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['initiated_by'] = self.context['request'].user
         return super().create(validated_data)
+
+
+class CheckInSerializer(serializers.ModelSerializer):
+    employee_name = serializers.CharField(source='employee.person.legal_name', read_only=True)
+    manager_name = serializers.CharField(source='manager.person.legal_name', read_only=True)
+    cycle_name = serializers.CharField(source='cycle.name', read_only=True, allow_null=True, default=None)
+
+    class Meta:
+        model = CheckIn
+        fields = [
+            'id', 'employee', 'employee_name', 'manager', 'manager_name',
+            'cycle', 'cycle_name', 'check_in_date', 'goals_discussed',
+            'achievements', 'challenges', 'next_steps', 'overall_rating', 'created_at',
+        ]
+        read_only_fields = ['id', 'created_at']
+
+
+class CyclePopulationSerializer(serializers.ModelSerializer):
+    employee_name = serializers.CharField(source='employee.person.legal_name', read_only=True)
+    employee_number = serializers.CharField(source='employee.employee_number', read_only=True)
+    cycle_name = serializers.CharField(source='cycle.name', read_only=True)
+
+    class Meta:
+        model = CyclePopulation
+        fields = [
+            'id', 'cycle', 'cycle_name', 'employee', 'employee_name', 'employee_number',
+            'is_eligible', 'inclusion_reason', 'exclusion_reason', 'added_at',
+        ]
+        read_only_fields = ['id', 'added_at']

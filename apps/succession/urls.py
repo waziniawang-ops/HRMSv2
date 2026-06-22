@@ -9,6 +9,7 @@ router.register('talent-pools', views.TalentPoolViewSet, basename='talent-pool')
 router.register('talent-profiles', views.TalentProfileViewSet, basename='talent-profile')
 router.register('development-plans', views.DevelopmentPlanViewSet, basename='development-plan')
 router.register('development-activities', views.DevelopmentActivityViewSet, basename='development-activity')
+router.register('critical-roles', views.CriticalRoleViewSet, basename='critical-role')
 
 urlpatterns = [
     path('', include(router.urls)),

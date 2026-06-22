@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import WorkflowRule, WorkflowRequest, WorkflowStep, WorkflowComment, WorkflowHistory
+from .models import WorkflowRule, WorkflowRequest, WorkflowStep, WorkflowComment, WorkflowHistory, WorkflowAttachment, WorkflowActor
 
 
 @admin.register(WorkflowRule)
@@ -32,3 +32,18 @@ class WorkflowRequestAdmin(admin.ModelAdmin):
     raw_id_fields = ['maker_user', 'workflow_rule']
     inlines = [WorkflowStepInline, WorkflowHistoryInline]
     readonly_fields = ['submitted_at', 'completed_at', 'created_at', 'updated_at']
+
+
+@admin.register(WorkflowAttachment)
+class WorkflowAttachmentAdmin(admin.ModelAdmin):
+    list_display = ['workflow_request', 'original_filename', 'uploaded_by', 'uploaded_at']
+    raw_id_fields = ['workflow_request', 'uploaded_by']
+    readonly_fields = ['uploaded_at']
+
+
+@admin.register(WorkflowActor)
+class WorkflowActorAdmin(admin.ModelAdmin):
+    list_display = ['workflow_request', 'user', 'role', 'assigned_at']
+    list_filter = ['role']
+    raw_id_fields = ['workflow_request', 'user']
+    readonly_fields = ['assigned_at']

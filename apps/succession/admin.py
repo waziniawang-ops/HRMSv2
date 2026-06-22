@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     SuccessionPlan, SuccessorNomination, TalentPool, TalentProfile,
-    DevelopmentPlan, DevelopmentActivity,
+    DevelopmentPlan, DevelopmentActivity, CriticalRole,
 )
 
 
@@ -45,3 +45,10 @@ class DevelopmentPlanAdmin(admin.ModelAdmin):
     list_filter = ['status']
     raw_id_fields = ['employee', 'succession_nominee', 'created_by']
     inlines = [DevelopmentActivityInline]
+
+
+@admin.register(CriticalRole)
+class CriticalRoleAdmin(admin.ModelAdmin):
+    list_display = ['position', 'risk_level', 'has_identified_successor', 'minimum_successors_required', 'time_to_fill_days', 'is_active']
+    list_filter = ['risk_level', 'has_identified_successor', 'is_active']
+    raw_id_fields = ['position']

@@ -194,3 +194,56 @@ class WorkflowHistory(models.Model):
 
     def __str__(self):
         return f"{self.from_status} → {self.to_status} by {self.actor}"
+
+
+class WorkflowAttachment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    workflow_request = models.ForeignKey(
+        WorkflowRequest, on_delete=models.CASCADE, related_name='attachments'
+    )
+    file = models.FileField(upload_to='workflow/attachments/')
+    original_filename = models.CharField(max_length=255, blank=True)
+    description = models.CharField(max_length=500, blank=True)
+    uploaded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='workflow_attachments'
+    )
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'workflow_attachment'
+        ordering = ['uploaded_at']
+
+    def __str__(self):
+        return f"{self.original_filename or self.file.name} on {self.workflow_request}"
+
+
+class WorkflowActor(models.Model):
+    ROLE_INITIATOR = 'INITIATOR'
+    ROLE_CHECKER = 'CHECKER'
+    ROLE_APPROVER = 'APPROVER'
+    ROLE_OBSERVER = 'OBSERVER'
+
+    ROLE_CHOICES = [
+        (ROLE_INITIATOR, 'Initiator'),
+        (ROLE_CHECKER, 'Checker'),
+        (ROLE_APPROVER, 'Approver'),
+        (ROLE_OBSERVER, 'Observer'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    workflow_request = models.ForeignKey(
+        WorkflowRequest, on_delete=models.CASCADE, related_name='actors'
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='workflow_actor_roles'
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    assigned_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'workflow_actor'
+        unique_together = [('workflow_request', 'user', 'role')]
+        ordering = ['assigned_at']
+
+    def __str__(self):
+        return f"{self.user} as {self.role} on {self.workflow_request}"
