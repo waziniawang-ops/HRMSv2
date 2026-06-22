@@ -728,7 +728,7 @@ cr_ali,_ = gc(ClaimRequest, {'employee':emp_ali,'period_start':kl_conf_start},
     period_end=kl_conf_end, total_amount=Decimal('1930'),
     currency='MYR', status='PAID',
     submitted_at=timezone.now()-timedelta(days=62),
-    approved_by=emp_pm, approved_at=timezone.now()-timedelta(days=60),
+    approved_by=hiring_mgr, approved_at=timezone.now()-timedelta(days=60),
     paid_by=finance_u, paid_at=timezone.now()-timedelta(days=55))
 
 for ct, desc, amt, edate, upr in [
