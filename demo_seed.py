@@ -630,19 +630,19 @@ bp_medical,_ = gc(BenefitPlan, {'code':'BP-MED-001'},
     name='Group Medical (Panel)', category='MEDICAL',
     provider='Allianz Malaysia Berhad',
     coverage_details={'outpatient_limit':1500,'specialist_limit':3000,'emergency':True},
-    employee_contribution_rate=Decimal('0.5'), employer_contribution_rate=Decimal('99.5'),
+    employee_contribution_rate=Decimal('0.005'), employer_contribution_rate=Decimal('0.995'),
     max_dependents=5, is_active=True)
 bp_hosp,_ = gc(BenefitPlan, {'code':'BP-HOSP-001'},
     name='Hospitalisation & Surgical', category='HOSPITALISATION',
     provider='Allianz Malaysia Berhad',
     coverage_details={'annual_limit':50000,'room_board_per_day':250,'intensive_care':5000},
-    employee_contribution_rate=Decimal('20'), employer_contribution_rate=Decimal('80'),
+    employee_contribution_rate=Decimal('0.20'), employer_contribution_rate=Decimal('0.80'),
     max_dependents=5, is_active=True)
 bp_life,_ = gc(BenefitPlan, {'code':'BP-GTL-001'},
     name='Group Term Life Insurance', category='INSURANCE',
     provider='AIA Berhad',
     coverage_details={'sum_assured_multiplier':24,'accidental_death':True},
-    employee_contribution_rate=Decimal('0'), employer_contribution_rate=Decimal('100'),
+    employee_contribution_rate=Decimal('0'), employer_contribution_rate=Decimal('1'),
     max_dependents=0, is_active=True)
 
 for plan, grade in [(bp_medical,g3),(bp_medical,g5),(bp_medical,g7),(bp_hosp,g5),(bp_hosp,g7),(bp_life,g3),(bp_life,g5),(bp_life,g7)]:
