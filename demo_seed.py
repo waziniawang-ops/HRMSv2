@@ -602,7 +602,8 @@ gc(CompensationChange, {'employee':emp_ali,'effective_date':date(2025,7,1)},
 
 # FY2026 Bonus cycle
 bonus_cycle,_ = gc(BonusCycle, {'name':'FY2026 Annual Performance Bonus','year':2026},
-    bonus_type='ANNUAL', budget_pool=Decimal('85000'), currency='MYR', status='PAID')
+    bonus_type='ANNUAL', budget_pool=Decimal('85000'), currency='MYR', status='PAID',
+    created_by=admin_u)
 
 for emp, amt, rating in [
     (emp_ali, Decimal('5100'), 'EXCEEDS'),
