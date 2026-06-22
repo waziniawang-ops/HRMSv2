@@ -918,7 +918,7 @@ gc(CaseOutcome, {'case':er_case},
    outcome_type='VERBAL_WARNING',
    effective_date=date.today()-timedelta(days=25),
    outcome_details='Verbal warning issued. Employee acknowledged lateness and presented mitigating circumstances (road accident). No further action required. Case closed.',
-   letter_issued=True)
+   letter_issued=True, decided_by=er_u)
 
 print(f"  ✓ {ERCaseCategory.objects.count()} ER categories | {ERCase.objects.count()} ER case [{er_case.status}]")
 print(f"  ✓ {CaseParty.objects.count()} parties | {CaseHearing.objects.count()} hearings | {CaseOutcome.objects.count()} outcomes")
