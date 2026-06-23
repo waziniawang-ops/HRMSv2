@@ -36,7 +36,7 @@ class ESSRequestSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at',
         ]
         read_only_fields = [
-            'id', 'employee_name', 'employee_number', 'request_type_display',
+            'id', 'employee', 'employee_name', 'employee_number', 'request_type_display',
             'resolved_by_display', 'workflow_request', 'created_at', 'updated_at',
         ]
 

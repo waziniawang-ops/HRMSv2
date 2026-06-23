@@ -44,6 +44,14 @@ class ESSRequestViewSet(AuditMixin, ModelViewSet):
             return [IsInternalUser()]
         return [IsHRStaff()]
 
+    def perform_create(self, serializer):
+        try:
+            employee = self.request.user.person.employee
+        except Exception:
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError({'employee': 'No employee profile linked to this user.'})
+        serializer.save(employee=employee)
+
     @action(detail=True, methods=['post'])
     def submit(self, request, pk=None):
         obj = self.get_object()

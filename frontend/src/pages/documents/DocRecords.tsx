@@ -13,9 +13,9 @@ import { fmt } from '@/lib/utils'
 import api from '@/lib/api'
 
 type DocRecord = {
-  id: string; title: string; document_number: string
-  category_display: string; owner_employee_name: string
-  status: string; issue_date: string; expiry_date: string | null
+  id: string; title: string
+  category_name: string; employee_name: string | null
+  status: string; expiry_date: string | null; created_at: string
 }
 
 export default function DocRecords() {
@@ -35,7 +35,7 @@ export default function DocRecords() {
   const filtered = search
     ? data?.results?.filter((r: DocRecord) =>
         r.title?.toLowerCase().includes(search.toLowerCase()) ||
-        r.document_number?.toLowerCase().includes(search.toLowerCase()))
+        r.employee_name?.toLowerCase().includes(search.toLowerCase()))
     : data?.results
 
   return (
@@ -44,7 +44,7 @@ export default function DocRecords() {
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-sm">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search title or doc number..." value={search} onChange={e => setSearch(e.target.value)} />
+            <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search title or employee..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <Select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="w-36">
             <option value="">All Statuses</option>
@@ -58,15 +58,14 @@ export default function DocRecords() {
           ) : (
             <>
               <Table>
-                <Thead><tr><Th>Doc #</Th><Th>Title</Th><Th>Category</Th><Th>Owner</Th><Th>Issued</Th><Th>Expires</Th><Th>Status</Th></tr></Thead>
+                <Thead><tr><Th>Title</Th><Th>Category</Th><Th>Employee</Th><Th>Created</Th><Th>Expires</Th><Th>Status</Th></tr></Thead>
                 <Tbody>
                   {filtered.map((r: DocRecord) => (
                     <Tr key={r.id}>
-                      <Td className="font-mono text-sm">{r.document_number}</Td>
                       <Td className="font-medium">{r.title}</Td>
-                      <Td className="text-gray-600">{r.category_display}</Td>
-                      <Td>{r.owner_employee_name || '—'}</Td>
-                      <Td>{fmt(r.issue_date)}</Td>
+                      <Td className="text-gray-600">{r.category_name}</Td>
+                      <Td>{r.employee_name || '—'}</Td>
+                      <Td>{fmt(r.created_at)}</Td>
                       <Td>{r.expiry_date ? fmt(r.expiry_date) : '—'}</Td>
                       <Td><Badge status={r.status} /></Td>
                     </Tr>

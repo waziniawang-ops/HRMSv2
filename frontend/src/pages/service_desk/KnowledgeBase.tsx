@@ -16,7 +16,7 @@ import api from '@/lib/api'
 import toast from 'react-hot-toast'
 
 type Article = { id: string; title: string; category_name: string; status: string; views_count: number; is_featured: boolean; published_at: string | null }
-const emptyForm = { title: '', slug: '', content: '', status: 'DRAFT', is_featured: false }
+const emptyForm = { title: '', slug: '', category: '', content: '', status: 'DRAFT', is_featured: false }
 
 export default function KnowledgeBase() {
   const qc = useQueryClient()
@@ -25,14 +25,26 @@ export default function KnowledgeBase() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<Article | null>(null)
   const [form, setForm] = useState<typeof emptyForm>(emptyForm)
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([])
 
   const { data, isLoading } = useQuery({
     queryKey: ['knowledge-articles', page],
     queryFn: () => api.get(`/service-desk/knowledge-articles/?page=${page}`).then(r => r.data),
   })
 
-  function openCreate() { setEditing(null); setForm(emptyForm); setModalOpen(true) }
-  function openEdit(r: Article) { setEditing(r); setForm({ title: r.title, slug: '', content: '', status: r.status, is_featured: r.is_featured }); setModalOpen(true) }
+  function openCreate() {
+    setEditing(null)
+    setForm(emptyForm)
+    api.get('/service-desk/knowledge-categories/?page_size=100').then(r => setCategories(r.data.results || []))
+    setModalOpen(true)
+  }
+
+  function openEdit(r: Article) {
+    setEditing(r)
+    setForm({ title: r.title, slug: '', category: '', content: '', status: r.status, is_featured: r.is_featured })
+    api.get('/service-desk/knowledge-categories/?page_size=100').then(r2 => setCategories(r2.data.results || []))
+    setModalOpen(true)
+  }
 
   const save = useMutation({
     mutationFn: (body: object) => editing ? api.patch(`/service-desk/knowledge-articles/${editing.id}/`, body) : api.post('/service-desk/knowledge-articles/', body),
@@ -47,6 +59,15 @@ export default function KnowledgeBase() {
   })
 
   const filtered = search ? data?.results?.filter((r: Article) => r.title?.toLowerCase().includes(search.toLowerCase())) : data?.results
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const payload: Record<string, unknown> = { title: form.title, status: form.status, is_featured: form.is_featured }
+    if (form.category) payload.category = form.category
+    if (!editing) { payload.slug = form.slug; payload.content = form.content }
+    else if (form.content) payload.content = form.content
+    save.mutate(payload)
+  }
 
   return (
     <AppLayout title="Knowledge Base">
@@ -64,11 +85,12 @@ export default function KnowledgeBase() {
           ) : (
             <>
               <Table>
-                <Thead><tr><Th>Title</Th><Th>Status</Th><Th>Views</Th><Th>Featured</Th><Th>Published</Th><Th></Th></tr></Thead>
+                <Thead><tr><Th>Title</Th><Th>Category</Th><Th>Status</Th><Th>Views</Th><Th>Featured</Th><Th>Published</Th><Th></Th></tr></Thead>
                 <Tbody>
                   {filtered.map((r: Article) => (
                     <Tr key={r.id}>
                       <Td className="font-medium max-w-sm truncate">{r.title}</Td>
+                      <Td className="text-gray-500 text-sm">{r.category_name || '—'}</Td>
                       <Td><Badge status={r.status} /></Td>
                       <Td>{r.views_count}</Td>
                       <Td>{r.is_featured ? '⭐' : '—'}</Td>
@@ -89,10 +111,14 @@ export default function KnowledgeBase() {
         </Card>
       </div>
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? 'Edit Article' : 'New Article'}>
-        <form onSubmit={e => { e.preventDefault(); save.mutate(form) }} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <Input label="Title *" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') }))} required />
           {!editing && <Input label="Slug *" value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} required />}
-          <Textarea label="Content *" value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} rows={6} required={!editing} />
+          <Select label="Category *" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} required={!editing}>
+            <option value="">Select category…</option>
+            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </Select>
+          <Textarea label={editing ? 'Content (leave blank to keep current)' : 'Content *'} value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} rows={6} required={!editing} />
           <div className="flex items-center gap-4">
             <Select label="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
               {['DRAFT','PUBLISHED','ARCHIVED'].map(s => <option key={s} value={s}>{s}</option>)}

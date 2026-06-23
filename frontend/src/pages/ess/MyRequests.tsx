@@ -27,7 +27,7 @@ export default function MyRequests() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['ess-my-requests', page],
-    queryFn: () => api.get(`/ess/ess-requests/my_requests/?page=${page}`).then(r => r.data),
+    queryFn: () => api.get(`/ess/ess-requests/my_requests/`).then(r => r.data),
   })
 
   function openCreate() {
