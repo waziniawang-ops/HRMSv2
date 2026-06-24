@@ -255,7 +255,9 @@ person_new,_ = gc(Person, {'email': winner_appl.email},
                   nationality='Malaysian', gender='F')
 
 last_emp = Employee.objects.order_by('-created_at').first()
-next_no  = int(last_emp.employee_number.split('-')[-1]) + 1 if last_emp else 4
+import re as _re
+_digits = _re.search(r'\d+', last_emp.employee_number) if last_emp else None
+next_no  = int(_digits.group()) + 1 if _digits else 4
 new_emp,emp_created = gc(Employee, {'person': person_new},
                          employee_number=f'EMP-{next_no:06d}',
                          hire_date=offer.start_date,
