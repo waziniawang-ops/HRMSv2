@@ -148,6 +148,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
   {
     label: 'Compensation', icon: BarChart3, roles: [...ADMIN, 'PAYROLL_OFFICER', 'FINANCE_CHECKER'],
     children: [
+      { label: 'Salaries', path: '/compensation/salaries' },
       { label: 'Packages', path: '/compensation/packages' },
       { label: 'Bonus Cycles', path: '/compensation/bonus-cycles' },
     ],

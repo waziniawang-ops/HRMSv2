@@ -93,6 +93,7 @@ import PayrollGLPostings from '@/pages/payroll/PayrollGLPostings'
 
 // Compensation
 import CompensationPackages from '@/pages/compensation/Packages'
+import EmployeeSalaries from '@/pages/compensation/EmployeeSalaries'
 import BonusCycles from '@/pages/compensation/BonusCycles'
 
 // Benefits
@@ -243,6 +244,7 @@ export default function App() {
                   <Route path="/payroll/payslip-lines" element={<PayslipLines />} />
                   <Route path="/payroll/gl-postings" element={<PayrollGLPostings />} />
 
+                  <Route path="/compensation/salaries" element={<EmployeeSalaries />} />
                   <Route path="/compensation/packages" element={<CompensationPackages />} />
                   <Route path="/compensation/bonus-cycles" element={<BonusCycles />} />
 

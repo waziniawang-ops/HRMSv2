@@ -226,6 +226,36 @@ class PayrollRunViewSet(AuditMixin, ModelViewSet):
         return Response(PayrollRunSerializer(run).data)
 
     @action(detail=True, methods=['post'], permission_classes=[IsHRMaker])
+    def copy_payslip_lines_from(self, request, pk=None):
+        run = self.get_object()
+        if run.status not in [PayrollRun.STATUS_DRAFT, PayrollRun.STATUS_PROCESSING, PayrollRun.STATUS_LOCKED]:
+            return Response({'detail': 'Payslip lines can only be copied into draft, processing, or locked runs.'}, status=400)
+
+        source_run_id = request.data.get('source_run')
+        if not source_run_id:
+            return Response({'detail': 'source_run is required.'}, status=400)
+        if str(source_run_id) == str(run.id):
+            return Response({'detail': 'Source run must be different from the target run.'}, status=400)
+
+        source_lines = PayslipLine.objects.filter(payroll_run_id=source_run_id)
+        if not source_lines.exists():
+            return Response({'detail': 'Source run has no payslip lines to copy.'}, status=400)
+
+        existing = set(PayslipLine.objects.filter(payroll_run=run).values_list('employee_id', 'element_id'))
+        new_lines = [
+            PayslipLine(
+                payroll_run=run, employee_id=line.employee_id, element_id=line.element_id,
+                amount=line.amount, taxable_amount=line.taxable_amount, is_deduction=line.is_deduction,
+            )
+            for line in source_lines
+            if (line.employee_id, line.element_id) not in existing
+        ]
+        PayslipLine.objects.bulk_create(new_lines)
+        skipped = source_lines.count() - len(new_lines)
+        log_action(request, 'COPY_PAYSLIP_LINES', 'PayrollRun', str(run.id), module='payroll')
+        return Response({'copied': len(new_lines), 'skipped': skipped})
+
+    @action(detail=True, methods=['post'], permission_classes=[IsHRMaker])
     def generate_payslips(self, request, pk=None):
         run = self.get_object()
         if run.status not in [PayrollRun.STATUS_PROCESSING, PayrollRun.STATUS_LOCKED]:

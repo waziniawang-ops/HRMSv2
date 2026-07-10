@@ -1,15 +1,18 @@
+from django.db.models import OuterRef, Subquery
 from django.utils import timezone
+from rest_framework import generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from apps.audit.mixins import AuditMixin
 from apps.audit.utils import log_action
 from apps.accounts.permissions import IsHRStaff, IsHRMaker, IsHRChecker, IsSystemAdmin
+from apps.core_hr.models import Employee
 
 from .models import SalaryComponent, GradeBand, EmployeePackage, CompensationChange, BonusCycle, BonusAllocation
 from .serializers import (
     SalaryComponentSerializer, GradeBandSerializer, EmployeePackageSerializer,
-    CompensationChangeSerializer, BonusCycleSerializer, BonusAllocationSerializer,
+    EmployeeSalarySerializer, CompensationChangeSerializer, BonusCycleSerializer, BonusAllocationSerializer,
 )
 
 
@@ -88,6 +91,28 @@ class EmployeePackageViewSet(AuditMixin, ModelViewSet):
         wf_req = engine.reject(request, pkg.workflow_request, request.data.get('comment', ''))
         from apps.workflow.serializers import WorkflowRequestSerializer
         return Response(WorkflowRequestSerializer(wf_req).data)
+
+
+class EmployeeSalaryListView(generics.ListAPIView):
+    """
+    Read-only, one row per employee, showing their currently active
+    compensation package (if any). Distinct from EmployeePackageViewSet,
+    which lists every package record (drafts/history/superseded included).
+    """
+    serializer_class = EmployeeSalarySerializer
+    permission_classes = [IsHRMaker]
+    filterset_fields = ['org_unit', 'grade', 'employment_status']
+    search_fields = ['employee_number', 'person__legal_name']
+
+    def get_queryset(self):
+        active_packages = EmployeePackage.objects.filter(
+            employee=OuterRef('pk'), status=EmployeePackage.STATUS_ACTIVE
+        ).order_by('-effective_date')
+        return Employee.objects.select_related('person', 'position', 'org_unit', 'grade').annotate(
+            current_salary=Subquery(active_packages.values('total_ctc')[:1]),
+            salary_currency=Subquery(active_packages.values('currency')[:1]),
+            salary_effective_date=Subquery(active_packages.values('effective_date')[:1]),
+        ).order_by('employee_number')
 
 
 class CompensationChangeViewSet(AuditMixin, ModelViewSet):

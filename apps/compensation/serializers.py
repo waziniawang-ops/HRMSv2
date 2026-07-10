@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from apps.core_hr.models import Employee
 from .models import SalaryComponent, GradeBand, EmployeePackage, CompensationChange, BonusCycle, BonusAllocation
 
 
@@ -40,13 +41,31 @@ class EmployeePackageSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             'id', 'employee_name', 'employee_number', 'approved_by_display',
-            'approved_at', 'created_at', 'updated_at',
+            'approved_at', 'created_by', 'created_at', 'updated_at',
         ]
 
     def get_approved_by_display(self, obj):
         if not obj.approved_by:
             return None
         return obj.approved_by.get_full_name() or obj.approved_by.username
+
+
+class EmployeeSalarySerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(read_only=True)
+    position_display = serializers.CharField(source='position.title', read_only=True, default='')
+    org_unit_display = serializers.CharField(source='org_unit.name', read_only=True, default='')
+    grade_display = serializers.CharField(source='grade.grade_name', read_only=True, default='')
+    current_salary = serializers.DecimalField(max_digits=14, decimal_places=2, read_only=True, allow_null=True)
+    salary_currency = serializers.CharField(read_only=True, allow_null=True)
+    salary_effective_date = serializers.DateField(read_only=True, allow_null=True)
+
+    class Meta:
+        model = Employee
+        fields = [
+            'id', 'employee_number', 'full_name', 'employment_status',
+            'position_display', 'org_unit_display', 'grade_display',
+            'current_salary', 'salary_currency', 'salary_effective_date',
+        ]
 
 
 class CompensationChangeSerializer(serializers.ModelSerializer):
@@ -61,7 +80,7 @@ class CompensationChangeSerializer(serializers.ModelSerializer):
             'status', 'workflow_request', 'created_by', 'created_by_display',
             'created_at', 'updated_at',
         ]
-        read_only_fields = ['id', 'employee_name', 'created_by_display', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'employee_name', 'created_by', 'created_by_display', 'created_at', 'updated_at']
 
     def get_created_by_display(self, obj):
         if not obj.created_by:
@@ -81,7 +100,7 @@ class BonusCycleSerializer(serializers.ModelSerializer):
             'allocation_count', 'created_at', 'updated_at',
         ]
         read_only_fields = [
-            'id', 'approved_at', 'created_by_display', 'allocation_count', 'created_at', 'updated_at',
+            'id', 'approved_at', 'created_by', 'created_by_display', 'allocation_count', 'created_at', 'updated_at',
         ]
 
     def get_created_by_display(self, obj):

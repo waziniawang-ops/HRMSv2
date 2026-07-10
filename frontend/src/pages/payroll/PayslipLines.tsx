@@ -9,7 +9,7 @@ import { Modal } from '@/components/ui/Modal'
 import { Input, Select } from '@/components/ui/Input'
 import { PageSpinner } from '@/components/ui/Spinner'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { Plus, Trash2, Receipt } from 'lucide-react'
+import { Plus, Trash2, Receipt, Copy } from 'lucide-react'
 import { fmt } from '@/lib/utils'
 import api from '@/lib/api'
 import toast from 'react-hot-toast'
@@ -30,6 +30,8 @@ export default function PayslipLines() {
   const [runId, setRunId] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [form, setForm] = useState(emptyForm)
+  const [copyModalOpen, setCopyModalOpen] = useState(false)
+  const [sourceRunId, setSourceRunId] = useState('')
 
   const { data: runsData } = useQuery({
     queryKey: ['payroll-runs-for-lines'],
@@ -88,6 +90,24 @@ export default function PayslipLines() {
     onError: () => toast.error('Cannot delete line'),
   })
 
+  const otherRuns = runs.filter(r => r.id !== effectiveRunId)
+
+  function openCopyModal() {
+    setSourceRunId(otherRuns[0]?.id || '')
+    setCopyModalOpen(true)
+  }
+
+  const copyLines = useMutation({
+    mutationFn: () => api.post(`/payroll/payroll-runs/${effectiveRunId}/copy_payslip_lines_from/`, { source_run: sourceRunId }),
+    onSuccess: (r) => {
+      const { copied, skipped } = r.data
+      toast.success(`Copied ${copied} line${copied === 1 ? '' : 's'}${skipped ? ` (${skipped} skipped — employee/element already has a line)` : ''}`)
+      qc.invalidateQueries({ queryKey: ['payslip-lines', effectiveRunId] })
+      setCopyModalOpen(false)
+    },
+    onError: (e: unknown) => toast.error(errorDetail(e, 'Failed to copy payslip lines')),
+  })
+
   const selectedElement = elements.find(e => e.id === form.element)
   const totalGross = lines.filter(l => ['BASIC', 'ALLOWANCE'].includes(l.element_category)).reduce((s, l) => s + Number(l.amount), 0)
   const totalDeductions = lines.filter(l => l.is_deduction).reduce((s, l) => s + Number(l.amount), 0)
@@ -104,7 +124,12 @@ export default function PayslipLines() {
                 </option>
               ))}
             </Select>
-            <Button onClick={openCreate} disabled={!effectiveRunId}><Plus size={16} /> Add Line</Button>
+            <div className="flex items-center gap-2">
+              <Button variant="secondary" onClick={openCopyModal} disabled={!effectiveRunId || !otherRuns.length}>
+                <Copy size={16} /> Copy from Previous Run
+              </Button>
+              <Button onClick={openCreate} disabled={!effectiveRunId}><Plus size={16} /> Add Line</Button>
+            </div>
           </div>
         </Card>
 
@@ -130,8 +155,15 @@ export default function PayslipLines() {
             <EmptyState
               icon={Receipt}
               title="No payslip lines for this run"
-              description="Add a line per employee per pay element (basic, allowance, deduction, tax, contribution) before generating payslips."
-              action={<Button onClick={openCreate} disabled={!effectiveRunId}><Plus size={16} />Add Line</Button>}
+              description="Add a line per employee per pay element (basic, allowance, deduction, tax, contribution) before generating payslips, or copy them from a previous run."
+              action={
+                <div className="flex items-center gap-2">
+                  {!!otherRuns.length && (
+                    <Button variant="secondary" onClick={openCopyModal}><Copy size={16} />Copy from Previous Run</Button>
+                  )}
+                  <Button onClick={openCreate} disabled={!effectiveRunId}><Plus size={16} />Add Line</Button>
+                </div>
+              }
             />
           ) : (
             <Table>
@@ -190,6 +222,28 @@ export default function PayslipLines() {
             <Button type="submit" loading={create.isPending}>Add Line</Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal open={copyModalOpen} onClose={() => setCopyModalOpen(false)} title="Copy Payslip Lines from Previous Run">
+        <div className="space-y-4">
+          <p className="text-sm text-gray-500">
+            Copies every payslip line (employee, element, amount) from the selected run into the current run.
+            Employees who already have a line for a given element in this run are skipped, so it's safe to run more than once.
+          </p>
+          <Select label="Copy From *" value={sourceRunId} onChange={e => setSourceRunId(e.target.value)}>
+            {otherRuns.map(r => (
+              <option key={r.id} value={r.id}>
+                {r.calendar_display} — {fmt(r.period_start)} to {fmt(r.period_end)} [{r.status}]
+              </option>
+            ))}
+          </Select>
+          <div className="flex justify-end gap-3 pt-2">
+            <Button variant="secondary" type="button" onClick={() => setCopyModalOpen(false)}>Cancel</Button>
+            <Button onClick={() => copyLines.mutate()} loading={copyLines.isPending} disabled={!sourceRunId}>
+              <Copy size={16} /> Copy Lines
+            </Button>
+          </div>
+        </div>
       </Modal>
     </AppLayout>
   )

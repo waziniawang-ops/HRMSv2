@@ -11,5 +11,6 @@ router.register('bonus-cycles', views.BonusCycleViewSet, basename='bonus-cycle')
 router.register('bonus-allocations', views.BonusAllocationViewSet, basename='bonus-allocation')
 
 urlpatterns = [
+    path('employee-salaries/', views.EmployeeSalaryListView.as_view(), name='employee-salaries'),
     path('', include(router.urls)),
 ]
