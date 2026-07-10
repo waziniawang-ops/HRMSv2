@@ -88,6 +88,8 @@ import PayrollCalendars from '@/pages/payroll/PayrollCalendars'
 import PayrollRuns from '@/pages/payroll/PayrollRuns'
 import Payslips from '@/pages/payroll/Payslips'
 import PayrollElements from '@/pages/payroll/PayrollElements'
+import PayslipLines from '@/pages/payroll/PayslipLines'
+import PayrollGLPostings from '@/pages/payroll/PayrollGLPostings'
 
 // Compensation
 import CompensationPackages from '@/pages/compensation/Packages'
@@ -238,6 +240,8 @@ export default function App() {
                   <Route path="/payroll/runs" element={<PayrollRuns />} />
                   <Route path="/payroll/payslips" element={<Payslips />} />
                   <Route path="/payroll/elements" element={<PayrollElements />} />
+                  <Route path="/payroll/payslip-lines" element={<PayslipLines />} />
+                  <Route path="/payroll/gl-postings" element={<PayrollGLPostings />} />
 
                   <Route path="/compensation/packages" element={<CompensationPackages />} />
                   <Route path="/compensation/bonus-cycles" element={<BonusCycles />} />

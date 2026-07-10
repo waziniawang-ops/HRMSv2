@@ -13,9 +13,9 @@ import { Plus, Search, Pencil, Trash2, Settings } from 'lucide-react'
 import api from '@/lib/api'
 import toast from 'react-hot-toast'
 
-type Element = { id: string; code: string; name: string; category: string; is_taxable: boolean; is_pensionable: boolean; is_active: boolean; display_order: number }
+type Element = { id: string; code: string; name: string; category: string; is_taxable: boolean; is_pensionable: boolean; is_active: boolean; display_order: number; gl_account: string }
 
-const emptyForm = { code: '', name: '', category: 'BASIC', is_taxable: true, is_pensionable: false, is_active: true, display_order: 0 }
+const emptyForm = { code: '', name: '', category: 'BASIC', is_taxable: true, is_pensionable: false, is_active: true, display_order: 0, gl_account: '' }
 const CATEGORIES = ['BASIC','ALLOWANCE','DEDUCTION','CONTRIBUTION','TAX']
 
 export default function PayrollElements() {
@@ -32,7 +32,7 @@ export default function PayrollElements() {
   })
 
   function openCreate() { setEditing(null); setForm(emptyForm); setModalOpen(true) }
-  function openEdit(r: Element) { setEditing(r); setForm({ code: r.code, name: r.name, category: r.category, is_taxable: r.is_taxable, is_pensionable: r.is_pensionable, is_active: r.is_active, display_order: r.display_order }); setModalOpen(true) }
+  function openEdit(r: Element) { setEditing(r); setForm({ code: r.code, name: r.name, category: r.category, is_taxable: r.is_taxable, is_pensionable: r.is_pensionable, is_active: r.is_active, display_order: r.display_order, gl_account: r.gl_account || '' }); setModalOpen(true) }
 
   const save = useMutation({
     mutationFn: (body: object) => editing ? api.patch(`/payroll/payroll-elements/${editing.id}/`, body) : api.post('/payroll/payroll-elements/', body),
@@ -63,13 +63,14 @@ export default function PayrollElements() {
           ) : (
             <>
               <Table>
-                <Thead><tr><Th>Code</Th><Th>Name</Th><Th>Category</Th><Th>Taxable</Th><Th>Pensionable</Th><Th>Order</Th><Th>Active</Th><Th></Th></tr></Thead>
+                <Thead><tr><Th>Code</Th><Th>Name</Th><Th>Category</Th><Th>GL Account</Th><Th>Taxable</Th><Th>Pensionable</Th><Th>Order</Th><Th>Active</Th><Th></Th></tr></Thead>
                 <Tbody>
                   {filtered.map((r: Element) => (
                     <Tr key={r.id}>
                       <Td className="font-mono text-sm">{r.code}</Td>
                       <Td className="font-medium">{r.name}</Td>
                       <Td><span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{r.category}</span></Td>
+                      <Td className="font-mono text-sm">{r.gl_account || <span className="text-gray-400">—</span>}</Td>
                       <Td>{r.is_taxable ? '✓' : '—'}</Td>
                       <Td>{r.is_pensionable ? '✓' : '—'}</Td>
                       <Td>{r.display_order}</Td>
@@ -101,6 +102,7 @@ export default function PayrollElements() {
             </Select>
             <Input label="Display Order" type="number" value={String(form.display_order)} onChange={e => setForm(f => ({ ...f, display_order: Number(e.target.value) }))} />
           </div>
+          <Input label="GL Account" placeholder="e.g. 5100" value={form.gl_account} onChange={e => setForm(f => ({ ...f, gl_account: e.target.value }))} />
           <div className="flex gap-4">
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.is_taxable} onChange={e => setForm(f => ({ ...f, is_taxable: e.target.checked }))} /> Taxable</label>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.is_pensionable} onChange={e => setForm(f => ({ ...f, is_pensionable: e.target.checked }))} /> Pensionable</label>

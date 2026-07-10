@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import (
     PayrollCalendar, PayrollElement, EmployeePayrollProfile,
     PayrollRun, PayslipLine, Payslip, PayrollAdjustment, PayrollGLPosting,
+    AccountingIntegration,
 )
 
 admin.site.register(PayrollCalendar)
@@ -12,3 +13,4 @@ admin.site.register(PayslipLine)
 admin.site.register(Payslip)
 admin.site.register(PayrollAdjustment)
 admin.site.register(PayrollGLPosting)
+admin.site.register(AccountingIntegration)

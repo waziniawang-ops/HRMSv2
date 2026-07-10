@@ -20,7 +20,7 @@ interface ApiList<T> { count: number; results: T[] }
 type Phase = 'idle' | 'loading_models' | 'starting_camera' | 'ready' | 'capturing' | 'processing' | 'done' | 'error'
 
 const SAMPLES_NEEDED = 5
-const MODELS_URL = '/models'
+const MODELS_URL = `${import.meta.env.BASE_URL}models`
 
 export default function FaceEnroll() {
   const qc = useQueryClient()

@@ -13,5 +13,8 @@ router.register('payroll-adjustments', views.PayrollAdjustmentViewSet, basename=
 router.register('payroll-gl-postings', views.PayrollGLPostingViewSet, basename='payroll-gl-posting')
 
 urlpatterns = [
+    path('gl-settings/', views.PayrollGLSettingsView.as_view(), name='payroll-gl-settings'),
+    path('accounting-integration/', views.AccountingIntegrationSettingsView.as_view(), name='accounting-integration-settings'),
+    path('accounting-integration/test/', views.AccountingIntegrationTestView.as_view(), name='accounting-integration-test'),
     path('', include(router.urls)),
 ]

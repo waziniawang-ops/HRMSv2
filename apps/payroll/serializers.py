@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import (
     PayrollCalendar, PayrollElement, EmployeePayrollProfile,
     PayrollRun, PayslipLine, Payslip, PayrollAdjustment, PayrollGLPosting,
+    AccountingIntegration,
 )
 
 
@@ -27,7 +28,7 @@ class PayrollElementSerializer(serializers.ModelSerializer):
         model = PayrollElement
         fields = [
             'id', 'code', 'name', 'category', 'is_taxable', 'is_pensionable',
-            'formula', 'display_order', 'is_active', 'created_at',
+            'formula', 'gl_account', 'display_order', 'is_active', 'created_at',
         ]
         read_only_fields = ['id', 'created_at']
 
@@ -140,7 +141,50 @@ class PayrollGLPostingSerializer(serializers.ModelSerializer):
     class Meta:
         model = PayrollGLPosting
         fields = [
-            'id', 'payroll_run', 'gl_account', 'description', 'amount',
+            'id', 'payroll_run', 'gl_account', 'entry_type', 'description', 'amount',
             'cost_center', 'cost_center_display', 'posting_date', 'is_posted', 'posted_at',
+            'sent_to_accounting_at',
         ]
-        read_only_fields = ['id', 'cost_center_display', 'posted_at']
+        read_only_fields = ['id', 'cost_center_display', 'posted_at', 'sent_to_accounting_at']
+
+
+class AccountingIntegrationSerializer(serializers.ModelSerializer):
+    """
+    Never exposes the raw api_key. `api_key_set` tells the frontend whether one
+    is already stored; the write-only `api_key` field only overwrites it when a
+    non-empty value is actually submitted.
+    """
+    api_key = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    api_key_set = serializers.SerializerMethodField()
+    is_configured = serializers.BooleanField(read_only=True)
+    updated_by_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AccountingIntegration
+        fields = [
+            'id', 'name', 'api_url', 'api_key', 'api_key_set',
+            'auth_header_name', 'auth_header_prefix', 'is_configured',
+            'last_test_at', 'last_test_success', 'last_test_detail',
+            'updated_by_display', 'updated_at',
+        ]
+        read_only_fields = [
+            'id', 'api_key_set', 'is_configured', 'last_test_at',
+            'last_test_success', 'last_test_detail', 'updated_by_display', 'updated_at',
+        ]
+
+    def get_api_key_set(self, obj):
+        return bool(obj.api_key)
+
+    def get_updated_by_display(self, obj):
+        if not obj.updated_by:
+            return None
+        return obj.updated_by.get_full_name() or obj.updated_by.username
+
+    def update(self, instance, validated_data):
+        new_key = validated_data.pop('api_key', None)
+        if new_key:
+            instance.api_key = new_key
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance

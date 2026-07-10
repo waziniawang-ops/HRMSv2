@@ -24,7 +24,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
             </div>
             <div>
               <p className="text-sm font-bold text-gray-900 leading-none">HRMSv2 Careers</p>
-              <p className="text-[10px] text-gray-400">Visionaries Sdn Bhd</p>
+              <p className="text-[10px] text-gray-400">Olive Digital Sdn Bhd</p>
             </div>
           </Link>
 
@@ -104,7 +104,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
       </main>
 
       <footer className="border-t border-gray-200 py-4 text-center text-xs text-gray-400">
-        Visionaries Sdn Bhd © 2026 — Careers Portal
+        Olive Digital Sdn Bhd © 2026 — Careers Portal
       </footer>
     </div>
   )

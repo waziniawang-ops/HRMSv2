@@ -50,7 +50,7 @@ export default function PayrollRuns() {
   }
 
   const create = useMutation({
-    mutationFn: (body: object) => api.post('/payroll/payroll-runs/', body),
+    mutationFn: (body: typeof emptyForm) => api.post('/payroll/payroll-runs/', { ...body, pay_date: body.pay_date || null }),
     onSuccess: () => { toast.success('Payroll run created'); qc.invalidateQueries({ queryKey: ['payroll-runs'] }); setModalOpen(false) },
     onError: () => toast.error('Failed to create payroll run'),
   })
@@ -102,9 +102,10 @@ export default function PayrollRuns() {
                       <Td><Badge status={r.status} /></Td>
                       <Td>
                         <div className="flex items-center gap-1 justify-end">
-                          {r.status === 'DRAFT' && <button onClick={() => doAction.mutate({ id: r.id, action: 'lock_run' })} className="text-xs px-2 py-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200">Lock</button>}
-                          {r.status === 'LOCKED' && <button onClick={() => doAction.mutate({ id: r.id, action: 'submit_for_approval' })} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200">Submit</button>}
-                          {r.status === 'SUBMITTED' && <button onClick={() => doAction.mutate({ id: r.id, action: 'approve' })} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200">Approve</button>}
+                          {(r.status === 'DRAFT' || r.status === 'PROCESSING') && <button onClick={() => doAction.mutate({ id: r.id, action: 'lock_run' })} className="text-xs px-2 py-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200">Lock</button>}
+                          {r.status === 'LOCKED' && <button onClick={() => doAction.mutate({ id: r.id, action: 'generate_payslips' })} className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">Generate Payslips</button>}
+                          {r.status === 'LOCKED' && <button onClick={() => doAction.mutate({ id: r.id, action: 'approve' })} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200">Approve</button>}
+                          {r.status === 'APPROVED' && <button onClick={() => doAction.mutate({ id: r.id, action: 'mark_paid' })} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200">Mark Paid</button>}
                         </div>
                       </Td>
                     </Tr>

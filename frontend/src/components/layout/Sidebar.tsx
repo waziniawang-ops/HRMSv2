@@ -139,8 +139,10 @@ const ALL_NAV_ITEMS: NavItem[] = [
     children: [
       { label: 'Calendars', path: '/payroll/calendars', roles: PAYROLL },
       { label: 'Payroll Runs', path: '/payroll/runs', roles: PAYROLL },
+      { label: 'Payslip Lines', path: '/payroll/payslip-lines', roles: PAYROLL },
       { label: 'Payslips', path: '/payroll/payslips', roles: PAYROLL },
       { label: 'Elements', path: '/payroll/elements', roles: PAYROLL },
+      { label: 'GL Postings', path: '/payroll/gl-postings', roles: PAYROLL },
     ],
   },
   {
@@ -319,7 +321,7 @@ export function Sidebar() {
       </nav>
 
       <div className="px-3 py-3 border-t border-slate-800">
-        <p className="text-[10px] text-slate-500 text-center">Visionaries Sdn Bhd © 2026</p>
+        <p className="text-[10px] text-slate-500 text-center">Olive Digital Sdn Bhd © 2026</p>
       </div>
     </aside>
   )

@@ -60,6 +60,10 @@ class PayrollElement(models.Model):
     is_taxable = models.BooleanField(default=True)
     is_pensionable = models.BooleanField(default=False)
     formula = models.JSONField(default=dict, help_text='{"type": "fixed", "value": 0}')
+    gl_account = models.CharField(
+        max_length=50, blank=True, default='',
+        help_text='GL account code this element posts to (expense account for earnings, liability account for deductions/tax).'
+    )
     display_order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -243,9 +247,18 @@ class PayrollAdjustment(models.Model):
 
 
 class PayrollGLPosting(models.Model):
+    ENTRY_DEBIT = 'DEBIT'
+    ENTRY_CREDIT = 'CREDIT'
+
+    ENTRY_TYPE_CHOICES = [
+        (ENTRY_DEBIT, 'Debit'),
+        (ENTRY_CREDIT, 'Credit'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     payroll_run = models.ForeignKey(PayrollRun, on_delete=models.CASCADE, related_name='gl_postings')
     gl_account = models.CharField(max_length=50)
+    entry_type = models.CharField(max_length=10, choices=ENTRY_TYPE_CHOICES, default=ENTRY_DEBIT)
     description = models.CharField(max_length=255)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     cost_center = models.ForeignKey(
@@ -255,10 +268,47 @@ class PayrollGLPosting(models.Model):
     posting_date = models.DateField()
     is_posted = models.BooleanField(default=False)
     posted_at = models.DateTimeField(null=True, blank=True)
+    sent_to_accounting_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table = 'payroll_gl_posting'
         ordering = ['posting_date', 'gl_account']
 
     def __str__(self):
-        return f"GL: {self.gl_account} | {self.amount} | {self.posting_date}"
+        return f"GL: {self.gl_account} | {self.entry_type} | {self.amount} | {self.posting_date}"
+
+
+class AccountingIntegration(models.Model):
+    """
+    Singleton configuration for pushing GL postings to an external accounting
+    system via a generic configurable API/webhook. Always accessed through
+    `get_settings()` so exactly one row ever exists.
+    """
+    name = models.CharField(max_length=100, default='Accounting System')
+    api_url = models.URLField(max_length=500, blank=True)
+    api_key = models.CharField(max_length=500, blank=True)
+    auth_header_name = models.CharField(max_length=100, blank=True, default='Authorization')
+    auth_header_prefix = models.CharField(max_length=50, blank=True, default='Bearer')
+    last_test_at = models.DateTimeField(null=True, blank=True)
+    last_test_success = models.BooleanField(null=True, blank=True)
+    last_test_detail = models.CharField(max_length=500, blank=True, default='')
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='+'
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'payroll_accounting_integration'
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def is_configured(self):
+        return bool(self.api_url and self.api_key)
+
+    @classmethod
+    def get_settings(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj

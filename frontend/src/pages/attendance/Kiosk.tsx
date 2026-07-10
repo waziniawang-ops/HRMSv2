@@ -15,7 +15,7 @@ interface VerifyResult {
   message?: string
 }
 
-const MODELS_URL = '/models'
+const MODELS_URL = `${import.meta.env.BASE_URL}models`
 const RESULT_DISPLAY_MS = 4000
 const NO_MATCH_DISPLAY_MS = 2500
 const DEBOUNCE_DETECT_MS = 1200  // wait for stable face before calling API
