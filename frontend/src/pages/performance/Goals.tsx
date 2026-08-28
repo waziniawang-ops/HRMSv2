@@ -57,20 +57,20 @@ export default function Goals() {
                         <Td><Badge status={gp.status} /></Td>
                         <Td className="font-semibold">{gp.overall_weight_total}</Td>
                         <Td>
-                          <span className="text-xs text-blue-600 font-medium">
+                          <span className="text-xs text-orange-600 font-medium">
                             {expanded === gp.id ? '▲ Collapse' : '▼ Show goals'}
                           </span>
                         </Td>
                       </Tr>
                       {expanded === gp.id && gp.goals?.map((g: Goal) => (
-                        <tr key={g.id} className="bg-blue-50/30">
+                        <tr key={g.id} className="bg-orange-50/30">
                           <td className="px-4 py-2 pl-12 text-sm text-gray-800" colSpan={2}>{g.title}</td>
                           <td className="px-4 py-2 text-sm"><Badge status={g.status} /></td>
                           <td className="px-4 py-2 text-sm text-gray-600">{g.category} · w={g.weight}</td>
                           <td className="px-4 py-2 text-sm">
                             <div className="flex items-center gap-2">
                               <div className="flex-1 h-1.5 bg-gray-200 rounded-full">
-                                <div className="h-full bg-blue-500 rounded-full" style={{ width: `${g.completion_percentage}%` }} />
+                                <div className="h-full bg-orange-500 rounded-full" style={{ width: `${g.completion_percentage}%` }} />
                               </div>
                               <span className="text-xs text-gray-600">{g.completion_percentage}%</span>
                             </div>

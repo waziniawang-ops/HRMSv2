@@ -66,10 +66,10 @@ export default function PayrollCalendars() {
                     <Tr key={c.id}>
                       <Td className="font-mono text-sm">{c.code}</Td>
                       <Td className="font-medium">{c.name}</Td>
-                      <Td><span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{c.pay_group}</span></Td>
+                      <Td><span className="text-xs bg-orange-50 text-orange-700 px-2 py-0.5 rounded">{c.pay_group}</span></Td>
                       <Td className="text-gray-500">{c.frequency || '—'}</Td>
                       <Td><Badge status={c.is_active ? 'ACTIVE' : 'INACTIVE'} /></Td>
-                      <Td><button onClick={() => openEdit(c)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"><Pencil size={15} /></button></Td>
+                      <Td><button onClick={() => openEdit(c)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg"><Pencil size={15} /></button></Td>
                     </Tr>
                   ))}
                 </Tbody>

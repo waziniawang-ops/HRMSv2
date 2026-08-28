@@ -19,12 +19,12 @@ export function PortalLayout({ children }: { children: ReactNode }) {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/portal" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center">
               <Briefcase size={16} className="text-white" />
             </div>
             <div>
               <p className="text-sm font-bold text-gray-900 leading-none">HRMSv2 Careers</p>
-              <p className="text-[10px] text-gray-400">Olive Digital Sdn Bhd</p>
+              <p className="text-[10px] text-gray-400">Visionaries Ent.</p>
             </div>
           </Link>
 
@@ -34,7 +34,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
               end
               className={({ isActive }) => cn(
                 'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                isActive ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               )}
             >
               <Briefcase size={15} /> Jobs
@@ -46,7 +46,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                   to="/portal/dashboard"
                   className={({ isActive }) => cn(
                     'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    isActive ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   )}
                 >
                   <LayoutDashboard size={15} /> My Applications
@@ -55,7 +55,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                   to="/portal/profile"
                   className={({ isActive }) => cn(
                     'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    isActive ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   )}
                 >
                   <User size={15} /> Profile
@@ -64,7 +64,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                   to="/portal/documents"
                   className={({ isActive }) => cn(
                     'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    isActive ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   )}
                 >
                   <FileText size={15} /> Documents
@@ -82,14 +82,14 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                   to="/portal/login"
                   className={({ isActive }) => cn(
                     'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    isActive ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   )}
                 >
                   <LogIn size={15} /> Sign In
                 </NavLink>
                 <Link
                   to="/portal/register"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors ml-1"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-orange-600 text-white hover:bg-orange-700 transition-colors ml-1"
                 >
                   Register
                 </Link>
@@ -104,7 +104,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
       </main>
 
       <footer className="border-t border-gray-200 py-4 text-center text-xs text-gray-400">
-        Olive Digital Sdn Bhd © 2026 — Careers Portal
+        Visionaries Ent. © 2026 — Careers Portal
       </footer>
     </div>
   )

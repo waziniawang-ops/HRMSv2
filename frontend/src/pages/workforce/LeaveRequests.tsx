@@ -116,7 +116,7 @@ export default function LeaveRequests() {
           <div className="flex items-center gap-3 flex-1">
             <div className="relative">
               <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search employee..." value={search} onChange={e => setSearch(e.target.value)} />
+              <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search employee..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
             <Select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="w-40">
               <option value="">All Statuses</option>
@@ -145,7 +145,7 @@ export default function LeaveRequests() {
                       <Td className="text-gray-500 max-w-xs truncate">{r.reason || '—'}</Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEdit(r)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
+                          <button onClick={() => openEdit(r)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
                           <button onClick={() => handleDelete(r)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete"><Trash2 size={15} /></button>
                         </div>
                       </Td>

@@ -169,7 +169,7 @@ export default function UsersPage() {
           <div className="relative">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
-              className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder="Search users…"
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1) }}
@@ -208,7 +208,7 @@ export default function UsersPage() {
                         <div className="flex flex-wrap gap-1">
                           {(u.roles?.length ? u.roles : [u.role]).map(r => (
                             r !== u.role && (
-                              <span key={r} className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                              <span key={r} className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-50 text-orange-700 border border-orange-200">
                                 {r.replace(/_/g, ' ')}
                               </span>
                             )
@@ -220,7 +220,7 @@ export default function UsersPage() {
                       <Td className="text-sm text-gray-500">{fmt(u.date_joined)}</Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEdit(u)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
+                          <button onClick={() => openEdit(u)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
                           <button onClick={() => handleDelete(u)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete"><Trash2 size={15} /></button>
                         </div>
                       </Td>
@@ -272,7 +272,7 @@ export default function UsersPage() {
                   <label
                     key={r.code}
                     className={`flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer transition-colors text-xs ${
-                      checked ? 'bg-blue-100 text-blue-800' : 'hover:bg-gray-100 text-gray-700'
+                      checked ? 'bg-orange-100 text-orange-800' : 'hover:bg-gray-100 text-gray-700'
                     }`}
                   >
                     <input
@@ -280,10 +280,10 @@ export default function UsersPage() {
                       checked={checked}
                       disabled={isPrimary}
                       onChange={() => toggleRole(r.code)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                     />
                     <span className="leading-tight">{r.label}</span>
-                    {isPrimary && <span className="text-[9px] text-blue-600 font-semibold uppercase ml-auto">primary</span>}
+                    {isPrimary && <span className="text-[9px] text-orange-600 font-semibold uppercase ml-auto">primary</span>}
                   </label>
                 )
               })}

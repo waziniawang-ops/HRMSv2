@@ -27,10 +27,10 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-orange-950 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-orange-600 mb-4">
             <Briefcase size={28} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white">HRMSv2</h1>
@@ -50,7 +50,7 @@ export default function Login() {
                 placeholder="Enter your username"
                 required
                 autoFocus
-                className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
             <div>
@@ -61,14 +61,14 @@ export default function Login() {
                 onChange={e => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 required
-                className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
             >
               {loading ? (
                 <>
@@ -82,9 +82,9 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-xl">
-            <p className="text-xs font-medium text-blue-800 mb-2">Demo Credentials <span className="font-normal text-blue-600">(all use Demo1234!)</span></p>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs text-blue-700">
+          <div className="mt-6 p-4 bg-orange-50 rounded-xl">
+            <p className="text-xs font-medium text-orange-800 mb-2">Demo Credentials <span className="font-normal text-orange-600">(all use Demo1234!)</span></p>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs text-orange-700">
               <p><span className="font-mono font-semibold">sysadmin</span> — Sys Admin</p>
               <p><span className="font-mono font-semibold">hr_norziah</span> — HR Admin</p>
               <p><span className="font-mono font-semibold">hr_fatimah</span> — HR Maker</p>
@@ -103,7 +103,7 @@ export default function Login() {
         </div>
 
         <p className="text-center text-slate-500 text-xs mt-6">
-          Olive Digital Sdn Bhd · HRMSv2 © 2026
+          Visionaries Ent. · HRMSv2 © 2026
         </p>
       </div>
     </div>

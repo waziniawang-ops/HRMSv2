@@ -39,7 +39,7 @@ export default function Outcomes() {
   }, {})
 
   const outcomeColors: Record<string, string> = {
-    EXCEEDS: 'bg-green-600', MEETS: 'bg-blue-600', PARTIALLY: 'bg-yellow-500', BELOW: 'bg-red-500',
+    EXCEEDS: 'bg-green-600', MEETS: 'bg-orange-600', PARTIALLY: 'bg-yellow-500', BELOW: 'bg-red-500',
   }
 
   return (

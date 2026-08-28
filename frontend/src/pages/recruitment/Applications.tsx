@@ -146,7 +146,7 @@ export default function Applications() {
                       <Td className="text-gray-500">{a.job_title ?? '—'}</Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEdit(a)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Stage/Score"><Pencil size={15} /></button>
+                          <button onClick={() => openEdit(a)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit Stage/Score"><Pencil size={15} /></button>
                           <button onClick={() => handleDelete(a)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete"><Trash2 size={15} /></button>
                         </div>
                       </Td>
@@ -172,7 +172,7 @@ export default function Applications() {
               value={form.notes}
               onChange={e => setForm(prev => ({ ...prev, notes: e.target.value }))}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
               placeholder="Internal notes about this application…"
             />
           </div>

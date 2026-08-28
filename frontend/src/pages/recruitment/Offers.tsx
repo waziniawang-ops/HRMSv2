@@ -187,14 +187,14 @@ export default function Offers() {
                       <Td className="font-medium text-gray-900">{o.applicant_name || '—'}</Td>
                       <Td className="text-gray-600 text-sm">{o.position_display || '—'}</Td>
                       <Td className="font-semibold text-gray-900">{currency(o.basic_salary, symbol)}</Td>
-                      <Td className="font-semibold text-blue-700">{currency(o.total_package, symbol)}</Td>
+                      <Td className="font-semibold text-orange-700">{currency(o.total_package, symbol)}</Td>
                       <Td className="text-sm text-gray-600">{o.employment_type}</Td>
                       <Td>{fmt(o.start_date)}</Td>
                       <Td><Badge status={o.status} /></Td>
                       <Td>
                         {canEdit && (
                           <div className="flex items-center gap-2 justify-end">
-                            <button onClick={() => openEdit(o)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
+                            <button onClick={() => openEdit(o)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
                             <button onClick={() => handleDelete(o)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete"><Trash2 size={15} /></button>
                           </div>
                         )}

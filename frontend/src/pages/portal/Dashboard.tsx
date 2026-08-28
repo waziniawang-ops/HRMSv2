@@ -49,16 +49,16 @@ export default function PortalDashboard() {
 
       {/* Quick links */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <Link to="/portal" className="bg-white rounded-xl border border-gray-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
-            <Briefcase size={18} className="text-blue-600" />
+        <Link to="/portal" className="bg-white rounded-xl border border-gray-200 p-4 hover:border-orange-300 hover:shadow-sm transition-all flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-orange-50 flex items-center justify-center">
+            <Briefcase size={18} className="text-orange-600" />
           </div>
           <div>
             <p className="text-sm font-semibold text-gray-900">Browse Jobs</p>
             <p className="text-xs text-gray-400">See open vacancies</p>
           </div>
         </Link>
-        <Link to="/portal/profile" className="bg-white rounded-xl border border-gray-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all flex items-center gap-3">
+        <Link to="/portal/profile" className="bg-white rounded-xl border border-gray-200 p-4 hover:border-orange-300 hover:shadow-sm transition-all flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center">
             <span className="text-purple-600 text-lg font-bold">{(user?.first_name?.[0] || user?.username?.[0] || 'A').toUpperCase()}</span>
           </div>
@@ -67,7 +67,7 @@ export default function PortalDashboard() {
             <p className="text-xs text-gray-400">Edit your info</p>
           </div>
         </Link>
-        <Link to="/portal/documents" className="bg-white rounded-xl border border-gray-200 p-4 hover:border-blue-300 hover:shadow-sm transition-all flex items-center gap-3">
+        <Link to="/portal/documents" className="bg-white rounded-xl border border-gray-200 p-4 hover:border-orange-300 hover:shadow-sm transition-all flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-green-50 flex items-center justify-center">
             <Briefcase size={18} className="text-green-600" />
           </div>
@@ -90,7 +90,7 @@ export default function PortalDashboard() {
           <div className="text-center py-16 text-gray-400">
             <Briefcase size={36} className="mx-auto mb-2 opacity-30" />
             <p className="text-gray-600 font-medium">No applications yet</p>
-            <Link to="/portal" className="text-sm text-blue-600 hover:underline mt-1 inline-block">
+            <Link to="/portal" className="text-sm text-orange-600 hover:underline mt-1 inline-block">
               Browse open positions →
             </Link>
           </div>

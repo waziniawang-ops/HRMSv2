@@ -80,7 +80,7 @@ export default function Cases() {
                     </Thead>
                     <Tbody>
                       {data.results.map((c: Case) => (
-                        <Tr key={c.id} onClick={() => setSelected(c)} className={selected?.id === c.id ? 'bg-blue-50' : ''}>
+                        <Tr key={c.id} onClick={() => setSelected(c)} className={selected?.id === c.id ? 'bg-orange-50' : ''}>
                           <Td className="font-medium text-gray-900">{c.applicant_name || `Case ${c.id.slice(0, 8)}`}</Td>
                           <Td><Badge status={c.status} /></Td>
                           <Td>

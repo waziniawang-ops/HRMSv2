@@ -50,7 +50,7 @@ export default function ESSRequests() {
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-sm">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search employee or subject..." value={search} onChange={e => setSearch(e.target.value)} />
+            <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-full focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search employee or subject..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <Select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="w-44">
             <option value="">All Statuses</option>

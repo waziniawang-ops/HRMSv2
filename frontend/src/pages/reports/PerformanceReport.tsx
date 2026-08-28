@@ -71,9 +71,9 @@ export default function PerformanceReport() {
             <Card>
               <CardHeader><CardTitle>Summary Statistics</CardTitle></CardHeader>
               <CardContent className="space-y-4">
-                <div className="p-4 bg-blue-50 rounded-xl">
-                  <p className="text-sm text-blue-600 font-medium">Average Rating</p>
-                  <p className="text-4xl font-bold text-blue-800 mt-1">{Number(data?.average_rating ?? 0).toFixed(2)}<span className="text-xl text-blue-400">/5.0</span></p>
+                <div className="p-4 bg-orange-50 rounded-xl">
+                  <p className="text-sm text-orange-600 font-medium">Average Rating</p>
+                  <p className="text-4xl font-bold text-orange-800 mt-1">{Number(data?.average_rating ?? 0).toFixed(2)}<span className="text-xl text-orange-400">/5.0</span></p>
                 </div>
                 <div className="space-y-3">
                   {chartData.map((d: { name: string; value: number; color: string }) => {

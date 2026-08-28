@@ -245,7 +245,7 @@ export default function Positions() {
                       </Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEdit(p)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                          <button onClick={() => openEdit(p)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit">
                             <Pencil size={15} />
                           </button>
                           <button onClick={() => handleDelete(p)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
@@ -306,7 +306,7 @@ export default function Positions() {
               type="checkbox"
               checked={form.is_critical}
               onChange={set('is_critical')}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
             />
             Mark as Critical Position
           </label>

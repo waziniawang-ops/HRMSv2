@@ -84,7 +84,7 @@ export default function PortalJobDetail() {
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-1">{job.title}</h1>
-            {job.position_title && <p className="text-blue-600 font-medium mb-3">{job.position_title}</p>}
+            {job.position_title && <p className="text-orange-600 font-medium mb-3">{job.position_title}</p>}
             <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
               {job.department && <span className="flex items-center gap-1"><MapPin size={13} />{job.department}</span>}
               {job.grade && <span className="flex items-center gap-1"><Briefcase size={13} />Grade: {job.grade}</span>}
@@ -122,7 +122,7 @@ export default function PortalJobDetail() {
                 <CheckCircle size={40} className="text-green-500 mx-auto mb-2" />
                 <p className="font-semibold text-gray-900">Application Submitted</p>
                 <p className="text-sm text-gray-500 mt-1">We'll be in touch!</p>
-                <Link to="/portal/dashboard" className="mt-4 inline-block text-sm text-blue-600 hover:underline">
+                <Link to="/portal/dashboard" className="mt-4 inline-block text-sm text-orange-600 hover:underline">
                   View my applications →
                 </Link>
               </div>
@@ -132,7 +132,7 @@ export default function PortalJobDetail() {
                 <Button onClick={() => navigate('/portal/login')} className="w-full justify-center">Sign In to Apply</Button>
                 <p className="text-xs text-gray-400 mt-3">
                   New here?{' '}
-                  <Link to="/portal/register" className="text-blue-600 hover:underline">Create an account</Link>
+                  <Link to="/portal/register" className="text-orange-600 hover:underline">Create an account</Link>
                 </p>
               </div>
             ) : (
@@ -145,7 +145,7 @@ export default function PortalJobDetail() {
                     value={coverLetter}
                     onChange={e => setCoverLetter(e.target.value)}
                     placeholder="Tell us why you're a great fit…"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
                   />
                 </div>
                 <Button
@@ -157,9 +157,9 @@ export default function PortalJobDetail() {
                 </Button>
                 <p className="text-xs text-gray-400 text-center">
                   Make sure your{' '}
-                  <Link to="/portal/profile" className="text-blue-600 hover:underline">profile</Link>
+                  <Link to="/portal/profile" className="text-orange-600 hover:underline">profile</Link>
                   {' '}and{' '}
-                  <Link to="/portal/documents" className="text-blue-600 hover:underline">documents</Link>
+                  <Link to="/portal/documents" className="text-orange-600 hover:underline">documents</Link>
                   {' '}are up to date before applying.
                 </p>
               </div>

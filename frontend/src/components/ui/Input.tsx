@@ -13,7 +13,7 @@ export function Input({ label, error, className, ...props }: InputProps) {
       <input
         {...props}
         className={cn(
-          'w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+          'w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors',
           error ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-white',
           className
         )}
@@ -35,7 +35,7 @@ export function Select({ label, error, className, children, ...props }: SelectPr
       <select
         {...props}
         className={cn(
-          'w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white transition-colors',
+          'w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white transition-colors',
           error ? 'border-red-300' : 'border-gray-300',
           className
         )}
@@ -60,7 +60,7 @@ export function Textarea({ label, error, className, ...props }: TextareaProps) {
         {...props}
         rows={props.rows ?? 3}
         className={cn(
-          'w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-colors',
+          'w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none transition-colors',
           error ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-white',
           className
         )}

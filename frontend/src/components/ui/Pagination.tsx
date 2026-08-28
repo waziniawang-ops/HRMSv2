@@ -35,7 +35,7 @@ export function Pagination({ count, page, pageSize, onPage }: PaginationProps) {
               key={p}
               onClick={() => onPage(p)}
               className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
-                p === page ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'
+                p === page ? 'bg-orange-600 text-white' : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
               {p}

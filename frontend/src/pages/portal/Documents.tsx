@@ -27,7 +27,7 @@ const DOC_TYPES = [
 ]
 
 const DOC_COLORS: Record<string, string> = {
-  RESUME: 'bg-blue-50 text-blue-700',
+  RESUME: 'bg-orange-50 text-orange-700',
   COVER_LETTER: 'bg-purple-50 text-purple-700',
   ACADEMIC_CERT: 'bg-green-50 text-green-700',
   IDENTITY: 'bg-orange-50 text-orange-700',
@@ -91,19 +91,19 @@ export default function PortalDocuments() {
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Document Type</label>
             <select ref={docTypeRef} defaultValue="RESUME"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white">
               {DOC_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Document Name</label>
             <input ref={nameRef} placeholder="e.g. My Resume 2024"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">File</label>
             <input ref={fileRef} type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-3 file:text-xs file:font-medium file:border-0 file:bg-blue-50 file:text-blue-700 file:rounded file:px-2 file:py-1" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 file:mr-3 file:text-xs file:font-medium file:border-0 file:bg-orange-50 file:text-orange-700 file:rounded file:px-2 file:py-1" />
           </div>
         </div>
         <Button onClick={handleUpload} loading={upload.isPending}>
@@ -147,7 +147,7 @@ export default function PortalDocuments() {
                   <div className="flex items-center gap-2 shrink-0">
                     {doc.file_url && (
                       <a href={doc.file_url} target="_blank" rel="noopener noreferrer"
-                        className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Download">
+                        className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Download">
                         <Download size={15} />
                       </a>
                     )}

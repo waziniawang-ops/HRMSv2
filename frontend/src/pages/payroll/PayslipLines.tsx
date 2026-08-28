@@ -173,7 +173,7 @@ export default function PayslipLines() {
                   <Tr key={l.id}>
                     <Td className="font-medium">{l.employee_name}</Td>
                     <Td>{l.element_display}</Td>
-                    <Td><span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{l.element_category}</span></Td>
+                    <Td><span className="text-xs bg-orange-50 text-orange-700 px-2 py-0.5 rounded">{l.element_category}</span></Td>
                     <Td className="font-semibold">{Number(l.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Td>
                     <Td>{l.is_deduction ? '✓' : '—'}</Td>
                     <Td>

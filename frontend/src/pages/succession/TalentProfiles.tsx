@@ -56,8 +56,8 @@ const NINE_BOX = [
 ]
 
 const nineBoxColor: Record<number, string> = {
-  9: 'bg-green-600', 8: 'bg-green-500', 7: 'bg-blue-600',
-  6: 'bg-blue-500', 5: 'bg-indigo-600', 4: 'bg-yellow-500',
+  9: 'bg-green-600', 8: 'bg-green-500', 7: 'bg-orange-600',
+  6: 'bg-orange-500', 5: 'bg-orange-600', 4: 'bg-yellow-500',
   3: 'bg-yellow-400', 2: 'bg-orange-500', 1: 'bg-red-500',
 }
 
@@ -212,9 +212,9 @@ export default function TalentProfiles() {
       <div className="space-y-4">
 
         {/* Workflow explanation */}
-        <div className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-800">
+        <div className="rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-800">
           <p className="font-semibold mb-1">Talent Profile Review Workflow</p>
-          <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-indigo-700">
+          <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-orange-700">
             <span>1. Create profile (Manager / HR)</span>
             <span>→ 2. Submit for approval</span>
             <span>→ 3. HR Checker reviews (Step 1, 48h)</span>
@@ -311,7 +311,7 @@ export default function TalentProfiles() {
                             {!p.workflow_request && (
                               <button
                                 onClick={() => submitForApproval.mutate(p.id)}
-                                className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                                 title="Submit for Approval"
                               >
                                 <Send size={14} />
@@ -337,7 +337,7 @@ export default function TalentProfiles() {
                               </>
                             )}
                             {/* Edit */}
-                            <button onClick={() => openEdit(p)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                            <button onClick={() => openEdit(p)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit">
                               <Pencil size={14} />
                             </button>
                             {/* Delete */}
@@ -395,7 +395,7 @@ export default function TalentProfiles() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Key Strengths</label>
             <textarea
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
               rows={2}
               value={form.key_strengths}
               onChange={set('key_strengths')}
@@ -406,7 +406,7 @@ export default function TalentProfiles() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Development Areas</label>
             <textarea
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
               rows={2}
               value={form.development_areas}
               onChange={set('development_areas')}
@@ -417,7 +417,7 @@ export default function TalentProfiles() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Career Aspirations</label>
             <textarea
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
               rows={2}
               value={form.career_aspirations}
               onChange={set('career_aspirations')}
@@ -448,7 +448,7 @@ export default function TalentProfiles() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Comment {commentModal.action === 'reject' ? '(required)' : '(optional)'}</label>
               <textarea
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
                 rows={3}
                 value={comment}
                 onChange={e => setComment(e.target.value)}

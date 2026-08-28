@@ -94,9 +94,9 @@ export default function Notifications() {
             <>
               <ul className="divide-y divide-gray-100">
                 {data.results.map((n: Notif) => (
-                  <li key={n.id} className={`flex items-start gap-4 px-5 py-4 ${n.status !== 'READ' ? 'bg-blue-50/40' : ''}`}>
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${n.channel === 'EMAIL' ? 'bg-blue-100' : 'bg-purple-100'}`}>
-                      <Bell size={16} className={n.channel === 'EMAIL' ? 'text-blue-600' : 'text-purple-600'} />
+                  <li key={n.id} className={`flex items-start gap-4 px-5 py-4 ${n.status !== 'READ' ? 'bg-orange-50/40' : ''}`}>
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${n.channel === 'EMAIL' ? 'bg-orange-100' : 'bg-purple-100'}`}>
+                      <Bell size={16} className={n.channel === 'EMAIL' ? 'text-orange-600' : 'text-purple-600'} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">

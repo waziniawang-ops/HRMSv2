@@ -103,7 +103,7 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Settings2 size={18} className="text-blue-600" />
+              <Settings2 size={18} className="text-orange-600" />
               <CardTitle>Currency Settings</CardTitle>
             </div>
           </CardHeader>
@@ -159,7 +159,7 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Settings2 size={18} className="text-blue-600" />
+              <Settings2 size={18} className="text-orange-600" />
               <CardTitle>Payroll GL Posting Settings</CardTitle>
             </div>
           </CardHeader>
@@ -212,7 +212,7 @@ export default function Settings() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Settings2 size={18} className="text-blue-600" />
+                <Settings2 size={18} className="text-orange-600" />
                 <CardTitle>Accounting System Integration</CardTitle>
               </div>
               {acctData && (

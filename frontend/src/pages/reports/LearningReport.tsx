@@ -46,8 +46,8 @@ export default function LearningReport() {
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                      <BookOpen size={18} className="text-blue-600" />
+                    <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+                      <BookOpen size={18} className="text-orange-600" />
                     </div>
                     <div>
                       <p className="text-lg font-bold text-gray-900">{data?.mandatory_assignments_total}</p>

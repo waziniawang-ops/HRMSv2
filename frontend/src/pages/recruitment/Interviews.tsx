@@ -159,11 +159,11 @@ export default function Interviews() {
                       <Td><Badge status={iv.interview_type} /></Td>
                       <Td className="text-center font-semibold text-gray-600">R{iv.round_number}</Td>
                       <Td className="text-sm text-gray-700">{fmtDatetime(iv.scheduled_at)}</Td>
-                      <Td className="text-sm text-blue-600 max-w-xs truncate">{iv.location_or_link || '—'}</Td>
+                      <Td className="text-sm text-orange-600 max-w-xs truncate">{iv.location_or_link || '—'}</Td>
                       <Td><Badge status={iv.status} /></Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEdit(iv)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
+                          <button onClick={() => openEdit(iv)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
                           <button onClick={() => handleDelete(iv)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete"><Trash2 size={15} /></button>
                         </div>
                       </Td>
@@ -198,7 +198,7 @@ export default function Interviews() {
           <Input label="Location / Link" value={form.location_or_link} onChange={set('location_or_link')} placeholder="e.g. Zoom link or Room 101" />
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-            <textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} rows={2} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+            <textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} rows={2} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none" />
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="secondary" onClick={closeModal}>Cancel</Button>

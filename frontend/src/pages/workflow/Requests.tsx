@@ -71,7 +71,7 @@ const ACTIONABLE = ['SUBMITTED', 'IN_REVIEW', 'RESUBMITTED']
 
 const STEP_DOT: Record<string, string> = {
   PENDING: 'bg-gray-300',
-  IN_REVIEW: 'bg-blue-400',
+  IN_REVIEW: 'bg-orange-400',
   APPROVED: 'bg-green-500',
   REJECTED: 'bg-red-500',
   RETURNED: 'bg-yellow-500',
@@ -160,7 +160,7 @@ function DetailPanel({
         </div>
         <div className="flex gap-2">
           <input
-            className="flex-1 px-2 py-1.5 border border-gray-200 rounded text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="flex-1 px-2 py-1.5 border border-gray-200 rounded text-xs focus:outline-none focus:ring-1 focus:ring-orange-400"
             placeholder="Add a comment…"
             value={newComment}
             onChange={e => setNewComment(e.target.value)}
@@ -345,7 +345,7 @@ export default function WorkflowRequests() {
                   {data.results.map((r: WFRequest) => (
                     <Fragment key={r.id}>
                       <Tr
-                        className={`cursor-pointer ${expandedId === r.id ? 'bg-blue-50' : ''}`}
+                        className={`cursor-pointer ${expandedId === r.id ? 'bg-orange-50' : ''}`}
                         onClick={() => toggleExpand(r.id)}
                       >
                         <Td>
@@ -357,7 +357,7 @@ export default function WorkflowRequests() {
                         <Td className="text-sm text-gray-600">{r.module_code}</Td>
                         <Td className="text-sm text-gray-600">{r.object_type}</Td>
                         <Td className="font-medium text-gray-900">{r.maker_display || '—'}</Td>
-                        <Td className="text-center font-bold text-blue-600">{r.current_step}</Td>
+                        <Td className="text-center font-bold text-orange-600">{r.current_step}</Td>
                         <Td><Badge status={r.status} /></Td>
                         <Td className="text-sm text-gray-500">{fmt(r.created_at)}</Td>
                         <Td onClick={e => e.stopPropagation()}>
@@ -434,7 +434,7 @@ export default function WorkflowRequests() {
               : 'Explain what needs to be amended (minimum 5 characters).'}
           </p>
           <textarea
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-500"
             rows={3}
             value={actionComment}
             onChange={e => setActionComment(e.target.value)}

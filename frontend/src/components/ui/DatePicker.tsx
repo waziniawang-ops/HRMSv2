@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 // Shared input class to match the existing Input component styling
 const inputClass = (error?: string, className?: string) =>
   cn(
-    'w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white',
+    'w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors bg-white',
     error ? 'border-red-300 bg-red-50' : 'border-gray-300',
     className
   )

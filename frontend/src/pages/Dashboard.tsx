@@ -79,8 +79,8 @@ export default function Dashboard() {
   if (isError || !data) return (
     <AppLayout title="Dashboard">
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center mb-4">
-          <TrendingUp size={28} className="text-blue-600" />
+        <div className="w-16 h-16 rounded-2xl bg-orange-100 flex items-center justify-center mb-4">
+          <TrendingUp size={28} className="text-orange-600" />
         </div>
         <h2 className="text-xl font-semibold text-gray-900 mb-2">Welcome to HRMSv2</h2>
         <p className="text-sm text-gray-500 max-w-sm">Use the sidebar to navigate to your available modules.</p>
@@ -110,7 +110,7 @@ export default function Dashboard() {
       <div className="space-y-6">
         {/* KPI Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard label="Active Employees" value={data.total_active_employees} icon={Users} color="bg-blue-600" />
+          <StatCard label="Active Employees" value={data.total_active_employees} icon={Users} color="bg-orange-600" />
           <StatCard label="Open Vacancies" value={data.open_vacancies} icon={Briefcase} color="bg-orange-500" />
           <StatCard label="Active Requisitions" value={data.active_requisitions} icon={GitPullRequest} color="bg-purple-600" />
           <StatCard label="Open Job Postings" value={data.open_job_postings} icon={FileText} color="bg-teal-600" />
@@ -119,7 +119,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard label="Pending Approvals" value={data.pending_approvals} icon={CheckCircle2} color="bg-yellow-500" />
           <StatCard label="New Hires This Month" value={data.new_hires_this_month} icon={UserPlus} color="bg-green-600" />
-          <StatCard label="Pending Onboarding" value={data.pending_onboarding_cases} icon={UserPlus} color="bg-indigo-600" />
+          <StatCard label="Pending Onboarding" value={data.pending_onboarding_cases} icon={UserPlus} color="bg-orange-600" />
           <StatCard
             label="Learning Compliance"
             value={learning?.compliance_rate ?? 0}
@@ -143,7 +143,7 @@ export default function Dashboard() {
                     <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                     <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                     <Tooltip />
-                    <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="count" fill="#ea580c" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : <p className="text-sm text-gray-400 text-center py-8">No data available</p>}
@@ -198,7 +198,7 @@ export default function Dashboard() {
                     {perfDist?.average_rating && (
                       <div className="pt-2 border-t border-gray-100">
                         <p className="text-xs text-gray-500">Avg Rating</p>
-                        <p className="text-xl font-bold text-blue-600">{Number(perfDist.average_rating).toFixed(1)}</p>
+                        <p className="text-xl font-bold text-orange-600">{Number(perfDist.average_rating).toFixed(1)}</p>
                       </div>
                     )}
                   </div>
@@ -215,9 +215,9 @@ export default function Dashboard() {
               {learning ? (
                 <div className="space-y-4">
                   <div className="grid grid-cols-3 gap-4 text-center">
-                    <div className="p-3 rounded-xl bg-blue-50">
-                      <p className="text-xl font-bold text-blue-700">{learning.mandatory_assignments_total}</p>
-                      <p className="text-xs text-blue-600 mt-0.5">Mandatory</p>
+                    <div className="p-3 rounded-xl bg-orange-50">
+                      <p className="text-xl font-bold text-orange-700">{learning.mandatory_assignments_total}</p>
+                      <p className="text-xs text-orange-600 mt-0.5">Mandatory</p>
                     </div>
                     <div className="p-3 rounded-xl bg-green-50">
                       <p className="text-xl font-bold text-green-700">{learning.completed}</p>

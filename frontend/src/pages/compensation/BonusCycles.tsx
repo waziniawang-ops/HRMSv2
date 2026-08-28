@@ -65,7 +65,7 @@ export default function BonusCycles() {
                       <Td><Badge status={r.status} /></Td>
                       <Td>
                         <div className="flex gap-1 justify-end">
-                          {r.status === 'DRAFT' && <button onClick={() => doAction.mutate({ id: r.id, action: 'open_cycle' })} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">Open</button>}
+                          {r.status === 'DRAFT' && <button onClick={() => doAction.mutate({ id: r.id, action: 'open_cycle' })} className="text-xs px-2 py-1 bg-orange-100 text-orange-700 rounded">Open</button>}
                           {r.status === 'OPEN' && <button onClick={() => doAction.mutate({ id: r.id, action: 'close_cycle' })} className="text-xs px-2 py-1 bg-yellow-100 text-yellow-700 rounded">Close</button>}
                           {r.status === 'CLOSED' && <button onClick={() => doAction.mutate({ id: r.id, action: 'mark_paid' })} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">Mark Paid</button>}
                         </div>

@@ -150,7 +150,7 @@ export default function CostCenters() {
                         <div className="flex items-center gap-2 justify-end">
                           <button
                             onClick={() => openEdit(c)}
-                            className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                             title="Edit"
                           >
                             <Pencil size={15} />

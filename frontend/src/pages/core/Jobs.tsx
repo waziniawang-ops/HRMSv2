@@ -158,7 +158,7 @@ export default function Jobs() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <FolderOpen size={18} className="text-blue-600" />
+                <FolderOpen size={18} className="text-orange-600" />
                 <CardTitle>Job Families</CardTitle>
               </div>
               <Button onClick={openCreateFamily}><Plus size={16} />Add Job Family</Button>
@@ -200,7 +200,7 @@ export default function Jobs() {
                       <Td className="text-gray-500 text-sm max-w-xs truncate">{f.description || '—'}</Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEditFamily(f)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                          <button onClick={() => openEditFamily(f)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit">
                             <Pencil size={15} />
                           </button>
                           <button onClick={() => handleDeleteFamily(f)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
@@ -222,7 +222,7 @@ export default function Jobs() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <BookOpen size={18} className="text-blue-600" />
+                <BookOpen size={18} className="text-orange-600" />
                 <CardTitle>Job Catalogue</CardTitle>
               </div>
               <Button onClick={openCreateJob}><Plus size={16} />Add Job</Button>
@@ -266,7 +266,7 @@ export default function Jobs() {
                       <Td><Badge status={j.is_active ? 'ACTIVE' : 'INACTIVE'} /></Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEditJob(j)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                          <button onClick={() => openEditJob(j)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit">
                             <Pencil size={15} />
                           </button>
                           <button onClick={() => handleDeleteJob(j)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
@@ -298,7 +298,7 @@ export default function Jobs() {
               onChange={e => setFamilyForm(prev => ({ ...prev, description: e.target.value }))}
               rows={3}
               placeholder="Brief description of this job family…"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
             />
           </div>
           <div className="flex justify-end gap-3 pt-2">
@@ -334,7 +334,7 @@ export default function Jobs() {
               onChange={e => setJobForm(prev => ({ ...prev, description: e.target.value }))}
               rows={3}
               placeholder="Brief description of this job…"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
             />
           </div>
           <div className="flex justify-end gap-3 pt-2">

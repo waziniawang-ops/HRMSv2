@@ -214,7 +214,7 @@ export default function FaceEnroll() {
           <CardContent className="p-6 space-y-5">
 
             {phase === 'loading_models' && (
-              <div className="flex items-center gap-3 text-blue-600 text-sm">
+              <div className="flex items-center gap-3 text-orange-600 text-sm">
                 <RefreshCw size={16} className="animate-spin" />
                 Loading face recognition models — first load may take ~10 seconds…
               </div>
@@ -291,7 +291,7 @@ export default function FaceEnroll() {
                       </span>
                     </div>
                     {phase === 'capturing' && (
-                      <span className="text-sm text-blue-600 font-medium">
+                      <span className="text-sm text-orange-600 font-medium">
                         Capturing {capturedDescriptors.length}/{SAMPLES_NEEDED}…
                       </span>
                     )}

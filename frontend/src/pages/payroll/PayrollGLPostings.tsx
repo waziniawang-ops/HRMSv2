@@ -215,7 +215,7 @@ export default function PayrollGLPostings() {
                 {postings.map(p => (
                   <Tr key={p.id}>
                     <Td className="font-mono text-sm">{p.gl_account}</Td>
-                    <Td><Badge status={p.entry_type} className={p.entry_type === 'DEBIT' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'} /></Td>
+                    <Td><Badge status={p.entry_type} className={p.entry_type === 'DEBIT' ? 'bg-orange-100 text-orange-700' : 'bg-purple-100 text-purple-700'} /></Td>
                     <Td>{p.description}</Td>
                     <Td>{p.cost_center_display || <span className="text-gray-400">—</span>}</Td>
                     <Td className="font-semibold">{Number(p.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Td>
@@ -225,14 +225,14 @@ export default function PayrollGLPostings() {
                       : <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded">Unposted</span>}
                     </Td>
                     <Td>{p.sent_to_accounting_at
-                      ? <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Sent</span>
+                      ? <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded">Sent</span>
                       : <span className="text-gray-400">—</span>}
                     </Td>
                     <Td>
                       {!p.is_posted && (
                         <button
                           onClick={() => postOne.mutate(p.id)}
-                          className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                          className="text-xs px-2 py-1 bg-orange-100 text-orange-700 rounded hover:bg-orange-200"
                         >
                           Post
                         </button>

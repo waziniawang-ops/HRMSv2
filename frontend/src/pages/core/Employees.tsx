@@ -298,7 +298,7 @@ export default function Employees() {
                       <Td className="text-gray-500">{fmt(emp.hire_date)}</Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEdit(emp)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                          <button onClick={() => openEdit(emp)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit">
                             <Pencil size={15} />
                           </button>
                           <button onClick={() => handleDelete(emp)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
@@ -325,10 +325,10 @@ export default function Employees() {
         <div className="flex items-center gap-3 mb-6">
           {[1, 2].map(n => (
             <div key={n} className="flex items-center gap-2">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step === n ? 'bg-blue-600 text-white' : step > n ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step === n ? 'bg-orange-600 text-white' : step > n ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
                 {n}
               </div>
-              <span className={`text-xs font-medium ${step === n ? 'text-blue-700' : 'text-gray-400'}`}>
+              <span className={`text-xs font-medium ${step === n ? 'text-orange-700' : 'text-gray-400'}`}>
                 {n === 1 ? 'Personal Info' : 'Employment Details'}
               </span>
               {n < 2 && <div className="w-8 h-px bg-gray-200 ml-1" />}

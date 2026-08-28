@@ -75,7 +75,7 @@ export default function KnowledgeBase() {
         <div className="flex items-center justify-between gap-3">
           <div className="relative">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search articles..." value={search} onChange={e => setSearch(e.target.value)} />
+            <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search articles..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <Button onClick={openCreate}><Plus size={16} /> New Article</Button>
         </div>
@@ -97,7 +97,7 @@ export default function KnowledgeBase() {
                       <Td>{r.published_at ? fmt(r.published_at) : '—'}</Td>
                       <Td>
                         <div className="flex gap-2 justify-end">
-                          <button onClick={() => openEdit(r)} className="p-1.5 text-gray-400 hover:text-blue-600 rounded-lg"><Pencil size={15} /></button>
+                          <button onClick={() => openEdit(r)} className="p-1.5 text-gray-400 hover:text-orange-600 rounded-lg"><Pencil size={15} /></button>
                           {r.status === 'DRAFT' && <button onClick={() => publish.mutate(r.id)} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">Publish</button>}
                         </div>
                       </Td>

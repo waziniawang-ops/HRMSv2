@@ -74,7 +74,7 @@ export default function ERCases() {
           <div className="flex items-center gap-3 flex-1">
             <div className="relative flex-1 max-w-sm">
               <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search case or employee..." value={search} onChange={e => setSearch(e.target.value)} />
+              <input className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm w-full focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search case or employee..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
             <Select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="w-44">
               <option value="">All Statuses</option>
@@ -94,7 +94,7 @@ export default function ERCases() {
                 <Tbody>
                   {filtered.map((r: ERCase) => (
                     <Tr key={r.id} className="cursor-pointer hover:bg-gray-50" onClick={() => navigate(`/er/cases/${r.id}`)}>
-                      <Td className="font-mono text-sm font-medium text-blue-600">{r.case_number}</Td>
+                      <Td className="font-mono text-sm font-medium text-orange-600">{r.case_number}</Td>
                       <Td className="font-medium">{r.subject}</Td>
                       <Td>{r.subject_employee_name || '—'}</Td>
                       <Td className="text-gray-600">{r.category_name}</Td>

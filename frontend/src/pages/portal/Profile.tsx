@@ -83,7 +83,7 @@ export default function PortalProfile() {
   )
 
   const tabCls = (t: typeof tab) =>
-    `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${tab === t ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`
+    `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${tab === t ? 'bg-orange-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`
 
   return (
     <PortalLayout>
@@ -102,7 +102,7 @@ export default function PortalProfile() {
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
             <input value={basic.full_name} onChange={e => setBasic(p => ({ ...p, full_name: e.target.value }))}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Email <span className="text-gray-400">(cannot change)</span></label>
@@ -112,12 +112,12 @@ export default function PortalProfile() {
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Phone</label>
             <input value={basic.phone} onChange={e => setBasic(p => ({ ...p, phone: e.target.value }))} placeholder="+60 12-345 6789"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">LinkedIn URL</label>
             <input value={basic.linkedin_url} onChange={e => setBasic(p => ({ ...p, linkedin_url: e.target.value }))} placeholder="https://linkedin.com/in/yourname"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" />
           </div>
           <div className="flex justify-end pt-2">
             <Button onClick={() => updateBasic.mutate()} loading={updateBasic.isPending}>
@@ -133,14 +133,14 @@ export default function PortalProfile() {
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h3 className="font-semibold text-gray-900 mb-3">Professional Summary</h3>
             <textarea rows={4} value={summary} onChange={e => setSummary(e.target.value)} placeholder="Write a short professional summary…"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none" />
           </div>
 
           {/* Education */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-gray-900">Education</h3>
-              <button onClick={() => setEducation(p => [...p, { ...emptyEdu }])} className="flex items-center gap-1 text-xs text-blue-600 hover:underline"><Plus size={13} />Add</button>
+              <button onClick={() => setEducation(p => [...p, { ...emptyEdu }])} className="flex items-center gap-1 text-xs text-orange-600 hover:underline"><Plus size={13} />Add</button>
             </div>
             <div className="space-y-4">
               {education.map((edu, i) => (
@@ -150,22 +150,22 @@ export default function PortalProfile() {
                     <div>
                       <label className="block text-xs text-gray-500 mb-0.5">Institution</label>
                       <input value={edu.institution} onChange={e => setEducation(p => p.map((x, j) => j === i ? { ...x, institution: e.target.value } : x))}
-                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
                     </div>
                     <div>
                       <label className="block text-xs text-gray-500 mb-0.5">Degree</label>
                       <input value={edu.degree} onChange={e => setEducation(p => p.map((x, j) => j === i ? { ...x, degree: e.target.value } : x))}
-                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
                     </div>
                     <div>
                       <label className="block text-xs text-gray-500 mb-0.5">Field of Study</label>
                       <input value={edu.field} onChange={e => setEducation(p => p.map((x, j) => j === i ? { ...x, field: e.target.value } : x))}
-                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
                     </div>
                     <div>
                       <label className="block text-xs text-gray-500 mb-0.5">Year</label>
                       <input value={edu.year} onChange={e => setEducation(p => p.map((x, j) => j === i ? { ...x, year: e.target.value } : x))} placeholder="2023"
-                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
                     </div>
                   </div>
                 </div>
@@ -178,7 +178,7 @@ export default function PortalProfile() {
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-gray-900">Work Experience</h3>
-              <button onClick={() => setExperience(p => [...p, { ...emptyExp }])} className="flex items-center gap-1 text-xs text-blue-600 hover:underline"><Plus size={13} />Add</button>
+              <button onClick={() => setExperience(p => [...p, { ...emptyExp }])} className="flex items-center gap-1 text-xs text-orange-600 hover:underline"><Plus size={13} />Add</button>
             </div>
             <div className="space-y-4">
               {experience.map((exp, i) => (
@@ -188,28 +188,28 @@ export default function PortalProfile() {
                     <div>
                       <label className="block text-xs text-gray-500 mb-0.5">Company</label>
                       <input value={exp.company} onChange={e => setExperience(p => p.map((x, j) => j === i ? { ...x, company: e.target.value } : x))}
-                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
                     </div>
                     <div>
                       <label className="block text-xs text-gray-500 mb-0.5">Role / Title</label>
                       <input value={exp.role} onChange={e => setExperience(p => p.map((x, j) => j === i ? { ...x, role: e.target.value } : x))}
-                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
                     </div>
                     <div>
                       <label className="block text-xs text-gray-500 mb-0.5">From</label>
                       <input value={exp.from} onChange={e => setExperience(p => p.map((x, j) => j === i ? { ...x, from: e.target.value } : x))} placeholder="Jan 2020"
-                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
                     </div>
                     <div>
                       <label className="block text-xs text-gray-500 mb-0.5">To</label>
                       <input value={exp.to} onChange={e => setExperience(p => p.map((x, j) => j === i ? { ...x, to: e.target.value } : x))} placeholder="Present"
-                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
                     </div>
                   </div>
                   <div>
                     <label className="block text-xs text-gray-500 mb-0.5">Description</label>
                     <textarea rows={2} value={exp.description} onChange={e => setExperience(p => p.map((x, j) => j === i ? { ...x, description: e.target.value } : x))}
-                      className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none" />
+                      className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 resize-none" />
                   </div>
                 </div>
               ))}
@@ -229,13 +229,13 @@ export default function PortalProfile() {
                 <div className="flex gap-2 mb-3">
                   <input value={input} onChange={e => setInput(e.target.value)} placeholder={placeholder}
                     onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); setItems(p => [...p, input.trim()]); setInput('') } }}
-                    className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                    className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-orange-500" />
                   <button onClick={() => { if (input.trim()) { setItems(p => [...p, input.trim()]); setInput('') } }}
-                    className="px-2 py-1.5 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"><Plus size={13} /></button>
+                    className="px-2 py-1.5 bg-orange-600 text-white rounded text-xs hover:bg-orange-700"><Plus size={13} /></button>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {items.map((item, i) => (
-                    <span key={i} className="flex items-center gap-1 bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-full">
+                    <span key={i} className="flex items-center gap-1 bg-orange-50 text-orange-700 text-xs px-2 py-0.5 rounded-full">
                       {item}
                       <button onClick={() => setItems(p => p.filter((_, j) => j !== i))} className="hover:text-red-500 ml-0.5"><Trash2 size={10} /></button>
                     </span>

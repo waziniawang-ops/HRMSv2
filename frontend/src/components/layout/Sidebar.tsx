@@ -268,7 +268,7 @@ function NavGroup({ item }: { item: NavItem }) {
               to={child.path}
               className={({ isActive }) => cn(
                 'block px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                isActive ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                isActive ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'
               )}
             >
               {child.label}
@@ -290,7 +290,7 @@ export function Sidebar() {
     <aside className="fixed inset-y-0 left-0 w-60 bg-slate-900 flex flex-col z-30">
       <div className="px-4 py-5 border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center shrink-0">
             <Briefcase size={16} className="text-white" />
           </div>
           <div>
@@ -311,7 +311,7 @@ export function Sidebar() {
               end
               className={({ isActive }) => cn(
                 'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                isActive ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                isActive ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'
               )}
             >
               <item.icon size={18} className="shrink-0" />
@@ -322,7 +322,7 @@ export function Sidebar() {
       </nav>
 
       <div className="px-3 py-3 border-t border-slate-800">
-        <p className="text-[10px] text-slate-500 text-center">Olive Digital Sdn Bhd © 2026</p>
+        <p className="text-[10px] text-slate-500 text-center">Visionaries Ent. © 2026</p>
       </div>
     </aside>
   )

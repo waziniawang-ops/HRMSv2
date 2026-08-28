@@ -189,7 +189,7 @@ export default function Grades() {
                       <Td><Badge status={g.is_active ? 'ACTIVE' : 'INACTIVE'} /></Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEdit(g)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                          <button onClick={() => openEdit(g)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit">
                             <Pencil size={15} />
                           </button>
                           <button onClick={() => handleDelete(g)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">

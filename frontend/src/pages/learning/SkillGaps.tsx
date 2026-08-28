@@ -35,7 +35,7 @@ export default function SkillGaps() {
     return (
       <div className="flex items-center gap-2">
         <div className="w-20 h-1.5 bg-gray-100 rounded-full">
-          <div className="h-full bg-blue-500 rounded-full" style={{ width: `${pct}%` }} />
+          <div className="h-full bg-orange-500 rounded-full" style={{ width: `${pct}%` }} />
         </div>
         <span className="text-xs text-gray-600">{current}/{required}</span>
       </div>
@@ -64,7 +64,7 @@ export default function SkillGaps() {
                         -{g.gap}
                       </span>
                     </Td>
-                    <Td className="text-sm text-blue-700">{g.recommended_course_title || '—'}</Td>
+                    <Td className="text-sm text-orange-700">{g.recommended_course_title || '—'}</Td>
                     <Td><Badge status={g.is_closed ? 'ACTIVE' : 'PENDING'} label={g.is_closed ? 'Closed' : 'Open'} /></Td>
                   </Tr>
                 ))}

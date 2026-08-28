@@ -166,7 +166,7 @@ export default function Kiosk() {
       {/* Header bar */}
       <div className="flex items-center justify-between px-8 py-4 bg-gray-900 border-b border-gray-800">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center">
             <Camera size={16} className="text-white" />
           </div>
           <div>
@@ -186,7 +186,7 @@ export default function Kiosk() {
         {/* Loading states */}
         {(kioskState === 'loading_models' || kioskState === 'starting_camera') && (
           <div className="flex flex-col items-center gap-4 text-center">
-            <RefreshCw size={48} className="animate-spin text-blue-400" />
+            <RefreshCw size={48} className="animate-spin text-orange-400" />
             <p className="text-xl font-medium text-gray-300">
               {kioskState === 'loading_models' ? 'Loading face recognition…' : 'Starting camera…'}
             </p>
@@ -252,12 +252,12 @@ export default function Kiosk() {
             {kioskState === 'result' && result?.match && (
               <div className={`w-full rounded-2xl p-6 flex items-center gap-5 shadow-xl ${
                 result.action === 'CHECK_IN' ? 'bg-green-900/80 border-2 border-green-500' :
-                result.action === 'CHECK_OUT' ? 'bg-blue-900/80 border-2 border-blue-500' :
+                result.action === 'CHECK_OUT' ? 'bg-orange-900/80 border-2 border-orange-500' :
                 'bg-gray-800 border-2 border-gray-600'
               }`}>
                 <div className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center ${
                   result.action === 'CHECK_IN' ? 'bg-green-500' :
-                  result.action === 'CHECK_OUT' ? 'bg-blue-500' : 'bg-gray-600'
+                  result.action === 'CHECK_OUT' ? 'bg-orange-500' : 'bg-gray-600'
                 }`}>
                   {result.action === 'CHECK_IN' ? <LogIn size={32} className="text-white" /> :
                    result.action === 'CHECK_OUT' ? <LogOut size={32} className="text-white" /> :
@@ -268,14 +268,14 @@ export default function Kiosk() {
                   <p className="text-sm text-gray-300 mt-0.5">{result.employee_number}</p>
                   <p className={`text-lg font-semibold mt-2 ${
                     result.action === 'CHECK_IN' ? 'text-green-300' :
-                    result.action === 'CHECK_OUT' ? 'text-blue-300' : 'text-gray-300'
+                    result.action === 'CHECK_OUT' ? 'text-orange-300' : 'text-gray-300'
                   }`}>
                     {result.action === 'CHECK_IN' && `✓ Checked in at ${result.check_in}`}
                     {result.action === 'CHECK_OUT' && `✓ Checked out at ${result.check_out}`}
                     {result.action === 'ALREADY_COMPLETE' && 'Already checked in and out today'}
                   </p>
                   {result.action === 'CHECK_OUT' && result.check_in && (
-                    <p className="text-sm text-blue-200 mt-0.5">Check-in was at {result.check_in}</p>
+                    <p className="text-sm text-orange-200 mt-0.5">Check-in was at {result.check_in}</p>
                   )}
                 </div>
               </div>

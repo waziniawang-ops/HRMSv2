@@ -54,7 +54,7 @@ export function Header({ title }: HeaderProps) {
             onClick={() => setMenuOpen(o => !o)}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
           >
-            <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-full bg-orange-600 flex items-center justify-center">
               <User size={14} className="text-white" />
             </div>
             <div className="text-left">

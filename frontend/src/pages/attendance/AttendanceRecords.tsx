@@ -108,7 +108,7 @@ export default function AttendanceRecords() {
                       <Td><span className="font-mono text-xs text-gray-600">{r.employee_number}</span></Td>
                       <Td>{fmt(r.date)}</Td>
                       <Td className="font-mono text-sm text-green-700">{fmtTime(r.check_in)}</Td>
-                      <Td className="font-mono text-sm text-blue-700">{fmtTime(r.check_out)}</Td>
+                      <Td className="font-mono text-sm text-orange-700">{fmtTime(r.check_out)}</Td>
                       <Td>
                         {r.hours_worked != null
                           ? <span className="font-semibold text-gray-900">{r.hours_worked}h</span>

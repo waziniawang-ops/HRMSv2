@@ -54,7 +54,7 @@ const emptyForm = {
 }
 
 function assignmentType(a: Assignment) {
-  if (a.is_primary) return { label: 'Primary', cls: 'bg-blue-100 text-blue-700' }
+  if (a.is_primary) return { label: 'Primary', cls: 'bg-orange-100 text-orange-700' }
   if (!a.valid_to) return { label: 'Dual-Hat', cls: 'bg-purple-100 text-purple-700' }
   return { label: 'Acting', cls: 'bg-amber-100 text-amber-700' }
 }
@@ -157,10 +157,10 @@ export default function EmployeeAssignments() {
       <div className="space-y-4">
 
         {/* Info banner */}
-        <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 space-y-1">
+        <div className="rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-800 space-y-1">
           <p className="font-semibold">Assignment types</p>
           <div className="flex flex-wrap gap-4 text-xs mt-1">
-            <span><span className="inline-block px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium mr-1">Primary</span>Main substantive position</span>
+            <span><span className="inline-block px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 font-medium mr-1">Primary</span>Main substantive position</span>
             <span><span className="inline-block px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium mr-1">Dual-Hat</span>Ongoing secondary role — no end date</span>
             <span><span className="inline-block px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium mr-1">Acting</span>Temporary secondary role — has an end date</span>
           </div>
@@ -231,7 +231,7 @@ export default function EmployeeAssignments() {
                         <Td className="text-sm text-gray-500">{a.valid_to ? fmt(a.valid_to) : <span className="text-gray-300">Ongoing</span>}</Td>
                         <Td>
                           <div className="flex items-center gap-2 justify-end">
-                            <button onClick={() => openEdit(a)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                            <button onClick={() => openEdit(a)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit">
                               <Pencil size={15} />
                             </button>
                             <button onClick={() => handleDelete(a)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Remove">

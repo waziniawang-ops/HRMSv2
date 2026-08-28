@@ -27,7 +27,7 @@ type AuditLog = {
 
 const ACTION_COLOR: Record<string, string> = {
   CREATE: 'text-green-700 bg-green-50',
-  UPDATE: 'text-blue-700 bg-blue-50',
+  UPDATE: 'text-orange-700 bg-orange-50',
   DELETE: 'text-red-700 bg-red-50',
   APPROVE: 'text-emerald-700 bg-emerald-50',
   REJECT: 'text-orange-700 bg-orange-50',
@@ -143,7 +143,7 @@ export default function Audit() {
             className="w-56"
           />
           {(actionFilter || moduleFilter || objectTypeFilter || dateFrom || dateTo || search) && (
-            <button onClick={resetFilters} className="text-xs text-blue-600 hover:underline">
+            <button onClick={resetFilters} className="text-xs text-orange-600 hover:underline">
               Clear filters
             </button>
           )}
@@ -151,7 +151,7 @@ export default function Audit() {
 
         {data && (
           <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Shield size={14} className="text-blue-500" />
+            <Shield size={14} className="text-orange-500" />
             {data.count.toLocaleString()} immutable record{data.count !== 1 ? 's' : ''}
           </div>
         )}
@@ -184,7 +184,7 @@ export default function Audit() {
                   {data.results.map((log: AuditLog) => (
                     <Fragment key={log.id}>
                       <Tr
-                        className={`cursor-pointer ${expandedId === log.id ? 'bg-blue-50' : ''}`}
+                        className={`cursor-pointer ${expandedId === log.id ? 'bg-orange-50' : ''}`}
                         onClick={() => setExpandedId(prev => prev === log.id ? null : log.id)}
                       >
                         <Td>

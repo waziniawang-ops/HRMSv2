@@ -126,7 +126,7 @@ function StepBuilder({
           <GripVertical size={14} className="text-gray-300 shrink-0" />
 
           {/* Step number badge */}
-          <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
+          <span className="w-6 h-6 rounded-full bg-orange-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
             {i + 1}
           </span>
 
@@ -134,7 +134,7 @@ function StepBuilder({
           <select
             value={s.role}
             onChange={e => updateStep(i, 'role', e.target.value)}
-            className="flex-1 px-2 py-1.5 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-2 py-1.5 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
           >
             {ROLES.map(r => (
               <option key={r.value} value={r.value}>{r.label}</option>
@@ -149,7 +149,7 @@ function StepBuilder({
               max="720"
               value={s.sla_hours}
               onChange={e => updateStep(i, 'sla_hours', e.target.value)}
-              className="w-16 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-16 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
             <span className="text-xs text-gray-400 shrink-0">hrs SLA</span>
           </div>
@@ -284,7 +284,7 @@ function RuleModal({
               value={form.module_code}
               onChange={e => set('module_code', e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               <option value="">Select module…</option>
               {MODULES.map(m => (
@@ -311,7 +311,7 @@ function RuleModal({
             onChange={e => set('description', e.target.value)}
             rows={2}
             placeholder="Brief description of what this workflow governs…"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
 
@@ -354,7 +354,7 @@ function RuleModal({
                 type="checkbox"
                 checked={form[key] as boolean}
                 onChange={e => set(key, e.target.checked)}
-                className="rounded text-blue-600"
+                className="rounded text-orange-600"
               />
               <span className="text-xs font-medium text-gray-700">{label}</span>
             </label>
@@ -450,7 +450,7 @@ export default function WorkflowRules() {
                     <Tr
                       key={r.id}
                       onClick={() => setSelected(r)}
-                      className={`cursor-pointer ${selected?.id === r.id ? 'bg-blue-50' : ''}`}
+                      className={`cursor-pointer ${selected?.id === r.id ? 'bg-orange-50' : ''}`}
                     >
                       <Td>
                         <span className="font-mono text-xs font-semibold text-gray-700">
@@ -461,7 +461,7 @@ export default function WorkflowRules() {
                         <Badge status={r.module_code} label={r.module_code} />
                       </Td>
                       <Td className="text-gray-700 text-sm">{r.applies_to}</Td>
-                      <Td className="text-center font-bold text-blue-700">
+                      <Td className="text-center font-bold text-orange-700">
                         {r.steps?.length ?? 0}
                       </Td>
                       <Td>
@@ -479,7 +479,7 @@ export default function WorkflowRules() {
                         <div className="flex gap-1">
                           <button
                             onClick={() => openEdit(r)}
-                            className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                             title="Edit"
                           >
                             <Pencil size={14} />
@@ -550,7 +550,7 @@ export default function WorkflowRules() {
                   <ol className="space-y-2">
                     {(selected.steps ?? []).map((s: Step) => (
                       <li key={s.step} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                        <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
+                        <span className="w-6 h-6 rounded-full bg-orange-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
                           {s.step}
                         </span>
                         <div>

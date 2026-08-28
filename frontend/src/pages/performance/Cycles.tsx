@@ -121,7 +121,7 @@ export default function Cycles() {
                       <Td className="text-sm text-gray-600">{fmt(c.year_end_start)} – {fmt(c.year_end_end)}</Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
-                          <button onClick={() => openEdit(c)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
+                          <button onClick={() => openEdit(c)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></button>
                           <button onClick={() => handleDelete(c)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete"><Trash2 size={15} /></button>
                         </div>
                       </Td>
@@ -144,8 +144,8 @@ export default function Cycles() {
           <Select label="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
             {['DRAFT', 'ACTIVE', 'CLOSED', 'ARCHIVED'].map(s => <option key={s} value={s}>{s}</option>)}
           </Select>
-          <div className="p-3 bg-blue-50 rounded-xl">
-            <p className="text-xs font-semibold text-blue-700 mb-3">Goal Setting Period</p>
+          <div className="p-3 bg-orange-50 rounded-xl">
+            <p className="text-xs font-semibold text-orange-700 mb-3">Goal Setting Period</p>
             <div className="grid grid-cols-2 gap-3">
               <DatePicker label="Start" value={form.goal_setting_start} onChange={v => setForm(f => ({ ...f, goal_setting_start: v }))} />
               <DatePicker label="End" value={form.goal_setting_end} onChange={v => setForm(f => ({ ...f, goal_setting_end: v }))} />
