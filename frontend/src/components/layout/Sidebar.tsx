@@ -287,7 +287,7 @@ export function Sidebar() {
   const navItems = filterNavItems(ALL_NAV_ITEMS, userRoles)
 
   return (
-    <aside className="fixed inset-y-0 left-0 w-60 bg-slate-900 flex flex-col z-30">
+    <aside className="fixed inset-y-0 left-0 w-60 bg-gradient-to-b from-slate-900 via-orange-950 to-slate-900 flex flex-col z-30">
       <div className="px-4 py-5 border-b border-slate-800">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center shrink-0">
