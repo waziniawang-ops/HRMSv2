@@ -40,7 +40,12 @@ jobs:
         run: npm run build
 
       - name: Copy index.html to 404.html for SPA routing
-        run: cp frontend/dist/index.html frontend/dist/404.html
+        run: |
+          cp frontend/dist/index.html frontend/dist/404.html
+          # Chrome replaces small (<512 byte) 4xx/5xx response bodies with its own
+          # generic error page instead of rendering the actual HTML, breaking direct
+          # navigation to deep links. Pad well past that threshold.
+          printf '\n<!-- %s -->\n' "$(head -c 600 /dev/zero | tr '\0' '.')" >> frontend/dist/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
