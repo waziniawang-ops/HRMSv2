@@ -118,7 +118,7 @@ services:
     dockerfilePath: ./tenant-admin/Dockerfile
     dockerContext: ./tenant-admin
     healthCheckPath: /healthz/
-    preDeployCommand: "python manage.py migrate --no-input && python manage.py ensure_operator"
+    preDeployCommand: "./predeploy.sh"
     envVars:
       - key: SECRET_KEY
         generateValue: true

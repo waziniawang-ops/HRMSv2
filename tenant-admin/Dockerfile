@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x entrypoint.sh predeploy.sh
 
 EXPOSE 8000
 
