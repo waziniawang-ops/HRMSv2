@@ -9,6 +9,7 @@ import {
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/context/AuthContext'
+import { APP_NAME, APP_TAGLINE, ORG_NAME, CURRENT_YEAR } from '@/lib/branding'
 
 type RoleCode = string
 
@@ -23,6 +24,9 @@ interface NavItem {
   path?: string
   icon: React.ElementType
   roles?: RoleCode[]
+  /** Module.code from tenant-admin's plan catalog (config.settings.base.GATEABLE_MODULES).
+   * Omit for infra items (Dashboard, Workflow, Reports, Users, ...) that are never gated. */
+  module?: string
   children?: NavChild[]
 }
 
@@ -45,7 +49,7 @@ const REPORTS = [...ALL_HR, 'HR_PERFORMANCE', 'TALENT_COMMITTEE', 'MANAGER', 'RE
 const ALL_NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', path: '/', icon: LayoutDashboard },
   {
-    label: 'Core HR', icon: Building2, roles: ALL_HR,
+    label: 'Core HR', icon: Building2, roles: ALL_HR, module: 'core_hr',
     children: [
       { label: 'Org Units', path: '/core/org-units' },
       { label: 'Positions', path: '/core/positions' },
@@ -57,7 +61,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Recruitment', icon: UserPlus, roles: RECRUITMENT,
+    label: 'Recruitment', icon: UserPlus, roles: RECRUITMENT, module: 'recruitment',
     children: [
       { label: 'Requisitions', path: '/recruitment/requisitions', roles: [...ALL_HR, 'RECRUITER', 'HIRING_MANAGER'] },
       { label: 'Job Postings', path: '/recruitment/postings', roles: [...ALL_HR, 'RECRUITER', 'HIRING_MANAGER'] },
@@ -68,20 +72,20 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Onboarding', icon: UserCheck, roles: [...ALL_HR, 'RECRUITER'],
+    label: 'Onboarding', icon: UserCheck, roles: [...ALL_HR, 'RECRUITER'], module: 'onboarding',
     children: [
       { label: 'Cases', path: '/onboarding/cases' },
     ],
   },
   {
-    label: 'Attendance', icon: ScanFace, roles: ALL_HR,
+    label: 'Attendance', icon: ScanFace, roles: ALL_HR, module: 'attendance',
     children: [
       { label: 'Face Enrolment', path: '/attendance/enroll', roles: ALL_HR },
       { label: 'Records', path: '/attendance/records', roles: ALL_HR },
     ],
   },
   {
-    label: 'Workforce', icon: Calendar, roles: WORKFORCE,
+    label: 'Workforce', icon: Calendar, roles: WORKFORCE, module: 'workforce',
     children: [
       { label: 'Leave Types', path: '/workforce/leave-types', roles: ALL_HR },
       { label: 'Leave Requests', path: '/workforce/leave-requests' },
@@ -91,7 +95,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Succession', icon: GitBranch, roles: SUCCESSION,
+    label: 'Succession', icon: GitBranch, roles: SUCCESSION, module: 'succession',
     children: [
       { label: 'Plans', path: '/succession/plans' },
       { label: 'Talent Pools', path: '/succession/talent-pools', roles: [...ALL_HR, 'TALENT_COMMITTEE'] },
@@ -99,7 +103,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Performance', icon: TrendingUp, roles: PERF,
+    label: 'Performance', icon: TrendingUp, roles: PERF, module: 'performance',
     children: [
       { label: 'Cycles', path: '/performance/cycles', roles: [...ADMIN, 'HR_PERFORMANCE'] },
       { label: 'Goal Plans', path: '/performance/goals' },
@@ -108,7 +112,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Learning', icon: BookOpen, roles: [...LD, 'HR_MAKER', 'MANAGER', 'EMPLOYEE'],
+    label: 'Learning', icon: BookOpen, roles: [...LD, 'HR_MAKER', 'MANAGER', 'EMPLOYEE'], module: 'learning',
     children: [
       { label: 'Courses', path: '/learning/courses', roles: LD },
       { label: 'Assignments', path: '/learning/assignments', roles: [...LD, 'HR_MAKER', 'MANAGER', 'EMPLOYEE'] },
@@ -135,7 +139,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Payroll', icon: DollarSign, roles: PAYROLL,
+    label: 'Payroll', icon: DollarSign, roles: PAYROLL, module: 'payroll',
     children: [
       { label: 'Calendars', path: '/payroll/calendars', roles: PAYROLL },
       { label: 'Payroll Runs', path: '/payroll/runs', roles: PAYROLL },
@@ -146,7 +150,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Compensation', icon: BarChart3, roles: [...ADMIN, 'PAYROLL_OFFICER', 'FINANCE_CHECKER'],
+    label: 'Compensation', icon: BarChart3, roles: [...ADMIN, 'PAYROLL_OFFICER', 'FINANCE_CHECKER'], module: 'compensation',
     children: [
       { label: 'Salaries', path: '/compensation/salaries' },
       { label: 'Packages', path: '/compensation/packages' },
@@ -154,14 +158,14 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Benefits', icon: Gift, roles: BENEFITS_ROLES,
+    label: 'Benefits', icon: Gift, roles: BENEFITS_ROLES, module: 'benefits',
     children: [
       { label: 'Benefit Plans', path: '/benefits/plans' },
       { label: 'Enrollments', path: '/benefits/enrollments' },
     ],
   },
   {
-    label: 'ESS', icon: Inbox, roles: ALL_INTERNAL,
+    label: 'ESS', icon: Inbox, roles: ALL_INTERNAL, module: 'ess',
     children: [
       { label: 'All Requests', path: '/ess/requests', roles: ALL_HR },
       { label: 'My Requests', path: '/ess/my-requests' },
@@ -169,14 +173,14 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Service Desk', icon: HeadphonesIcon, roles: SD_ROLES,
+    label: 'Service Desk', icon: HeadphonesIcon, roles: SD_ROLES, module: 'service_desk',
     children: [
       { label: 'Tickets', path: '/service-desk/tickets' },
       { label: 'Knowledge Base', path: '/service-desk/knowledge-base' },
     ],
   },
   {
-    label: 'Employee Relations', icon: Scale, roles: ER_ROLES,
+    label: 'Employee Relations', icon: Scale, roles: ER_ROLES, module: 'employee_relations',
     children: [
       { label: 'ER Cases', path: '/er/cases' },
     ],
@@ -189,33 +193,33 @@ const ALL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: 'Offboarding', icon: LogOut, roles: ALL_HR,
+    label: 'Offboarding', icon: LogOut, roles: ALL_HR, module: 'offboarding',
     children: [
       { label: 'Cases', path: '/offboarding/cases' },
     ],
   },
   {
-    label: 'Engagement', icon: Award, roles: ALL_HR,
+    label: 'Engagement', icon: Award, roles: ALL_HR, module: 'engagement',
     children: [
       { label: 'Recognition', path: '/engagement/nominations' },
       { label: 'Surveys', path: '/engagement/surveys' },
     ],
   },
   {
-    label: 'HSE', icon: AlertTriangle, roles: HSE_ROLES,
+    label: 'HSE', icon: AlertTriangle, roles: HSE_ROLES, module: 'hse',
     children: [
       { label: 'Incidents', path: '/hse/incidents' },
       { label: 'Wellbeing', path: '/hse/wellbeing' },
     ],
   },
   {
-    label: 'Claims', icon: Receipt, roles: [...ALL_HR, 'MANAGER', 'EMPLOYEE'],
+    label: 'Claims', icon: Receipt, roles: [...ALL_HR, 'MANAGER', 'EMPLOYEE'], module: 'claims',
     children: [
       { label: 'Claim Requests', path: '/claims/requests' },
     ],
   },
   {
-    label: 'Skills', icon: Zap, roles: [...ALL_HR, 'MANAGER'],
+    label: 'Skills', icon: Zap, roles: [...ALL_HR, 'MANAGER'], module: 'skills',
     children: [
       { label: 'Skill Inventory', path: '/skills/inventory', roles: ALL_HR },
       { label: 'Employee Skills', path: '/skills/employee-skills' },
@@ -231,9 +235,14 @@ function canAccess(requiredRoles: RoleCode[] | undefined, userRoles: RoleCode[])
   return !requiredRoles || requiredRoles.some(r => userRoles.includes(r))
 }
 
-function filterNavItems(items: NavItem[], userRoles: RoleCode[]): NavItem[] {
+/** null enabledModules means ungated (flagship/local deployment) — everything passes. */
+function canAccessModule(requiredModule: string | undefined, enabledModules: string[] | null): boolean {
+  return !requiredModule || enabledModules === null || enabledModules.includes(requiredModule)
+}
+
+function filterNavItems(items: NavItem[], userRoles: RoleCode[], enabledModules: string[] | null): NavItem[] {
   return items
-    .filter(item => canAccess(item.roles, userRoles))
+    .filter(item => canAccess(item.roles, userRoles) && canAccessModule(item.module, enabledModules))
     .map(item => {
       if (!item.children) return item
       const children = item.children.filter(c => canAccess(c.roles, userRoles))
@@ -284,7 +293,7 @@ export function Sidebar() {
   const { user } = useAuth()
   // user.roles is the full effective set; fall back to [primary role] if missing
   const userRoles = user?.roles?.length ? user.roles : (user?.role ? [user.role] : [])
-  const navItems = filterNavItems(ALL_NAV_ITEMS, userRoles)
+  const navItems = filterNavItems(ALL_NAV_ITEMS, userRoles, user?.enabled_modules ?? null)
 
   return (
     <aside className="fixed inset-y-0 left-0 w-60 bg-gradient-to-b from-slate-900 via-orange-950 to-slate-900 flex flex-col z-30">
@@ -294,8 +303,8 @@ export function Sidebar() {
             <Briefcase size={16} className="text-white" />
           </div>
           <div>
-            <p className="text-sm font-bold text-white leading-none">HRMSv2</p>
-            <p className="text-[10px] text-slate-400 mt-0.5">Enterprise HR Platform</p>
+            <p className="text-sm font-bold text-white leading-none">{APP_NAME}</p>
+            <p className="text-[10px] text-slate-400 mt-0.5">{APP_TAGLINE}</p>
           </div>
         </div>
       </div>
@@ -322,7 +331,7 @@ export function Sidebar() {
       </nav>
 
       <div className="px-3 py-3 border-t border-slate-800">
-        <p className="text-[10px] text-slate-500 text-center">Visionaries Ent. © 2026</p>
+        <p className="text-[10px] text-slate-500 text-center">{ORG_NAME} © {CURRENT_YEAR}</p>
       </div>
     </aside>
   )

@@ -3,6 +3,7 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { PageSpinner } from '@/components/ui/Spinner'
 import api from '@/lib/api'
+import { APP_NAME } from '@/lib/branding'
 import {
   Users, Briefcase, GitPullRequest, UserPlus, FileText, CheckCircle2,
   TrendingUp, BookOpen, ArrowUpRight
@@ -82,7 +83,7 @@ export default function Dashboard() {
         <div className="w-16 h-16 rounded-2xl bg-orange-100 flex items-center justify-center mb-4">
           <TrendingUp size={28} className="text-orange-600" />
         </div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Welcome to HRMSv2</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">Welcome to {APP_NAME}</h2>
         <p className="text-sm text-gray-500 max-w-sm">Use the sidebar to navigate to your available modules.</p>
       </div>
     </AppLayout>

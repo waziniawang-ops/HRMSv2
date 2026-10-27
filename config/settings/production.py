@@ -15,16 +15,16 @@ SECURE_HSTS_PRELOAD = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# Always allow GitHub Pages frontend; also honour any extra origins from env.
+# Origins come only from env — the flagship sets its GitHub Pages origin in
+# render.yaml, and each tenant backend gets its own frontend URL from
+# tenant-admin, so one tenant's API never trusts another deployment's origin.
 # Strip paths from env-var origins — CORS origins must be scheme+host only.
 def _origin_only(url: str) -> str:
     p = urlparse(url.strip())
     return f"{p.scheme}://{p.netloc}" if p.scheme and p.netloc else url.strip()
 
-_extra = [_origin_only(o) for o in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()]
-CORS_ALLOWED_ORIGINS = list({
-    'https://waziniawang-ops.github.io',
-    *_extra,
+CORS_ALLOWED_ORIGINS = sorted({
+    _origin_only(o) for o in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()
 })
 
 # Cloudinary for media files

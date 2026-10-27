@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { Briefcase, LogOut, User, FileText, LayoutDashboard, LogIn } from 'lucide-react'
 import { usePortalAuth } from '@/context/PortalAuthContext'
 import { cn } from '@/lib/utils'
+import { ORG_NAME, APP_NAME, CURRENT_YEAR } from '@/lib/branding'
 
 export function PortalLayout({ children }: { children: ReactNode }) {
   const { user, logout } = usePortalAuth()
@@ -23,8 +24,8 @@ export function PortalLayout({ children }: { children: ReactNode }) {
               <Briefcase size={16} className="text-white" />
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-900 leading-none">HRMSv2 Careers</p>
-              <p className="text-[10px] text-gray-400">Visionaries Ent.</p>
+              <p className="text-sm font-bold text-gray-900 leading-none">{APP_NAME} Careers</p>
+              <p className="text-[10px] text-gray-400">{ORG_NAME}</p>
             </div>
           </Link>
 
@@ -104,7 +105,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
       </main>
 
       <footer className="border-t border-gray-200 py-4 text-center text-xs text-gray-400">
-        Visionaries Ent. © 2026 — Careers Portal
+        {ORG_NAME} © {CURRENT_YEAR} — Careers Portal
       </footer>
     </div>
   )

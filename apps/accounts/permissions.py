@@ -1,5 +1,32 @@
+from django.conf import settings
 from rest_framework.permissions import BasePermission
 from .models import CustomUser
+
+
+def _module_label(view):
+    """Derives the owning app's Module.code from a view's module path, e.g.
+    'apps.payroll.views' -> 'payroll'. Not URL-prefix-based, because several
+    URL prefixes don't match their app label (core vs core_hr, er vs
+    employee_relations, ...)."""
+    parts = type(view).__module__.split('.')
+    return parts[1] if len(parts) >= 2 and parts[0] == 'apps' else None
+
+
+class IsModuleEnabled(BasePermission):
+    """Secondary DEFAULT_PERMISSION_CLASSES layer blocking plan-gated modules
+    this tenant's plan doesn't include. Most views set their own
+    permission_classes, which replaces the defaults, so the real enforcement
+    is apps.accounts.middleware.ModuleGateMiddleware."""
+
+    message = "This module isn't included in your organization's plan."
+
+    def has_permission(self, request, view):
+        if not settings.ENABLED_MODULES:
+            return True
+        module = _module_label(view)
+        if module is None or module not in settings.GATEABLE_MODULES:
+            return True
+        return module in settings.ENABLED_MODULES
 
 
 class IsInternalUser(BasePermission):

@@ -6,6 +6,7 @@ import { PortalLayout } from './PortalLayout'
 import { Spinner } from '@/components/ui/Spinner'
 import portalApi from '@/lib/portalApi'
 import { fmt } from '@/lib/utils'
+import { ORG_NAME } from '@/lib/branding'
 
 interface Job {
   id: string
@@ -35,7 +36,7 @@ export default function PortalJobs() {
       {/* Hero */}
       <div className="text-center mb-10">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Open Vacancies</h1>
-        <p className="text-gray-500">Find your next opportunity at Visionaries Ent.</p>
+        <p className="text-gray-500">Find your next opportunity at {ORG_NAME}</p>
       </div>
 
       {/* Search */}
