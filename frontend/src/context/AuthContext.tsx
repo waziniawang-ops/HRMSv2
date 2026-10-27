@@ -13,11 +13,15 @@ export interface User {
   /** All effective roles — use this for access-control checks */
   roles: string[]
   user_type: string
+  /** This deployment's plan-gated module codes, or null if ungated (flagship
+   * or local/dev). Comes from settings.ENABLED_MODULES, not a per-user value. */
+  enabled_modules: string[] | null
 }
 
 interface AuthContextValue {
   user: User | null
   login: (username: string, password: string) => Promise<void>
+  loginWithTokens: (access: string, refresh: string) => Promise<void>
   logout: () => void
   isLoading: boolean
 }
@@ -48,6 +52,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(normalise(data.user))
   }
 
+  /** Used by the OAuth callback page — the backend already issued a JWT pair
+   * via the IdP handshake; store it and fetch the profile. */
+  async function loginWithTokens(access: string, refresh: string) {
+    localStorage.setItem('access_token', access)
+    localStorage.setItem('refresh_token', refresh)
+    const { data } = await api.get('/auth/profile/')
+    setUser(normalise(data))
+  }
+
   function logout() {
     const refresh = localStorage.getItem('refresh_token')
     if (refresh) api.post('/auth/logout/', { refresh }).catch(() => {})
@@ -57,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, loginWithTokens, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

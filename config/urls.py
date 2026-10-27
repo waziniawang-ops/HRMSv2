@@ -2,9 +2,20 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.db import connection
+from django.http import JsonResponse
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
+
+
+def healthz(request):
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT 1')
+    return JsonResponse({'status': 'ok'})
+
+
 urlpatterns = [
+    path('healthz/', healthz, name='healthz'),
     path('admin/', admin.site.urls),
 
     # API v1

@@ -10,6 +10,10 @@ urlpatterns = [
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
 
+    path('oauth/status/', views.OAuthStatusView.as_view(), name='oauth-status'),
+    path('oauth/login/', views.OAuthLoginView.as_view(), name='oauth-login'),
+    path('oauth/callback/', views.OAuthCallbackView.as_view(), name='oauth-callback'),
+
     path('roles/', views.RoleListView.as_view(), name='role-list'),
 
     path('users/', views.UserListView.as_view(), name='user-list'),

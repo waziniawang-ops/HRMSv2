@@ -16,6 +16,7 @@ import PortalProfile from '@/pages/portal/Profile'
 import PortalDocuments from '@/pages/portal/Documents'
 
 import Login from '@/pages/Login'
+import OAuthCallback from '@/pages/OAuthCallback'
 import Dashboard from '@/pages/Dashboard'
 
 // Core HR
@@ -167,6 +168,7 @@ export default function App() {
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
             {/* Kiosk is public — no auth required */}
             <Route path="/kiosk" element={<Kiosk />} />
 

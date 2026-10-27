@@ -1,3 +1,7 @@
+from urllib.parse import urlencode
+
+from django.conf import settings
+from django.http import HttpResponseRedirect
 from django.utils import timezone
 from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
@@ -6,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.audit.utils import log_action
+from . import oauth
 from .models import CustomUser, Role
 from .serializers import (
     RegisterSerializer, LoginSerializer, UserSerializer,
@@ -78,6 +83,78 @@ class LogoutView(APIView):
         except Exception:
             pass
         return Response({'detail': 'Successfully logged out.'})
+
+
+class OAuthStatusView(APIView):
+    """Public, pre-login endpoint the login page calls to decide whether to
+    show an SSO button."""
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        if not settings.OAUTH_ENABLED:
+            return Response({'enabled': False})
+        return Response({'enabled': True, 'button_label': settings.OAUTH_BUTTON_LABEL})
+
+
+class OAuthLoginView(APIView):
+    """Starts the OIDC login — a real browser redirect to the IdP."""
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        try:
+            oauth.require_config()
+        except oauth.OAuthConfigError:
+            return HttpResponseRedirect(_frontend_login_redirect('oauth_not_configured'))
+        state, nonce = oauth.make_state_and_nonce()
+        return HttpResponseRedirect(oauth.build_authorization_url(state, nonce))
+
+
+class OAuthCallbackView(APIView):
+    """Where the IdP redirects back to. On success, hands the JWT pair to the
+    SPA in the URL fragment, which browsers never send to any server."""
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        if request.query_params.get('error'):
+            return HttpResponseRedirect(_frontend_login_redirect('oauth_denied'))
+
+        state = request.query_params.get('state')
+        code = request.query_params.get('code')
+        if not code or not state:
+            return HttpResponseRedirect(_frontend_login_redirect('oauth_invalid_state'))
+        try:
+            expected_nonce = oauth.validate_state(state)
+        except Exception:
+            # covers signing.BadSignature and its SignatureExpired subclass
+            return HttpResponseRedirect(_frontend_login_redirect('oauth_invalid_state'))
+
+        try:
+            claims = oauth.exchange_code_for_claims(code, expected_nonce)
+        except oauth.OAuthLoginError:
+            log_action(request, 'OAUTH_LOGIN_FAILED', 'CustomUser')
+            return HttpResponseRedirect(_frontend_login_redirect('oauth_failed'))
+
+        email = claims.get('email')
+        if not email or claims.get('email_verified') is False:
+            return HttpResponseRedirect(_frontend_login_redirect('oauth_email_unverified'))
+
+        # No auto-provisioning: an admin must already have created a user with
+        # this email — a successful IdP login alone never grants an account.
+        user = CustomUser.objects.filter(email__iexact=email, is_active=True).first()
+        if not user:
+            log_action(request, 'OAUTH_LOGIN_NO_ACCOUNT', 'CustomUser', extra={'email': email})
+            return HttpResponseRedirect(_frontend_login_redirect('oauth_no_account'))
+
+        refresh = RefreshToken.for_user(user)
+        user.last_login = timezone.now()
+        user.save(update_fields=['last_login'])
+        log_action(request, 'OAUTH_LOGIN_SUCCESS', 'CustomUser', str(user.id))
+        fragment = urlencode({'access': str(refresh.access_token), 'refresh': str(refresh)})
+        return HttpResponseRedirect(f'{settings.FRONTEND_URL}/oauth/callback#{fragment}')
+
+
+def _frontend_login_redirect(error_code):
+    return f'{settings.FRONTEND_URL}/login?{urlencode({"oauth_error": error_code})}'
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):

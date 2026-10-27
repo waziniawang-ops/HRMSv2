@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -57,16 +58,17 @@ class LoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     roles = serializers.SerializerMethodField()
+    enabled_modules = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
         fields = [
             'id', 'username', 'email', 'first_name', 'last_name',
             'user_type', 'role', 'roles', 'phone', 'is_active',
-            'is_email_verified', 'date_joined', 'last_login',
+            'is_email_verified', 'date_joined', 'last_login', 'enabled_modules',
         ]
         read_only_fields = [
-            'id', 'date_joined', 'last_login', 'user_type', 'role', 'roles',
+            'id', 'date_joined', 'last_login', 'user_type', 'role', 'roles', 'enabled_modules',
         ]
 
     def get_roles(self, obj) -> list[str]:
@@ -75,6 +77,11 @@ class UserSerializer(serializers.ModelSerializer):
         if obj.role:
             codes.add(obj.role)
         return sorted(codes)
+
+    def get_enabled_modules(self, obj) -> list[str] | None:
+        """Deployment-level, from settings.ENABLED_MODULES (set by tenant-admin).
+        None means ungated — the frontend sidebar shows every module."""
+        return sorted(settings.ENABLED_MODULES) if settings.ENABLED_MODULES else None
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -100,6 +107,31 @@ class UserCreateSerializer(serializers.ModelSerializer):
         if obj.role:
             codes.add(obj.role)
         return sorted(codes)
+
+    def validate(self, attrs):
+        """Enforces settings.SEAT_LIMIT (pushed by tenant-admin from the tenant's
+        plan) against active INTERNAL users — the billed seats. Only blocks a
+        write that newly consumes a seat (create, reactivate, EXTERNAL->INTERNAL);
+        it never evicts anyone already over a lowered limit."""
+        if settings.SEAT_LIMIT is not None:
+            was_consuming = bool(
+                self.instance and self.instance.is_active
+                and self.instance.user_type == CustomUser.USER_TYPE_INTERNAL
+            )
+            will_be_active = attrs.get('is_active', self.instance.is_active if self.instance else True)
+            will_be_internal = attrs.get(
+                'user_type', self.instance.user_type if self.instance else CustomUser.USER_TYPE_INTERNAL,
+            ) == CustomUser.USER_TYPE_INTERNAL
+            if will_be_active and will_be_internal and not was_consuming:
+                current = CustomUser.objects.filter(
+                    user_type=CustomUser.USER_TYPE_INTERNAL, is_active=True,
+                ).count()
+                if current >= settings.SEAT_LIMIT:
+                    raise serializers.ValidationError(
+                        f'Seat limit reached ({current}/{settings.SEAT_LIMIT} active internal users). '
+                        'Deactivate an existing user or upgrade your plan to add more.'
+                    )
+        return attrs
 
     def _sync_roles(self, user, role_codes):
         """Set the M2M roles from a list of codes. Always includes primary role."""

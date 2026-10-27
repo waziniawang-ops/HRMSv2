@@ -13,6 +13,43 @@ DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
+# Plan-gateable modules — must match tenant-admin/tenants/models.py's Module.code
+# catalog exactly. Each tenant is a fully separate Render deployment with no live
+# connection to tenant-admin, so the catalog is duplicated here rather than
+# looked up. Apps not in this set (accounts, audit, documents, notification,
+# reporting, workflow) are cross-cutting infrastructure and are never gated.
+GATEABLE_MODULES = frozenset({
+    'attendance', 'core_hr', 'ess', 'workforce',
+    'benefits', 'claims', 'compensation', 'payroll',
+    'employee_relations', 'engagement', 'hse', 'service_desk',
+    'learning', 'offboarding', 'onboarding', 'performance', 'recruitment', 'skills', 'succession',
+})
+
+# Set by tenant-admin's provisioning to this tenant's plan's module codes
+# (comma-separated). Empty means "no gating at all", not "nothing enabled" —
+# the flagship deployment and local/dev never set it, so a missing env var can
+# never lock a tenant out of their own app.
+ENABLED_MODULES = frozenset(
+    m.strip() for m in os.environ.get('ENABLED_MODULES', '').split(',') if m.strip()
+)
+
+# Set by tenant-admin's provisioning to the plan's seat_limit. Unset/blank means
+# unlimited. Enforced in apps.accounts.serializers.UserCreateSerializer.
+_seat_limit_raw = os.environ.get('SEAT_LIMIT', '').strip()
+SEAT_LIMIT = int(_seat_limit_raw) if _seat_limit_raw.isdigit() else None
+
+# This deployment's own frontend URL — where the OAuth callback sends the browser.
+FRONTEND_URL = os.environ.get('FRONTEND_URL', '').strip()
+
+# Generic OpenID Connect SSO, configured per tenant in tenant-admin and pushed
+# here as env vars. Unset means SSO is simply not offered (see apps.accounts.oauth).
+OAUTH_ENABLED = os.environ.get('OAUTH_ENABLED', '').strip().lower() == 'true'
+OAUTH_ISSUER = os.environ.get('OAUTH_ISSUER', '').strip().rstrip('/')
+OAUTH_CLIENT_ID = os.environ.get('OAUTH_CLIENT_ID', '').strip()
+OAUTH_CLIENT_SECRET = os.environ.get('OAUTH_CLIENT_SECRET', '').strip()
+OAUTH_REDIRECT_URI = os.environ.get('OAUTH_REDIRECT_URI', '').strip()
+OAUTH_BUTTON_LABEL = os.environ.get('OAUTH_BUTTON_LABEL', '').strip() or 'Sign in with SSO'
+
 # Render automatically injects this — no manual env var needed
 _render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if _render_host and _render_host not in ALLOWED_HOSTS:
@@ -82,6 +119,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'apps.audit.middleware.AuditMiddleware',
+    'apps.accounts.middleware.ModuleGateMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -130,18 +168,24 @@ DATABASES = {
 # Cache
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': REDIS_URL,
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+# Tenant deployments created by tenant-admin get no Redis of their own — they
+# set USE_REDIS_CACHE=false and fall back to an in-process cache with
+# database-backed sessions (only the Django admin uses sessions; the API is JWT).
+if os.environ.get('USE_REDIS_CACHE', 'true').lower() == 'true':
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': REDIS_URL,
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            }
         }
     }
-}
-
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default'
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = 'default'
+else:
+    CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'}}
+    SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -172,6 +216,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+        'apps.accounts.permissions.IsModuleEnabled',
     ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',

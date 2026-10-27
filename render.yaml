@@ -4,6 +4,20 @@ databases:
     user: hrms
     plan: free
 
+  # --- Multi-tenant control plane -------------------------------------------
+  # tenant-admin's own metadata (tenants, plans, modules). Never holds HR data.
+  - name: hrms-tenant-admin-db
+    databaseName: tenant_admin
+    user: tenant_admin
+    plan: basic-256mb
+
+  # Shared instance holding ONE DATABASE PER TENANT — tenant-admin creates and
+  # drops those databases itself (tenants/provisioning.py).
+  - name: hrms-tenants-db
+    databaseName: tenants
+    user: tenants_admin
+    plan: basic-1gb
+
 services:
   - type: redis
     name: hrms-redis
@@ -94,3 +108,55 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
+
+  # Tenant control plane: Django API + React UI in one Docker service. Creates,
+  # suspends, re-plans and deletes each tenant's own Render services + database.
+  - type: web
+    name: hrms-tenant-admin
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./tenant-admin/Dockerfile
+    dockerContext: ./tenant-admin
+    healthCheckPath: /healthz/
+    preDeployCommand: "python manage.py migrate --no-input && python manage.py ensure_operator"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hrms-tenant-admin-db
+          property: connectionString
+      - key: TENANT_APPS_DB_ADMIN_URL
+        fromDatabase:
+          name: hrms-tenants-db
+          property: connectionString
+      - key: TENANT_REPO_URL
+        value: "https://github.com/waziniawang-ops/HRMSv2"
+      - key: TENANT_REPO_BRANCH
+        value: "main"
+      - key: TENANT_RENDER_REGION
+        value: "singapore"
+      - key: TENANT_BACKEND_PLAN
+        value: "starter"
+      # Copied into every tenant backend so uploads work (shared Cloudinary account).
+      - key: TENANT_SHARED_ENV_KEYS
+        value: "CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET"
+      # Set these in the Render dashboard:
+      - key: RENDER_API_KEY
+        sync: false
+      - key: RENDER_OWNER_ID          # workspace id from GET https://api.render.com/v1/owners
+        sync: false
+      - key: TENANT_ADMIN_PASSWORD_ENCRYPTION_KEY   # a Fernet key, see tenant-admin/config/settings.py
+        sync: false
+      - key: OPERATOR_USERNAME        # first operator login, created once by ensure_operator
+        sync: false
+      - key: OPERATOR_EMAIL
+        sync: false
+      - key: OPERATOR_PASSWORD
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false

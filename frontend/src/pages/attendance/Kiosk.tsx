@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import * as faceapi from 'face-api.js'
 import axios from 'axios'
 import { CheckCircle, LogIn, LogOut, AlertCircle, Camera, RefreshCw, Clock } from 'lucide-react'
+import { APP_NAME } from '@/lib/branding'
 
 type KioskState = 'loading_models' | 'starting_camera' | 'scanning' | 'verifying' | 'result' | 'no_match' | 'camera_error' | 'model_error'
 
@@ -170,7 +171,7 @@ export default function Kiosk() {
             <Camera size={16} className="text-white" />
           </div>
           <div>
-            <p className="font-bold text-white leading-none">HRMSv2</p>
+            <p className="font-bold text-white leading-none">{APP_NAME}</p>
             <p className="text-[10px] text-gray-400 mt-0.5">Facial Attendance Kiosk</p>
           </div>
         </div>
