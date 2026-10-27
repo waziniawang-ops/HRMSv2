@@ -129,9 +129,27 @@ def _set_env_vars(service_id, env):
     _render('PUT', f'/services/{service_id}/env-vars', json=_env_list(env))
 
 
+def _recent_deploys(service_id):
+    items = _render('GET', f'/services/{service_id}/deploys?limit=20') or []
+    # List endpoints wrap each row as {"deploy": {...}, "cursor": "..."}.
+    return [item.get('deploy', item) for item in items]
+
+
 def _trigger_deploy(service_id):
+    """Starts a deploy and returns its id. If another deploy is still running,
+    Render queues the new one and answers with an empty body, so the queued
+    deploy's id is found by waiting for a deploy that wasn't there before."""
+    before = {d['id'] for d in _recent_deploys(service_id)}
     data = _render('POST', f'/services/{service_id}/deploys', json={'clearCache': 'do_not_clear'})
-    return data['id']
+    if data and data.get('id'):
+        return data['id']
+    deadline = time.monotonic() + _DEPLOY_TIMEOUT_SECONDS
+    while time.monotonic() < deadline:
+        new = [d for d in _recent_deploys(service_id) if d['id'] not in before]
+        if new:
+            return max(new, key=lambda d: d.get('createdAt', ''))['id']
+        time.sleep(_DEPLOY_POLL_SECONDS)
+    raise ProvisioningError(f'Deploy queued on {service_id} never started within {_DEPLOY_TIMEOUT_SECONDS // 60} minutes.')
 
 
 def _wait_for_deploy(tenant, service_id, deploy_id, label):
@@ -358,7 +376,7 @@ def _backend_env(tenant, db_url, django_secret_key, backend_url='', frontend_url
 
 def create_backend_service(tenant, env):
     """Creates the tenant's backend web service. Render starts its first
-    deploy immediately. Returns (service_id, url)."""
+    deploy immediately. Returns (service_id, url, deploy_id)."""
     data = _render('POST', '/services', json={
         'type': 'web_service',
         'name': _service_name(tenant, 'api'),
@@ -381,7 +399,7 @@ def create_backend_service(tenant, env):
         },
     })
     service = data['service']
-    return service['id'], service['serviceDetails']['url']
+    return service['id'], service['serviceDetails']['url'], data.get('deployId')
 
 
 def create_frontend_site(tenant, backend_url):
@@ -472,7 +490,7 @@ def provision_tenant(tenant_id, result_registry):
         _log_step(tenant, f'Database created ({_db_name(tenant)}).')
 
         _log_step(tenant, 'Creating backend service…')
-        backend_id, backend_url = create_backend_service(
+        backend_id, backend_url, backend_first_deploy_id = create_backend_service(
             tenant, _backend_env(tenant, db_url, django_secret_key, admin_password=admin_password),
         )
         tenant.render_backend_service_id = backend_id
@@ -485,12 +503,17 @@ def provision_tenant(tenant_id, result_registry):
         tenant.save(update_fields=['render_frontend_service_id'])
         _log_step(tenant, f'Frontend static site created: {frontend_url}')
 
+        # The first deploy builds, migrates and seeds the admin account. Let it
+        # finish before redeploying, so the two deploys don't overlap.
+        if backend_first_deploy_id:
+            _log_step(tenant, 'Building and migrating the backend (this takes a few minutes)…')
+            _wait_for_deploy(tenant, backend_id, backend_first_deploy_id, 'Backend (first)')
+
         _log_step(tenant, 'Pointing the backend at its frontend (CORS, SSO redirect) and redeploying…')
         _set_env_vars(backend_id, _backend_env(
             tenant, db_url, django_secret_key, backend_url, frontend_url, admin_password=admin_password,
         ))
         backend_deploy_id = _trigger_deploy(backend_id)
-        _log_step(tenant, 'Building and migrating the backend (this takes a few minutes)…')
         _wait_for_deploy(tenant, backend_id, backend_deploy_id, 'Backend')
         if frontend_deploy_id:
             _wait_for_deploy(tenant, frontend_id, frontend_deploy_id, 'Frontend')
