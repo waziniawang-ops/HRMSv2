@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Visionaries HRMS User Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: sticky contents rail beside one reading column; screenshots sit in
+   browser-window frames that break slightly wider than the text. */
+:root {
+  --bg: #fbf9f7;
+  --surface: #ffffff;
+  --sunken: #f4efeb;
+  --ink: #1d1814;
+  --muted: #6b615a;
+  --line: #ebe3dc;
+  --accent: #dd5410;
+  --accent-ink: #9a3412;
+  --accent-soft: #fff0e6;
+  --ok: #15803d;
+  --ok-soft: #e8f6ed;
+  --warn: #a16207;
+  --warn-soft: #fdf5dc;
+  --bad: #b91c1c;
+  --bad-soft: #fdeaea;
+  --info: #1d4ed8;
+  --info-soft: #e9effd;
+  --hero-1: #0f172a;
+  --hero-2: #431407;
+  --hero-ink: #fff7f1;
+  --hero-muted: #d6c3b6;
+  --shadow: 0 1px 2px rgb(40 20 10 / .06), 0 8px 24px rgb(40 20 10 / .07);
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --step--1: .84rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.55rem;
+  --step-3: 2.1rem;
+  --step-4: clamp(2.3rem, 5vw, 3.4rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141012; --surface: #1c1719; --sunken: #231d1f; --ink: #f3ede8; --muted: #ab9f97; --line: #322a2c;
+    --accent: #fb8a4a; --accent-ink: #fdba8c; --accent-soft: #2c1b12;
+    --ok: #4ade80; --ok-soft: #12261a; --warn: #facc15; --warn-soft: #2a230d; --bad: #f87171; --bad-soft: #2d1414;
+    --info: #93b4ff; --info-soft: #15203a;
+    --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141012; --surface: #1c1719; --sunken: #231d1f; --ink: #f3ede8; --muted: #ab9f97; --line: #322a2c;
+  --accent: #fb8a4a; --accent-ink: #fdba8c; --accent-soft: #2c1b12;
+  --ok: #4ade80; --ok-soft: #12261a; --warn: #facc15; --warn-soft: #2a230d; --bad: #f87171; --bad-soft: #2d1414;
+  --info: #93b4ff; --info-soft: #15203a;
+  --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: var(--step-0); line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent-ink); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+code, .mono { font-family: var(--font-mono); font-size: .88em; }
+code { background: var(--sunken); padding: .1em .35em; border-radius: 4px; }
+
+/* Hero — the same slate-to-ember gradient as the HRMS sign-in screen */
+.hero {
+  background: radial-gradient(120% 140% at 85% 10%, var(--hero-2) 0%, transparent 55%), linear-gradient(135deg, var(--hero-1) 0%, #2a1310 60%, var(--hero-1) 100%);
+  color: var(--hero-ink);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.hero-inner { max-width: 1180px; margin: 0 auto; padding-block: 56px 48px; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: center; }
+.brandline { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: .08em; text-transform: uppercase; color: var(--hero-muted); }
+.brandmark { width: 30px; height: 30px; border-radius: 8px; background: #ea580c; display: grid; place-items: center; }
+.hero h1 { font-family: var(--font-display); font-size: var(--step-4); line-height: 1.05; letter-spacing: -.02em; margin: 18px 0 14px; text-wrap: balance; font-weight: 800; }
+.hero p { color: var(--hero-muted); max-width: 54ch; margin: 0 0 10px; }
+.hero .note { font-size: var(--step--1); border-left: 2px solid #ea580c; padding-left: 12px; margin-top: 18px; }
+.hero-shot { border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgb(0 0 0 / .45); border: 1px solid rgb(255 255 255 / .08); }
+.hero-shot img { display: block; width: 100%; height: auto; }
+
+/* Page grid */
+.page {
+  max-width: 1180px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 80px;
+  display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 56px;
+}
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; max-height: calc(100vh - 48px); overflow-y: auto; font-size: .9rem; }
+.toc h2 { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; font-weight: 500; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: grid; grid-template-columns: 26px 1fr; padding: 5px 8px; border-radius: 6px; color: var(--muted); text-decoration: none; line-height: 1.35; }
+.toc a span { font-family: var(--font-mono); font-size: .75rem; color: var(--accent-ink); padding-top: 1px; }
+.toc a:hover { background: var(--sunken); color: var(--ink); }
+.toc a.active { background: var(--accent-soft); color: var(--ink); }
+.toc-mobile { display: none; }
+
+main { min-width: 0; }
+section { padding-top: 12px; margin-bottom: 64px; }
+.eyebrow { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 6px; }
+h2.sec { font-family: var(--font-display); font-size: var(--step-3); line-height: 1.12; letter-spacing: -.015em; margin: 0 0 14px; text-wrap: balance; font-weight: 700; }
+h3 { font-family: var(--font-display); font-size: var(--step-2); line-height: 1.2; margin: 40px 0 10px; text-wrap: balance; font-weight: 700; }
+h4 { font-size: var(--step-1); margin: 28px 0 8px; font-weight: 600; text-wrap: balance; }
+p, ul, ol { max-width: 68ch; }
+.lead { font-size: 1.08rem; color: var(--muted); }
+li + li { margin-top: 4px; }
+
+/* Breadcrumb for menu paths */
+.path { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: .82rem; background: var(--sunken); border: 1px solid var(--line); padding: 2px 9px; border-radius: 999px; color: var(--ink); white-space: nowrap; }
+.path i { font-style: normal; color: var(--accent); }
+
+/* Who-is-this-for tags */
+.who { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
+.who span { font-size: .75rem; font-weight: 600; letter-spacing: .02em; padding: 2px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); }
+
+/* Steps */
+ol.steps { counter-reset: s; list-style: none; padding: 0; display: grid; gap: 10px; }
+ol.steps > li { counter-increment: s; position: relative; padding-left: 40px; margin: 0; }
+ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 1px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 600; font-size: .8rem; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+ol.steps ul { margin: 6px 0 0; }
+
+/* Screenshot frames */
+figure { margin: 22px 0 28px; }
+.shot .frame { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+.shot .bar { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--sunken); }
+.dots { display: inline-flex; gap: 5px; flex: none; }
+.dots b { width: 9px; height: 9px; border-radius: 50%; background: var(--line); display: block; }
+.url { font-family: var(--font-mono); font-size: .74rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 2px 10px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.zoom { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.zoom img, .plain img { display: block; width: 100%; height: auto; max-width: 100%; }
+figcaption { font-size: .86rem; color: var(--muted); margin-top: 10px; max-width: 70ch; }
+figcaption b { color: var(--ink); font-weight: 600; }
+.shot.form { max-width: 560px; }
+.shot.form .frame { border-radius: 14px; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.pair figure { margin: 0; }
+
+/* Annotated screenshot */
+.annotated { position: relative; }
+.pin { position: absolute; transform: translate(-50%, -50%); width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: .8rem; display: grid; place-items: center; box-shadow: 0 0 0 3px rgb(255 255 255 / .9), 0 2px 8px rgb(0 0 0 / .35); pointer-events: none; }
+.legend { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; max-width: none; }
+.legend li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; margin: 0; }
+.legend b { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; font-size: .78rem; display: grid; place-items: center; }
+
+/* Callouts */
+.callout { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 14px 16px; margin: 20px 0; max-width: 72ch; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; }
+.callout svg { margin-top: 3px; }
+.callout p { margin: 0; }
+.callout p + p { margin-top: 6px; }
+.callout.tip { border-color: color-mix(in srgb, var(--ok) 35%, var(--line)); background: var(--ok-soft); }
+.callout.warn { border-color: color-mix(in srgb, var(--warn) 40%, var(--line)); background: var(--warn-soft); }
+.callout.info { border-color: color-mix(in srgb, var(--info) 30%, var(--line)); background: var(--info-soft); }
+
+/* Role chooser */
+.roles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 24px 0 8px; }
+.role { display: grid; gap: 6px; align-content: start; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); text-decoration: none; color: var(--ink); transition: border-color .15s, transform .15s; }
+.role:hover { border-color: var(--accent); transform: translateY(-2px); color: var(--ink); }
+@media (prefers-reduced-motion: reduce) { .role, .role:hover { transition: none; transform: none; } }
+.role strong { font-family: var(--font-display); font-size: 1.15rem; }
+.role small { color: var(--muted); font-size: .85rem; line-height: 1.45; }
+.role em { font-style: normal; font-size: .8rem; color: var(--accent-ink); font-weight: 600; margin-top: 4px; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 18px 0 24px; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--sunken); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 600; white-space: nowrap; }
+
+/* Status chips */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0; }
+.chip { font-family: var(--font-mono); font-size: .72rem; font-weight: 500; letter-spacing: .04em; padding: 3px 10px; border-radius: 999px; border: 1px solid transparent; white-space: nowrap; }
+.c-draft { background: var(--sunken); color: var(--muted); border-color: var(--line); }
+.c-wait { background: var(--info-soft); color: var(--info); }
+.c-ret { background: var(--warn-soft); color: var(--warn); }
+.c-ok { background: var(--ok-soft); color: var(--ok); }
+.c-bad { background: var(--bad-soft); color: var(--bad); }
+.arrow { color: var(--muted); font-size: .9rem; }
+
+/* Diagram */
+.diagram { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 16px; margin: 20px 0 26px; }
+.diagram svg { display: block; min-width: 640px; width: 100%; height: auto; }
+.diagram text { font-family: var(--font-body); fill: var(--ink); }
+.d-box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+.d-accent { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+.d-ok { fill: var(--ok-soft); stroke: var(--ok); stroke-width: 1.5; }
+.d-warn { fill: var(--warn-soft); stroke: var(--warn); stroke-width: 1.5; }
+.d-bad { fill: var(--bad-soft); stroke: var(--bad); stroke-width: 1.5; }
+.d-line { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+.d-dash { stroke: var(--warn); stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; }
+.d-small { font-size: 12px; fill: var(--muted) !important; }
+.d-head { fill: var(--muted); }
+.d-headw { fill: var(--warn); }
+
+/* Checklist */
+.checklist { list-style: none; padding: 0; display: grid; gap: 0; max-width: 72ch; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.checklist li { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); margin: 0; align-items: start; }
+.checklist li:last-child { border-bottom: 0; }
+.checklist .n { font-family: var(--font-mono); font-size: .8rem; color: var(--accent-ink); padding-top: 2px; }
+.checklist strong { display: block; }
+.checklist small { color: var(--muted); }
+.checklist .path { align-self: center; }
+
+/* FAQ */
+details.faq { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 10px 0; max-width: 76ch; }
+details.faq summary { cursor: pointer; padding: 14px 16px; font-weight: 600; list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) 18px; gap: 12px; }
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq summary::after { content: "+"; color: var(--accent); font-weight: 700; text-align: center; }
+details.faq[open] summary::after { content: "–"; }
+details.faq div { padding: 0 16px 14px; color: var(--ink); }
+details.faq div p { margin: 0 0 8px; }
+
+dl.glossary { display: grid; grid-template-columns: minmax(140px, 200px) minmax(0, 1fr); gap: 0; border-top: 1px solid var(--line); max-width: 80ch; }
+dl.glossary dt, dl.glossary dd { padding: 12px 0; border-bottom: 1px solid var(--line); margin: 0; }
+dl.glossary dt { font-weight: 600; padding-right: 16px; }
+dl.glossary dd { color: var(--muted); }
+
+.module-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
+.module { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: var(--surface); }
+.module strong { display: block; font-size: .95rem; }
+.module small { color: var(--muted); font-size: .82rem; line-height: 1.45; display: block; }
+
+footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; padding-block: 28px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+footer div { max-width: 1180px; margin: 0 auto; }
+
+/* Lightbox */
+dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: min(1400px, 96vw); max-height: 94vh; }
+dialog.lightbox::backdrop { background: rgb(10 6 4 / .82); }
+dialog.lightbox img { display: block; max-width: 100%; max-height: 88vh; width: auto; height: auto; border-radius: 10px; margin: 0 auto; }
+dialog.lightbox p { color: #f3ede8; text-align: center; font-size: .85rem; margin: 10px 0 0; }
+dialog.lightbox button { position: absolute; top: 8px; right: 8px; border: 0; background: rgb(0 0 0 / .55); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+
+@media (max-width: 1080px) {
+  .page { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .toc { display: none; }
+  .toc-mobile { display: block; margin-bottom: 32px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+  .toc-mobile summary { padding: 12px 16px; cursor: pointer; font-weight: 600; }
+  .toc-mobile ol { margin: 0; padding: 0 16px 14px 36px; columns: 2; column-gap: 28px; }
+  .toc-mobile li { break-inside: avoid; }
+  .hero-inner { grid-template-columns: minmax(0, 1fr); }
+  .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .roles, .pair, .legend, .module-grid { grid-template-columns: minmax(0, 1fr); }
+  .toc-mobile ol { columns: 1; }
+  .checklist li { grid-template-columns: 28px minmax(0, 1fr); }
+  .checklist .path { grid-column: 2; justify-self: start; }
+  dl.glossary { grid-template-columns: minmax(0, 1fr); }
+  dl.glossary dt { border-bottom: 0; padding-bottom: 0; }
+  .hero-inner { padding-block: 40px 32px; }
+  .pin { width: 20px; height: 20px; font-size: .68rem; }
+}
+</style>
+<style>body { margin: 0; } img { max-width: 100%; } [hidden] { display: none !important; }</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="brandline">
+        <span class="brandmark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
+        HRMSv2 · by Visionaries Ent.
+      </div>
+      <h1>Your HR system, step by step</h1>
+      <p>This guide explains how to use HRMSv2 at your organisation, from signing in for the first time to running payroll. Start with the section for your role, or read it end to end.</p>
+      <p class="note">The screenshots use a sample company, <b>Acme Logistics Sdn Bhd</b>, with made-up staff. Your screens show your own organisation's name and data. What you can see depends on your role and on the modules in your organisation's plan.</p>
+    </div>
+    <div class="hero-shot"><img src="img/hr-dashboard.webp" width="1200" height="750" alt="The HRMSv2 dashboard: an orange sidebar of modules on the left, summary tiles and charts on the right."></div>
+  </div>
+</header>
+
+<div class="page">
+  <nav class="toc" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol id="toc-list">
+      <li><a href="#start"><span>01</span>Start here</a></li>
+      <li><a href="#sign-in"><span>02</span>Signing in and finding your way</a></li>
+      <li><a href="#roles"><span>03</span>Roles and access</a></li>
+      <li><a href="#plan"><span>04</span>Your plan: modules and seats</a></li>
+      <li><a href="#approvals"><span>05</span>How approvals work</a></li>
+      <li><a href="#employees"><span>06</span>For employees</a></li>
+      <li><a href="#managers"><span>07</span>For managers and approvers</a></li>
+      <li><a href="#hr"><span>08</span>For HR teams</a></li>
+      <li><a href="#payroll"><span>09</span>Payroll and compensation</a></li>
+      <li><a href="#admins"><span>10</span>For administrators</a></li>
+      <li><a href="#careers"><span>11</span>Careers portal</a></li>
+      <li><a href="#kiosk"><span>12</span>Attendance kiosk</a></li>
+      <li><a href="#faq"><span>13</span>Questions and fixes</a></li>
+      <li><a href="#glossary"><span>14</span>Glossary</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <details class="toc-mobile">
+      <summary>Contents</summary>
+      <ol>
+        <li><a href="#start">Start here</a></li>
+        <li><a href="#sign-in">Signing in and finding your way</a></li>
+        <li><a href="#roles">Roles and access</a></li>
+        <li><a href="#plan">Your plan: modules and seats</a></li>
+        <li><a href="#approvals">How approvals work</a></li>
+        <li><a href="#employees">For employees</a></li>
+        <li><a href="#managers">For managers and approvers</a></li>
+        <li><a href="#hr">For HR teams</a></li>
+        <li><a href="#payroll">Payroll and compensation</a></li>
+        <li><a href="#admins">For administrators</a></li>
+        <li><a href="#careers">Careers portal</a></li>
+        <li><a href="#kiosk">Attendance kiosk</a></li>
+        <li><a href="#faq">Questions and fixes</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+      </ol>
+    </details>
+
+    <!-- 01 -->
+    <section id="start">
+      <p class="eyebrow">01 · Start here</p>
+      <h2 class="sec">Pick your path</h2>
+      <p class="lead">Everyone should read <a href="#sign-in">Signing in</a> and <a href="#approvals">How approvals work</a>. After that, jump to the part that matches what you do.</p>
+      <div class="roles">
+        <a class="role" href="#employees"><strong>Employee</strong><small>Apply for leave, submit claims, raise requests and tickets, follow your goals and training.</small><em>Section 06 →</em></a>
+        <a class="role" href="#managers"><strong>Manager or approver</strong><small>Review and approve requests, run interviews, rate your team.</small><em>Section 07 →</em></a>
+        <a class="role" href="#hr"><strong>HR team</strong><small>Keep employee records, hire and onboard, run leave, performance and learning.</small><em>Section 08 →</em></a>
+        <a class="role" href="#admins"><strong>Administrator</strong><small>Set the system up, create user accounts, assign roles, review the audit trail.</small><em>Section 10 →</em></a>
+      </div>
+      <p>Job applicants don't use the staff system at all. They use the public <a href="#careers">careers portal</a>.</p>
+    </section>
+
+    <!-- 02 -->
+    <section id="sign-in">
+      <p class="eyebrow">02 · Signing in and finding your way</p>
+      <h2 class="sec">Signing in</h2>
+      <p>Your administrator gives you the web address for your organisation's HRMSv2, plus a username and password. Each organisation has its own address and its own separate data.</p>
+      <ol class="steps">
+        <li>Open your organisation's HRMSv2 address in a browser such as Chrome, Edge, Safari or Firefox.</li>
+        <li>Type your <b>Username</b> and <b>Password</b>, then select <b>Sign in</b>.</li>
+        <li>If your organisation uses single sign-on, you'll also see a button such as <b>Sign in with SSO</b>. Select it to sign in with your work account instead.</li>
+      </ol>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/login</span></div>
+          <button class="zoom" type="button"><img src="img/login.webp" width="1200" height="750" loading="lazy" alt="The HRMSv2 sign-in page with Username and Password fields and an orange Sign in button. The footer reads Acme Logistics Sdn Bhd · HRMSv2, Powered by Visionaries Ent."></button></div>
+        <figcaption><b>The sign-in page.</b> Your organisation's name appears in the footer.</figcaption>
+      </figure>
+      <div class="callout info"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div><p><b>Forgotten your password?</b> There's no self-service reset. Ask your HR or system administrator to set a new one for you. They can do it from <span class="path">Users</span>.</p>
+        <p><b>Using single sign-on?</b> Your HRMSv2 account must already exist with the same email address as your work account. If it doesn't, the sign-in page says no account uses that email. Ask your administrator to create it.</p></div>
+      </div>
+
+      <h3>The main screen</h3>
+      <p>After signing in you land on the <b>Dashboard</b>. Every page has the same layout:</p>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/</span></div>
+          <div class="annotated">
+            <button class="zoom" type="button"><img src="img/hr-dashboard.webp" width="1200" height="750" loading="lazy" alt="The dashboard with numbered markers on the sidebar, page title, notifications bell, user menu, summary tiles and charts."></button>
+            <span class="pin" style="left:6%;top:30%">1</span>
+            <span class="pin" style="left:16.5%;top:4.2%">2</span>
+            <span class="pin" style="left:85.7%;top:8.6%">3</span>
+            <span class="pin" style="left:96.5%;top:8.6%">4</span>
+            <span class="pin" style="left:19.3%;top:12%">5</span>
+            <span class="pin" style="left:19.3%;top:43%">6</span>
+          </div></div>
+        <figcaption><b>The dashboard for HR staff.</b> Employees and managers see a simpler welcome page and a shorter menu.</figcaption>
+      </figure>
+      <ol class="legend">
+        <li><b>1</b><span><b>Sidebar menu.</b> One entry per module. Select a module to open its list of pages; the page you're on is highlighted in orange.</span></li>
+        <li><b>2</b><span><b>Page title.</b> Tells you where you are.</span></li>
+        <li><b>3</b><span><b>Notifications.</b> The bell shows a red count when something needs your attention. Select it to open <span class="path">Notifications</span>.</span></li>
+        <li><b>4</b><span><b>Your name and role.</b> Select it to see your username and email, or to <b>Sign out</b>.</span></li>
+        <li><b>5</b><span><b>Summary tiles.</b> Live counts such as active employees, open vacancies and approvals waiting.</span></li>
+        <li><b>6</b><span><b>Charts.</b> Headcount by department, the hiring funnel, performance and learning compliance.</span></li>
+      </ol>
+
+      <h4>Lists, searches and forms</h4>
+      <p>Most pages are a list of records with the same controls:</p>
+      <ul>
+        <li><b>Search box and filters</b> above the list, for example <b>All Statuses</b>, narrow what you see.</li>
+        <li>The orange button at the top right creates something new: <b>New Request</b>, <b>New Claim</b>, <b>Add Employee</b> and so on. It opens a form.</li>
+        <li>The pencil and bin icons at the end of a row edit or delete that record, if your role allows it.</li>
+        <li>Fields marked <b>*</b> in a form are required.</li>
+        <li>Coloured labels show each record's status, for example <span class="chip c-ok">APPROVED</span> or <span class="chip c-wait">SUBMITTED</span>.</li>
+      </ul>
+      <div class="pair">
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/user-menu.webp" width="400" height="230" loading="lazy" alt="The user menu opened from the top right, showing the username, email and a Sign out link."></button></div>
+          <figcaption><b>The user menu</b> holds <b>Sign out</b>. Sign out when you use a shared computer.</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/maker-notifications.webp" width="1200" height="317" loading="lazy" alt="The Notifications page listing two unread notifications about a position request that was submitted, with Mark read buttons."></button></div>
+          <figcaption><b>Notifications</b> tell you when a request is submitted, approved, returned or rejected. You also get most of them by email.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section id="roles">
+      <p class="eyebrow">03 · Roles and access</p>
+      <h2 class="sec">Why your menu looks different</h2>
+      <p>What you can see and do depends on your <b>roles</b>. Your administrator gives you a <b>primary role</b> (shown under your name) and can add <b>extra roles</b>. For example, a manager can also be an interviewer. You always get the combined access of all your roles.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Role</th><th>Typically held by</th><th>What they do</th></tr></thead>
+          <tbody>
+            <tr><td>System Admin</td><td>IT or system owner</td><td>Everything, including approval rules, system settings and the audit trail.</td></tr>
+            <tr><td>HR Admin</td><td>Head of HR</td><td>Everything except approval rules and system settings. Manages users and roles.</td></tr>
+            <tr><td>HR Maker</td><td>HR executive</td><td>Creates and updates HR records (positions, requisitions, onboarding, transfers) and submits them for approval. Cannot approve them.</td></tr>
+            <tr><td>HR Checker</td><td>Senior HR officer</td><td>Reviews and approves what HR Makers submit: positions, requisitions, job postings, leave.</td></tr>
+            <tr><td>Recruiter</td><td>Talent acquisition</td><td>Runs recruitment: postings, applicants, applications, interviews, offers.</td></tr>
+            <tr><td>Hiring Manager</td><td>Line manager who is hiring</td><td>Follows their requisitions and candidates; sees their team's leave and overtime.</td></tr>
+            <tr><td>Interviewer</td><td>Anyone on a panel</td><td>Sees their interviews and records feedback.</td></tr>
+            <tr><td>Finance Checker</td><td>Finance</td><td>Checks offers and payroll figures.</td></tr>
+            <tr><td>Manager</td><td>Team lead</td><td>Approves team requests, reviews team performance, claims and skills.</td></tr>
+            <tr><td>Employee</td><td>All staff</td><td>Their own leave, overtime, claims, self-service requests, tickets, goals, reviews and learning.</td></tr>
+            <tr><td>Specialist roles</td><td>Named teams</td><td><b>Payroll Officer</b>, <b>Benefits Administrator</b>, <b>HR Performance</b>, <b>L&amp;D Officer / Checker</b>, <b>Talent Committee</b>, <b>HSE Officer</b>, <b>Service Desk Agent</b> and <b>Employee Relations Officer</b> each open up their own module.</td></tr>
+            <tr><td>Applicant</td><td>Job seekers</td><td>The careers portal only. Applicants never see the staff system.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout tip"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
+        <div><p>If a colleague can see a page you can't, the difference is almost always a role. Ask your HR Admin to add it.</p></div>
+      </div>
+    </section>
+
+    <!-- 04 -->
+    <section id="plan">
+      <p class="eyebrow">04 · Your plan</p>
+      <h2 class="sec">Modules and seats</h2>
+      <p>Your organisation subscribes to HRMSv2 on a plan from Visionaries Ent. The plan decides two things.</p>
+      <h4>Which modules you have</h4>
+      <p>Modules that aren't in your plan don't appear in anyone's menu, whatever their role. Dashboard, Workflow, Notifications, Reports, Documents, Users and Audit are part of every plan.</p>
+      <div class="pair" style="grid-template-columns: repeat(2, minmax(0, 220px)); justify-content: start;">
+        <figure class="shot" style="margin:0">
+          <div class="frame"><button class="zoom" type="button"><img src="img/hr-dashboard-sidebar.webp" width="240" height="900" loading="lazy" alt="A full sidebar menu listing every module from Core HR to Skills."></button></div>
+          <figcaption><b>All modules</b></figcaption>
+        </figure>
+        <figure class="shot" style="margin:0">
+          <div class="frame"><button class="zoom" type="button"><img src="img/plan-sidebar.webp" width="240" height="620" loading="lazy" alt="A shorter sidebar with only Core HR, Attendance, Workforce, ESS and Claims, plus the menu items every plan includes."></button></div>
+          <figcaption><b>A smaller plan</b>: Core HR, Attendance, Workforce, ESS and Claims</figcaption>
+        </figure>
+      </div>
+      <h4>How many people can sign in</h4>
+      <p>Your plan may include a number of <b>seats</b>. Each active staff account (user type <b>Internal</b>) uses one seat. Applicant accounts and deactivated accounts don't count.</p>
+      <p>When every seat is in use, adding another staff user fails, and the system shows <b>Failed to create user</b>. Nobody who already has an account is affected.</p>
+      <figure class="shot form" style="max-width:640px">
+        <div class="frame"><button class="zoom" type="button"><img src="img/seat-limit.webp" width="900" height="686" loading="lazy" alt="The Add User form filled in, with a red message at the top right reading Failed to create user."></button></div>
+        <figcaption><b>Adding a user when all seats are taken.</b> To make room, deactivate accounts for people who have left, or ask Visionaries Ent. to move you to a larger plan.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 05 -->
+    <section id="approvals">
+      <p class="eyebrow">05 · How approvals work</p>
+      <h2 class="sec">Maker, checker, approved</h2>
+      <p>Important changes go through an approval chain before they take effect: new positions, requisitions, job postings, onboarding cases, goal plans, performance outcomes, attendance corrections and more.</p>
+      <p>The person who creates the change is the <b>maker</b>. One or more <b>checkers</b> then approve it, one step at a time. The system never lets you approve something you submitted yourself.</p>
+
+      <div class="diagram" role="img" aria-label="Approval flow. A maker submits a request. Step 1, for example the HR Checker, approves it and it moves to step 2, for example the HR Admin. When the last step approves, the request is approved. At any step the approver can return it to the maker for amendment, after which the maker resubmits, or reject it, which ends it.">
+        <svg viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-head"/></marker>
+            <marker id="ahw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-headw"/></marker>
+          </defs>
+          <rect x="10" y="40" width="150" height="64" rx="10" class="d-accent"/>
+          <text x="85" y="68" text-anchor="middle" font-weight="600" font-size="15">Maker submits</text>
+          <text x="85" y="88" text-anchor="middle" class="d-small">e.g. HR Maker</text>
+
+          <rect x="220" y="40" width="160" height="64" rx="10" class="d-box"/>
+          <text x="300" y="68" text-anchor="middle" font-weight="600" font-size="15">Step 1</text>
+          <text x="300" y="88" text-anchor="middle" class="d-small">e.g. HR Checker</text>
+
+          <rect x="440" y="40" width="160" height="64" rx="10" class="d-box"/>
+          <text x="520" y="68" text-anchor="middle" font-weight="600" font-size="15">Step 2</text>
+          <text x="520" y="88" text-anchor="middle" class="d-small">e.g. HR Admin</text>
+
+          <rect x="660" y="40" width="180" height="64" rx="10" class="d-ok"/>
+          <text x="750" y="68" text-anchor="middle" font-weight="600" font-size="15">Approved</text>
+          <text x="750" y="88" text-anchor="middle" class="d-small">change takes effect</text>
+
+          <path d="M160 72H214" class="d-line" marker-end="url(#ah)"/>
+          <path d="M380 72H434" class="d-line" marker-end="url(#ah)"/>
+          <path d="M600 72H654" class="d-line" marker-end="url(#ah)"/>
+          <text x="407" y="62" text-anchor="middle" class="d-small">approve</text>
+          <text x="627" y="62" text-anchor="middle" class="d-small">approve</text>
+
+          <rect x="220" y="180" width="200" height="60" rx="10" class="d-warn"/>
+          <text x="320" y="206" text-anchor="middle" font-weight="600" font-size="15">Returned</text>
+          <text x="320" y="225" text-anchor="middle" class="d-small">with a comment saying what to fix</text>
+
+          <rect x="500" y="180" width="200" height="60" rx="10" class="d-bad"/>
+          <text x="600" y="206" text-anchor="middle" font-weight="600" font-size="15">Rejected</text>
+          <text x="600" y="225" text-anchor="middle" class="d-small">ends, with a reason</text>
+
+          <path d="M300 104V174" class="d-dash" marker-end="url(#ahw)"/>
+          <path d="M520 104C520 140 600 140 600 174" class="d-line" marker-end="url(#ah)"/>
+          <path d="M220 210H85V110" class="d-dash" marker-end="url(#ahw)"/>
+          <text x="96" y="160" class="d-small">amend and resubmit</text>
+          <text x="312" y="146" class="d-small">return</text>
+          <text x="566" y="146" class="d-small">reject</text>
+        </svg>
+      </div>
+
+      <p>Each request moves through these statuses:</p>
+      <div class="chips" aria-label="Request statuses">
+        <span class="chip c-draft">DRAFT</span><span class="arrow">→</span>
+        <span class="chip c-wait">SUBMITTED</span><span class="arrow">→</span>
+        <span class="chip c-wait">IN REVIEW</span><span class="arrow">→</span>
+        <span class="chip c-ok">APPROVED</span>
+        <span class="arrow" style="margin-left:10px">or</span>
+        <span class="chip c-ret">RETURNED</span><span class="arrow">→</span><span class="chip c-wait">RESUBMITTED</span>
+        <span class="arrow" style="margin-left:10px">or</span>
+        <span class="chip c-bad">REJECTED</span>
+      </div>
+      <p>Every step has a target turnaround time, and the expanded request shows when each step is due.</p>
+
+      <h3>Approving a request</h3>
+      <div class="who"><span>HR Checker</span><span>HR Admin</span><span>Approvers</span></div>
+      <ol class="steps">
+        <li>Open <span class="path">Workflow <i>›</i> Requests</span>, or select the notification that told you about it.</li>
+        <li>Select the row to expand it. You'll see the approval steps, the history and any comments.</li>
+        <li>Choose <b>Approve</b>, <b>Return</b> or <b>Reject</b>.
+          <ul>
+            <li><b>Approve</b> moves it to the next step, or completes it if yours is the last step.</li>
+            <li><b>Return</b> sends it back to the maker. Write what needs changing (at least 5 characters).</li>
+            <li><b>Reject</b> ends it. Give the reason.</li>
+          </ul></li>
+      </ol>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/workflow/requests</span></div>
+          <button class="zoom" type="button"><img src="img/workflow-expanded.webp" width="1200" height="378" loading="lazy" alt="A position approval request expanded, showing Approve, Return and Reject buttons, two approval steps for HR Checker and HR Admin with due dates, the history, and a comments box."></button></div>
+        <figcaption><b>An expanded request.</b> Step 1 is for the HR Checker and step 2 for the HR Admin. Each step shows when it's due. Comments are visible to everyone on the request.</figcaption>
+      </figure>
+      <figure class="shot form" style="max-width:500px">
+        <div class="frame"><button class="zoom" type="button"><img src="img/workflow-return.webp" width="483" height="301" loading="lazy" alt="The Return for Amendment box asking the approver to explain what needs to be amended."></button></div>
+        <figcaption><b>Returning a request.</b> Be specific: the maker sees exactly what you write here.</figcaption>
+      </figure>
+      <div class="callout warn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg>
+        <div><p>Each step is assigned to a role. If you can't act on a request, it's probably waiting at a step for a different role, or you're the person who submitted it.</p></div>
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section id="employees">
+      <p class="eyebrow">06 · For employees</p>
+      <h2 class="sec">Everyday self-service</h2>
+      <div class="who"><span>Employee</span><span>Everyone</span></div>
+      <p>As an employee your menu is short: Dashboard, Workforce, Performance, Learning, Workflow, Notifications, ESS, Service Desk and Claims, depending on your organisation's plan.</p>
+
+      <h3 id="leave">Applying for leave</h3>
+      <ol class="steps">
+        <li>Go to <span class="path">Workforce <i>›</i> Leave Requests</span> and select <b>New Request</b>.</li>
+        <li>Choose the <b>Leave Type</b>, for example Annual Leave or Medical Leave.</li>
+        <li>Enter the <b>Start Date</b>, <b>End Date</b> and number of <b>Days</b>. Add a <b>Reason</b> if you like.</li>
+        <li>Select <b>Submit Request</b>. It shows as <span class="chip c-wait">PENDING</span> until it's decided, then <span class="chip c-ok">APPROVED</span> or <span class="chip c-bad">REJECTED</span>.</li>
+      </ol>
+      <div class="pair">
+        <figure class="shot form">
+          <div class="frame"><button class="zoom" type="button"><img src="img/form-leave.webp" width="547" height="520" loading="lazy" alt="The New Leave Request form with Employee, Leave Type, Start Date, End Date, Days and Reason fields and a Submit Request button."></button></div>
+          <figcaption><b>The leave form.</b> HR staff also pick the <b>Employee</b> when they apply on someone's behalf.</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/emp-leave.webp" width="1200" height="317" loading="lazy" alt="An employee's Leave Requests list showing three days of approved annual leave in November."></button></div>
+          <figcaption><b>Your leave history</b> with each request's status. Overtime works the same way under <span class="path">Workforce <i>›</i> Overtime</span>.</figcaption>
+        </figure>
+      </div>
+
+      <h3 id="claims">Claiming expenses</h3>
+      <ol class="steps">
+        <li>Go to <span class="path">Claims <i>›</i> Claim Requests</span> and select <b>New Claim</b>.</li>
+        <li>Choose yourself as the <b>Employee</b>, and give the claim a <b>Claim Title</b>, for example "Client meeting — Petaling Jaya".</li>
+        <li>Enter the <b>Period Start</b> and <b>Period End</b> the expenses cover, check the <b>Currency</b>, and add <b>Notes</b>.</li>
+        <li>Select <b>Create Claim</b>. Follow its status in the list: <span class="chip c-wait">SUBMITTED</span> → <span class="chip c-wait">IN REVIEW</span> → <span class="chip c-ok">APPROVED</span> → <span class="chip c-draft">PAID</span>.</li>
+      </ol>
+      <div class="pair">
+        <figure class="shot form">
+          <div class="frame"><button class="zoom" type="button"><img src="img/form-claim.webp" width="547" height="598" loading="lazy" alt="The New Claim Request form with Employee, Claim Title, Period Start, Period End, Currency and Notes fields."></button></div>
+          <figcaption><b>The claim form.</b></figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/emp-claims.webp" width="1200" height="317" loading="lazy" alt="The Claim Requests list with claim numbers, titles, amounts in MYR and statuses Approved and Paid."></button></div>
+          <figcaption><b>Claims and their status.</b> Each claim gets a number such as <span class="mono">CLM-2026-0012</span>. Quote it if you contact HR.</figcaption>
+        </figure>
+      </div>
+
+      <h3 id="ess">Self-service requests</h3>
+      <p>Use <b>ESS</b> (employee self-service) to ask HR for something that isn't leave or a claim.</p>
+      <ol class="steps">
+        <li>Go to <span class="path">ESS <i>›</i> My Requests</span> and select <b>New Request</b>.</li>
+        <li>Pick a <b>Request Type</b>: profile update, document request (for example an employment letter), leave, claim, training, IT access, or other.</li>
+        <li>Write a <b>Subject</b> and a <b>Description</b>, then select <b>Submit Request</b>.</li>
+      </ol>
+      <p>To correct your personal details, such as your phone number or address, use <span class="path">ESS <i>›</i> Profile Changes</span>. HR reviews the change before it's saved to your record.</p>
+      <figure class="shot form">
+        <div class="frame"><button class="zoom" type="button"><img src="img/form-ess.webp" width="547" height="464" loading="lazy" alt="The New Self-Service Request form with Request Type, Subject and Description fields."></button></div>
+        <figcaption><b>A new self-service request.</b></figcaption>
+      </figure>
+
+      <h3 id="tickets">Getting help: service desk tickets</h3>
+      <p>Have a question about your payslip, leave balance or system access? Raise a ticket and the HR service desk picks it up.</p>
+      <ol class="steps">
+        <li>Go to <span class="path">Service Desk <i>›</i> Tickets</span> and select <b>New Ticket</b>.</li>
+        <li>Choose a <b>Category</b>, write a <b>Subject</b>, set the <b>Priority</b> and describe the problem.</li>
+        <li>Select <b>Submit Ticket</b>. You can follow who it's assigned to and its status in the list.</li>
+      </ol>
+      <p>Check <span class="path">Service Desk <i>›</i> Knowledge Base</span> first: your answer may already be there.</p>
+      <div class="pair">
+        <figure class="shot form">
+          <div class="frame"><button class="zoom" type="button"><img src="img/form-ticket.webp" width="547" height="540" loading="lazy" alt="The New Support Ticket form with Category, Subject, Priority and Description fields."></button></div>
+          <figcaption><b>A new ticket.</b></figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/emp-tickets.webp" width="1200" height="367" loading="lazy" alt="The HR Service Desk ticket list showing ticket numbers, subjects, categories, priorities, who raised and who is assigned each ticket, and statuses Closed, Resolved and In Progress."></button></div>
+          <figcaption><b>Tickets</b> move from <span class="chip c-wait">IN PROGRESS</span> to <span class="chip c-ok">RESOLVED</span> and <span class="chip c-draft">CLOSED</span>.</figcaption>
+        </figure>
+      </div>
+
+      <h3 id="growth">Goals, reviews and learning</h3>
+      <ul>
+        <li><span class="path">Performance <i>›</i> Goal Plans</span> shows your goals for the current cycle. Select <b>Show goals</b> to see each goal and its weight.</li>
+        <li><span class="path">Performance <i>›</i> Reviews</span> is where you complete your self-review and see your manager's rating.</li>
+        <li><span class="path">Learning <i>›</i> Assignments</span> lists courses assigned to you, including mandatory ones such as data protection training.</li>
+      </ul>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/performance/goals</span></div>
+          <button class="zoom" type="button"><img src="img/emp-goals.webp" width="1200" height="317" loading="lazy" alt="An employee's Goal Plans page showing the FY2026 Annual Performance Review goal plan with status HR Approved."></button></div>
+        <figcaption><b>Your goal plan</b> for the year's performance cycle.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 07 -->
+    <section id="managers">
+      <p class="eyebrow">07 · For managers and approvers</p>
+      <h2 class="sec">Reviewing your team's work</h2>
+      <div class="who"><span>Manager</span><span>Hiring Manager</span><span>Interviewer</span><span>Finance Checker</span></div>
+      <h4>Approvals</h4>
+      <p>Requests waiting for you appear in <span class="path">Workflow <i>›</i> Requests</span>, and you get a notification for each. See <a href="#approvals">How approvals work</a> for the steps.</p>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/workflow/requests</span></div>
+          <button class="zoom" type="button"><img src="img/checker-workflow.webp" width="1200" height="317" loading="lazy" alt="The Workflow Requests list with one submitted position approval and green Approve, Return and red Reject buttons."></button></div>
+        <figcaption><b>A request waiting for you.</b> Filter by status or module to find older requests.</figcaption>
+      </figure>
+      <h4>Your team</h4>
+      <ul>
+        <li><b>Leave and overtime:</b> <span class="path">Workforce <i>›</i> Leave Requests</span> and <span class="path">Workforce <i>›</i> Overtime</span> show your team's requests.</li>
+        <li><b>Performance:</b> rate your team in <span class="path">Performance <i>›</i> Reviews</span> once the review window opens.</li>
+        <li><b>Hiring:</b> hiring managers follow candidates in <span class="path">Recruitment</span>. Interviewers see their interviews in <span class="path">Recruitment <i>›</i> Interviews</span>.</li>
+        <li><b>Reports:</b> the <span class="path">Reports</span> module shows the charts your role can see, such as the hiring funnel.</li>
+      </ul>
+    </section>
+
+    <!-- 08 -->
+    <section id="hr">
+      <p class="eyebrow">08 · For HR teams</p>
+      <h2 class="sec">Running HR day to day</h2>
+      <div class="who"><span>HR Admin</span><span>HR Maker</span><span>HR Checker</span><span>Recruiter</span><span>Specialists</span></div>
+
+      <h3 id="core-hr">Core HR: your organisation's structure</h3>
+      <p>Everything else builds on Core HR, so set it up in this order:</p>
+      <ol class="steps">
+        <li><b>Org Units</b>: the company, divisions and departments, each with a parent.</li>
+        <li><b>Cost Centres</b>: where people's costs are charged.</li>
+        <li><b>Job Grades</b>: levels with their pay band minimum and maximum.</li>
+        <li><b>Jobs</b>: the kinds of work, for example "Software Engineer".</li>
+        <li><b>Positions</b>: individual seats in a department. A position has a job, a grade and an org unit, and is <span class="chip c-ret">VACANT</span> or <span class="chip c-wait">OCCUPIED</span>. Mark it <b>Critical</b> if it needs a succession plan.</li>
+        <li><b>Employees</b>: people, each filling a position.</li>
+      </ol>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/core/org-units</span></div>
+          <button class="zoom" type="button"><img src="img/org-units.webp" width="1200" height="495" loading="lazy" alt="The Organisation Units list showing the company Acme Logistics Sdn Bhd, its Finance, Human Resources and Information Technology divisions, and departments under them."></button></div>
+        <figcaption><b>Org Units.</b> The company sits at the top; every division and department names its parent.</figcaption>
+      </figure>
+      <div class="pair">
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/grades.webp" width="1200" height="365" loading="lazy" alt="The Grades and Pay Bands list showing Executive, Senior and Manager grades with pay band minimums and maximums in RM."></button></div>
+          <figcaption><b>Job Grades</b> carry the pay band.</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/positions.webp" width="1200" height="495" loading="lazy" alt="The Positions list showing position codes, titles, statuses Vacant and Occupied, departments, grades and one Critical position."></button></div>
+          <figcaption><b>Positions</b>, vacant or occupied.</figcaption>
+        </figure>
+      </div>
+      <h4>Adding an employee</h4>
+      <ol class="steps">
+        <li>Go to <span class="path">Core HR <i>›</i> Employees</span> and select <b>Add Employee</b>.</li>
+        <li>Step 1, <b>Personal Info</b>: full legal name, work email, phone, date of birth, gender and nationality. Select <b>Save &amp; Continue</b>.</li>
+        <li>Step 2, <b>Employment Details</b>: employee number, hire date, employment status, position, org unit, grade and manager.</li>
+      </ol>
+      <p>Each employee gets a number such as <span class="mono">EMP-000004</span> and a status: <span class="chip c-ok">ACTIVE</span>, <span class="chip c-ret">PROBATION</span> or <span class="chip c-draft">TERMINATED</span>. Adding an employee doesn't create a login: an administrator does that separately in <a href="#users">Users</a>.</p>
+      <div class="pair">
+        <figure class="shot form">
+          <div class="frame"><button class="zoom" type="button"><img src="img/form-employee.webp" width="547" height="458" loading="lazy" alt="The Add Employee form at step 1 of 2, Personal Info, with name, email, phone, date of birth, gender and nationality fields."></button></div>
+          <figcaption><b>Add Employee</b>, step 1 of 2.</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/employees.webp" width="1200" height="452" loading="lazy" alt="The Employees list with employee numbers, names, statuses Active, Probation and Terminated, positions, departments, grades and hire dates."></button></div>
+          <figcaption><b>The employee list.</b> Search by name or number, or filter by status.</figcaption>
+        </figure>
+      </div>
+
+      <h3 id="recruitment">Recruitment: from vacancy to hire</h3>
+      <p>Hiring follows one pipeline across the <b>Recruitment</b> and <b>Onboarding</b> modules:</p>
+      <div class="diagram" role="img" aria-label="Hiring pipeline: requisition, job posting, applications, interviews, offer, onboarding, then hired.">
+        <svg viewBox="0 0 860 120" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head"/></marker></defs>
+          <g font-size="14" font-weight="600" text-anchor="middle">
+            <rect x="4" y="30" width="104" height="54" rx="9" class="d-accent"/><text x="56" y="54">Requisition</text><text x="56" y="72" class="d-small" font-weight="400">approved need</text>
+            <rect x="128" y="30" width="104" height="54" rx="9" class="d-box"/><text x="180" y="54">Job posting</text><text x="180" y="72" class="d-small" font-weight="400">advertised</text>
+            <rect x="252" y="30" width="104" height="54" rx="9" class="d-box"/><text x="304" y="54">Applications</text><text x="304" y="72" class="d-small" font-weight="400">screened</text>
+            <rect x="376" y="30" width="104" height="54" rx="9" class="d-box"/><text x="428" y="54">Interviews</text><text x="428" y="72" class="d-small" font-weight="400">panel feedback</text>
+            <rect x="500" y="30" width="104" height="54" rx="9" class="d-box"/><text x="552" y="54">Offer</text><text x="552" y="72" class="d-small" font-weight="400">letter accepted</text>
+            <rect x="624" y="30" width="104" height="54" rx="9" class="d-box"/><text x="676" y="54">Onboarding</text><text x="676" y="72" class="d-small" font-weight="400">checklist</text>
+            <rect x="748" y="30" width="104" height="54" rx="9" class="d-ok"/><text x="800" y="54">Hired</text><text x="800" y="72" class="d-small" font-weight="400">employee record</text>
+          </g>
+          <path d="M108 57H122M232 57H246M356 57H370M480 57H494M604 57H618M728 57H742" class="d-line" marker-end="url(#ah2)"/>
+        </svg>
+      </div>
+      <ol class="steps">
+        <li><b>Requisition.</b> An HR Maker raises one in <span class="path">Recruitment <i>›</i> Requisitions</span> for a position, with the reason (for example backfill), headcount and target start date. An HR Checker approves it.</li>
+        <li><b>Job posting.</b> The recruiter creates a posting from the approved requisition and chooses whether it's <b>External</b> (shown on the careers portal) or internal, with opening and closing dates.</li>
+        <li><b>Applications.</b> Candidates apply through the <a href="#careers">careers portal</a>. Each application has a score and a stage: <span class="chip c-wait">SCREENING</span>, <span class="chip c-wait">INTERVIEW</span>, <span class="chip c-ok">OFFER</span> and so on.</li>
+        <li><b>Interviews.</b> Use <b>Schedule Interview</b> to set the round, type (for example video), time and meeting link. Interviewers record feedback afterwards.</li>
+        <li><b>Offer.</b> Create the offer letter with basic salary, total package, employment type and start date. Finance can review it before it goes out, and the candidate's acceptance is recorded on it.</li>
+        <li><b>Onboarding.</b> An onboarding case opens with a checklist. Each task is marked complete and verified.</li>
+      </ol>
+      <div class="pair">
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/applications.webp" width="1200" height="355" loading="lazy" alt="The Applications list showing three applicants with scores and stages Offer, Screening and Interview for the Senior Frontend Engineer posting."></button></div>
+          <figcaption><b>Applications</b> with score and stage.</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/offers.webp" width="1200" height="317" loading="lazy" alt="The Offer Letters list showing an accepted offer with basic salary and total package."></button></div>
+          <figcaption><b>Offer letters.</b></figcaption>
+        </figure>
+      </div>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/onboarding/cases</span></div>
+          <button class="zoom" type="button"><img src="img/onboarding-checklist.webp" width="1200" height="622" loading="lazy" alt="An onboarding case at 100 percent completion, with its checklist on the right: personal information, resume, certificates, bank details, emergency contact, contract signing, access provisioning and payroll setup, all completed and verified."></button></div>
+        <figcaption><b>An onboarding case.</b> Select a case to see its checklist: personal details, documents, bank details, contract signing, system access and payroll setup.</figcaption>
+      </figure>
+
+      <h3 id="workforce">Leave, overtime and attendance</h3>
+      <ul>
+        <li><span class="path">Workforce <i>›</i> Leave Types</span>: set up each type of leave with its days per year, whether it's paid and whether unused days carry forward.</li>
+        <li><span class="path">Workforce <i>›</i> Leave Requests</span> and <span class="path">Workforce <i>›</i> Overtime</span>: everyone's requests. HR can create a request for any employee.</li>
+        <li><span class="path">Workforce <i>›</i> Transfers</span>: moves between positions or departments.</li>
+        <li><span class="path">Attendance <i>›</i> Records</span>: check-ins and check-outs from the <a href="#kiosk">attendance kiosk</a>, filtered by date and method.</li>
+      </ul>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/workforce/leave-types</span></div>
+          <button class="zoom" type="button"><img src="img/leave-types.webp" width="1200" height="317" loading="lazy" alt="The Leave Types list: Annual Leave 20 days, Maternity Leave 98 days and Medical Leave 14 days, all paid and active."></button></div>
+        <figcaption><b>Leave types.</b> Set these up before staff start applying.</figcaption>
+      </figure>
+
+      <h3 id="performance">Performance</h3>
+      <ol class="steps">
+        <li>HR Performance creates a <b>cycle</b> in <span class="path">Performance <i>›</i> Cycles</span>, for example "FY2026 Annual Performance Review", with its goal-setting and year-end review windows.</li>
+        <li>Employees agree their <b>goal plans</b> with their manager. Goal plans go through approval.</li>
+        <li>At year end, employees complete a <b>self-review</b> and managers a <b>manager review</b>, each with a rating.</li>
+        <li>HR confirms the final <b>outcomes</b> in <span class="path">Performance <i>›</i> Outcomes</span>, which also go through approval.</li>
+      </ol>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/performance/reviews</span></div>
+          <button class="zoom" type="button"><img src="img/perf-reviews.webp" width="1200" height="317" loading="lazy" alt="Performance Reviews list with a manager review rated 4.5 and a self review rated 4.2, both submitted."></button></div>
+        <figcaption><b>Reviews</b>: the manager's and the employee's own, side by side.</figcaption>
+      </figure>
+
+      <h3 id="more-modules">Other HR modules</h3>
+      <div class="module-grid">
+        <div class="module"><strong>Learning</strong><small>Courses with type, duration and pass score; assignments, completions and skill gaps. New courses are published through approval.</small></div>
+        <div class="module"><strong>Succession</strong><small>Succession plans for critical positions, talent pools and talent profiles. Used by the Talent Committee.</small></div>
+        <div class="module"><strong>Skills</strong><small>A skill inventory by category, and the skills recorded for each employee.</small></div>
+        <div class="module"><strong>Employee Relations</strong><small>Grievance and disciplinary cases with parties, evidence, hearings, outcomes and appeals.</small></div>
+        <div class="module"><strong>Documents</strong><small>Employee document records and company policies, with versions, effective dates and acknowledgement tracking.</small></div>
+        <div class="module"><strong>Offboarding</strong><small>Leaving cases with the last working date and an exit checklist.</small></div>
+        <div class="module"><strong>Engagement</strong><small>Employee surveys, which can be anonymous, and recognition nominations.</small></div>
+        <div class="module"><strong>HSE</strong><small>Health, safety and environment incidents, including near misses, plus wellbeing programmes.</small></div>
+        <div class="module"><strong>Service Desk</strong><small>The HR ticket queue and the knowledge base staff search before raising a ticket.</small></div>
+      </div>
+      <div class="pair">
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/policies.webp" width="1200" height="362" loading="lazy" alt="The Policies list with five company policies, their versions, effective dates and Required acknowledgement."></button></div>
+          <figcaption><b>Policies</b> staff must acknowledge.</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/courses.webp" width="1200" height="452" loading="lazy" alt="The Courses list showing five published courses with type, duration, pass score and whether they are mandatory."></button></div>
+          <figcaption><b>Courses</b>, including mandatory ones.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 09 -->
+    <section id="payroll">
+      <p class="eyebrow">09 · Payroll and compensation</p>
+      <h2 class="sec">Paying people</h2>
+      <div class="who"><span>Payroll Officer</span><span>HR Admin</span><span>Finance Checker</span></div>
+      <p>Set up once: <b>pay calendars</b> (for example a monthly payroll) in <span class="path">Payroll <i>›</i> Calendars</span>, and <b>elements</b> (basic pay, allowances, deductions, each with its general-ledger account) in <span class="path">Payroll <i>›</i> Elements</span>.</p>
+      <h3>Running payroll each period</h3>
+      <div class="chips" aria-label="Payroll run statuses">
+        <span class="chip c-draft">DRAFT</span><span class="arrow">→</span>
+        <span class="chip c-wait">PROCESSING</span><span class="arrow">→</span>
+        <span class="chip c-ret">LOCKED</span><span class="arrow">→</span>
+        <span class="chip c-ok">APPROVED</span><span class="arrow">→</span>
+        <span class="chip c-ok">PAID</span>
+      </div>
+      <ol class="steps">
+        <li>In <span class="path">Payroll <i>›</i> Payroll Runs</span>, select <b>New Run</b>. Choose the <b>Pay Calendar</b>, the period start and end, and the pay date.</li>
+        <li>Add the period's amounts in <span class="path">Payroll <i>›</i> Payslip Lines</span>. To save time, copy the lines from the previous run and adjust them.</li>
+        <li>Select <b>Lock</b> so the figures can't change, then <b>Generate Payslips</b>.</li>
+        <li>A checker selects <b>Approve</b>, and on the pay date the run is marked paid with <b>Mark Paid</b>.</li>
+        <li>Review the general-ledger journal in <span class="path">Payroll <i>›</i> GL Postings</span>. If your administrator has connected your accounting system, send it from there.</li>
+      </ol>
+      <div class="pair">
+        <figure class="shot form">
+          <div class="frame"><button class="zoom" type="button"><img src="img/form-payroll-run.webp" width="547" height="404" loading="lazy" alt="The New Payroll Run form with Pay Calendar, Period Start, Period End and Pay Date fields."></button></div>
+          <figcaption><b>Starting a payroll run.</b></figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/payslips.webp" width="1200" height="335" loading="lazy" alt="The Payslips list for four employees showing basic pay, gross pay, deductions and net pay, all locked."></button></div>
+          <figcaption><b>Payslips</b> with gross, deductions and net pay.</figcaption>
+        </figure>
+      </div>
+      <h3>Compensation, benefits and claims</h3>
+      <ul>
+        <li><span class="path">Compensation <i>›</i> Salaries</span>: everyone's current salary package by department and grade, with the total for the page.</li>
+        <li><span class="path">Compensation <i>›</i> Packages</span> and <span class="path">Compensation <i>›</i> Bonus Cycles</span>: salary changes and bonuses, made by an HR Maker and approved by an HR Checker.</li>
+        <li><span class="path">Benefits <i>›</i> Benefit Plans</span> and <span class="path">Benefits <i>›</i> Enrollments</span>: medical, insurance and other plans with employee and employer contribution rates.</li>
+        <li><span class="path">Claims <i>›</i> Claim Requests</span>: everyone's expense claims, to review, approve and mark paid.</li>
+      </ul>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/compensation/salaries</span></div>
+          <button class="zoom" type="button"><img src="img/salaries.webp" width="1200" height="521" loading="lazy" alt="The Employee Salaries page with the total salary for the page, and each employee's department, position, grade, current salary in MYR, effective date and status."></button></div>
+        <figcaption><b>Employee salaries.</b> Amounts use the currency your administrator set.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 10 -->
+    <section id="admins">
+      <p class="eyebrow">10 · For administrators</p>
+      <h2 class="sec">Setting up your organisation</h2>
+      <div class="who"><span>System Admin</span><span>HR Admin</span></div>
+      <p>When Visionaries Ent. sets up your organisation, you receive one administrator account. Its username is your email address. Sign in with it and work through this list.</p>
+      <ol class="checklist">
+        <li><span class="n">01</span><span><strong>Set your currency</strong><small>Malaysian Ringgit, Brunei Dollar and others. It's used for pay bands, salaries and bonuses.</small></span><span class="path">Settings</span></li>
+        <li><span class="n">02</span><span><strong>Build the structure</strong><small>Org units, cost centres, job grades, jobs, then positions. See <a href="#core-hr">Core HR</a>.</small></span><span class="path">Core HR</span></li>
+        <li><span class="n">03</span><span><strong>Add your employees</strong><small>One record per person, placed in a position.</small></span><span class="path">Core HR <i>›</i> Employees</span></li>
+        <li><span class="n">04</span><span><strong>Create user accounts</strong><small>One login per person who will sign in, with their roles. Each staff account uses a seat.</small></span><span class="path">Users</span></li>
+        <li><span class="n">05</span><span><strong>Set up leave and payroll</strong><small>Leave types, pay calendars and payroll elements.</small></span><span class="path">Workforce · Payroll</span></li>
+        <li><span class="n">06</span><span><strong>Check the approval rules</strong><small>Who approves what, and in how many steps. Only a System Admin can change them.</small></span><span class="path">Workflow <i>›</i> Rules</span></li>
+        <li><span class="n">07</span><span><strong>Publish your policies</strong><small>Add the employee handbook and the policies staff must acknowledge.</small></span><span class="path">Documents <i>›</i> Policies</span></li>
+      </ol>
+
+      <h3 id="users">Users and roles</h3>
+      <ol class="steps">
+        <li>Go to <span class="path">Users</span> and select <b>Add User</b>.</li>
+        <li>Enter the first and last name, a <b>Username</b> and <b>Email</b>.</li>
+        <li>Choose the <b>Primary Role</b> and the <b>User Type</b>: <b>Internal</b> for staff.</li>
+        <li>Tick any <b>Additional Roles</b>. The primary role is always included.</li>
+        <li>Set a starting <b>Password</b> and select <b>Create User</b>. Pass the username and password to the person securely.</li>
+      </ol>
+      <p>To reset someone's password, open their user with the pencil icon and enter a new one. To remove access when someone leaves, set the account to inactive rather than deleting it: their history stays, and their seat is freed.</p>
+      <div class="pair">
+        <figure class="shot form">
+          <div class="frame"><button class="zoom" type="button"><img src="img/form-user.webp" width="707" height="739" loading="lazy" alt="The Add User form with name, username, email, primary role, user type, a grid of additional role checkboxes and a password field."></button></div>
+          <figcaption><b>Add User.</b> The primary role is ticked automatically.</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><button class="zoom" type="button"><img src="img/users.webp" width="1200" height="750" loading="lazy" alt="The User Management list showing usernames, names, emails, primary roles, user types Internal and External, and active status."></button></div>
+          <figcaption><b>User Management.</b> External users are careers-portal applicants.</figcaption>
+        </figure>
+      </div>
+
+      <h3 id="system-settings">System settings</h3>
+      <p><span class="path">Settings</span> (System Admin only) holds three things:</p>
+      <ul>
+        <li><b>Currency</b>: the currency shown everywhere for money.</li>
+        <li><b>Payroll GL posting accounts</b>: the general-ledger accounts credited for net pay and for employer contributions.</li>
+        <li><b>Accounting system integration</b>: the address and key of your accounting system's API, so GL postings can be sent to it directly. Until it's set, you can still export postings.</li>
+      </ul>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/settings</span></div>
+          <button class="zoom" type="button"><img src="img/settings.webp" width="1200" height="750" loading="lazy" alt="The System Settings page with Currency Settings set to Malaysian Ringgit, Payroll GL Posting Settings, and Accounting System Integration marked Not configured."></button></div>
+        <figcaption><b>System settings.</b></figcaption>
+      </figure>
+
+      <h3>Approval rules</h3>
+      <p><span class="path">Workflow <i>›</i> Rules</span> lists every approval chain: which kind of record it covers, how many steps it has, and which role approves at each step. The shield icon shows the maker-checker rule is on, so makers can't approve their own requests. Select a rule to see its steps.</p>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/workflow/rules</span></div>
+          <button class="zoom" type="button"><img src="img/workflow-rules.webp" width="1200" height="750" loading="lazy" alt="The Workflow Rules list with rule codes such as POSITION_APPROVAL and COURSE_PUBLICATION_APPROVAL, their module, the record type they apply to, the number of steps and active status."></button></div>
+        <figcaption><b>Approval rules.</b> Change them carefully: they decide who can approve what across the whole organisation.</figcaption>
+      </figure>
+
+      <h3>Audit trail and reports</h3>
+      <p><span class="path">Audit</span> records every sign-in, change, approval and rejection with who did it, when and from which IP address. Records can't be edited or deleted. Filter by action, module and date.</p>
+      <p><span class="path">Reports</span> includes the HR dashboard, headcount by department, the hiring funnel, performance and learning reports.</p>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/reports/headcount</span></div>
+          <button class="zoom" type="button"><img src="img/reports-headcount.webp" width="1200" height="714" loading="lazy" alt="The Headcount by Department report with a bar chart and a department breakdown table showing headcount and percentage of total."></button></div>
+        <figcaption><b>Headcount report.</b></figcaption>
+      </figure>
+    </section>
+
+    <!-- 11 -->
+    <section id="careers">
+      <p class="eyebrow">11 · Careers portal</p>
+      <h2 class="sec">How candidates apply</h2>
+      <div class="who"><span>Applicants</span><span>Recruiters</span></div>
+      <p>Your organisation has a public careers site at your HRMSv2 address followed by <span class="mono">/portal</span>. Share that link on your website and job ads. It lists every job posting marked <b>External</b> that's open.</p>
+      <ol class="steps">
+        <li>The candidate browses <b>Open Vacancies</b> and opens a job to read about the role and its requirements.</li>
+        <li>They select <b>Register</b> to create an applicant account, or <b>Sign In</b> if they have one.</li>
+        <li>They apply, upload documents and follow their applications from the portal dashboard.</li>
+      </ol>
+      <div class="pair">
+        <figure class="shot">
+          <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/portal</span></div>
+            <button class="zoom" type="button"><img src="img/portal-jobs.webp" width="1200" height="750" loading="lazy" alt="The public careers portal listing open vacancies at Acme Logistics Sdn Bhd with a search box and one Senior Frontend Engineer job."></button></div>
+          <figcaption><b>Open vacancies</b> on the careers portal.</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/portal/register</span></div>
+            <button class="zoom" type="button"><img src="img/portal-register.webp" width="1200" height="750" loading="lazy" alt="The Create your account page for applicants, with name, email, phone, username and password fields."></button></div>
+          <figcaption><b>Candidate registration.</b> Applicant accounts never use a seat.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section id="kiosk">
+      <p class="eyebrow">12 · Attendance kiosk</p>
+      <h2 class="sec">Checking in with a face scan</h2>
+      <div class="who"><span>HR</span><span>Everyone who checks in</span></div>
+      <p>The kiosk turns any tablet or computer with a camera into a check-in point. Staff look at the camera: the first scan of the day checks them in and the next checks them out.</p>
+      <ol class="steps">
+        <li><b>Enrol faces.</b> HR captures each employee's face once in <span class="path">Attendance <i>›</i> Face Enrolment</span>.</li>
+        <li><b>Set up the kiosk.</b> On the device by the entrance, open your HRMSv2 address followed by <span class="mono">/kiosk</span> and allow camera access. The kiosk page doesn't need anyone signed in.</li>
+        <li><b>Check in and out.</b> The kiosk shows the person's name and whether they checked in or out. Records appear in <span class="path">Attendance <i>›</i> Records</span>.</li>
+      </ol>
+      <figure class="shot">
+        <div class="frame"><div class="bar"><span class="dots" aria-hidden="true"><b></b><b></b><b></b></span><span class="url">/kiosk</span></div>
+          <button class="zoom" type="button"><img src="img/kiosk.webp" width="1200" height="750" loading="lazy" alt="The Facial Attendance Kiosk page with a clock in the top right and a Camera unavailable message asking to allow camera access and reload."></button></div>
+        <figcaption><b>The kiosk</b> before camera access is allowed. Allow the camera in the browser, then reload the page.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 13 -->
+    <section id="faq">
+      <p class="eyebrow">13 · Questions and fixes</p>
+      <h2 class="sec">When something doesn't look right</h2>
+      <details class="faq"><summary>I can't see a module or page a colleague can see.</summary>
+        <div><p>Either your roles are different, or the module isn't in your organisation's plan. Ask your HR Admin to check your roles in <span class="path">Users</span>. If nobody in your organisation can see it, it isn't in your plan.</p></div></details>
+      <details class="faq"><summary>A list is empty, but I know there are records.</summary>
+        <div><p>Check the filters above the list: a status filter such as <b>Approved</b> hides everything else. Set it back to <b>All Statuses</b> and clear the search box.</p></div></details>
+      <details class="faq"><summary>I forgot my password.</summary>
+        <div><p>Ask your HR or system administrator. They set a new password for you in <span class="path">Users</span>. Change it to something only you know as soon as you can, by asking them again if needed.</p></div></details>
+      <details class="faq"><summary>Why can't I approve my own request?</summary>
+        <div><p>Maker-checker: the person who submits a change can never approve it. Someone with the approving role does. See <a href="#approvals">How approvals work</a>.</p></div></details>
+      <details class="faq"><summary>My request came back as RETURNED. What now?</summary>
+        <div><p>Open it in <span class="path">Workflow <i>›</i> Requests</span> and read the approver's comment. Make the changes, then submit again. It continues as <span class="chip c-wait">RESUBMITTED</span>.</p></div></details>
+      <details class="faq"><summary>Adding a user fails with "Failed to create user".</summary>
+        <div><p>Check that the username and email aren't already in use. If they aren't, your organisation has probably used all the seats in its plan. Deactivate accounts for people who have left, or contact Visionaries Ent. about a larger plan.</p></div></details>
+      <details class="faq"><summary>I'm asked to sign in again.</summary>
+        <div><p>For security, sessions end after a period without use. Sign in again; nothing you saved is lost.</p></div></details>
+      <details class="faq"><summary>Single sign-on says there's no account for my email.</summary>
+        <div><p>Single sign-on only works for accounts that already exist. Ask your administrator to create your user with exactly the same email address as your work account.</p></div></details>
+      <details class="faq"><summary>The kiosk says "Camera unavailable".</summary>
+        <div><p>Allow camera access for the page in the browser's site settings, then reload. The kiosk also needs to be opened over a secure (https) address.</p></div></details>
+      <details class="faq"><summary>Who do I contact for help?</summary>
+        <div><p>For questions about your own records, raise a ticket in <span class="path">Service Desk</span>. Administrators can contact Visionaries Ent. about access, plans, seats or problems with the system itself.</p></div></details>
+    </section>
+
+    <!-- 14 -->
+    <section id="glossary">
+      <p class="eyebrow">14 · Glossary</p>
+      <h2 class="sec">Terms used in HRMSv2</h2>
+      <dl class="glossary">
+        <dt>Maker</dt><dd>The person who creates or changes a record and submits it for approval.</dd>
+        <dt>Checker</dt><dd>The person who approves, returns or rejects what a maker submitted.</dd>
+        <dt>Workflow request</dt><dd>One item going through an approval chain, with its steps, history and comments.</dd>
+        <dt>Approval rule</dt><dd>The definition of an approval chain: which record it covers and which role approves at each step.</dd>
+        <dt>Org unit</dt><dd>A part of the organisation: the company, a division or a department.</dd>
+        <dt>Job</dt><dd>A kind of work, such as "Software Engineer". Many positions can share one job.</dd>
+        <dt>Position</dt><dd>One specific seat in a department, vacant or filled by an employee.</dd>
+        <dt>Job grade</dt><dd>A level with a pay band (minimum and maximum pay).</dd>
+        <dt>Cost centre</dt><dd>Where a person's costs are charged in the accounts.</dd>
+        <dt>Requisition</dt><dd>An approved request to hire for a position.</dd>
+        <dt>ESS</dt><dd>Employee self-service: requests staff send to HR themselves.</dd>
+        <dt>Payroll run</dt><dd>One pay period's payroll, from draft to paid.</dd>
+        <dt>Payroll element</dt><dd>One kind of pay or deduction, such as basic pay or an allowance.</dd>
+        <dt>GL posting</dt><dd>The accounting journal entries produced from a payroll run.</dd>
+        <dt>Seat</dt><dd>One active staff login. Your plan may limit how many you can have.</dd>
+        <dt>Module</dt><dd>One area of the system, such as Payroll or Recruitment. Your plan decides which you have.</dd>
+      </dl>
+    </section>
+  </main>
+</div>
+
+<footer><div>HRMSv2 by Visionaries Ent. · User guide. Screenshots show a sample company with made-up people and figures.</div></footer>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged screenshot">
+  <button type="button" id="lightbox-close" aria-label="Close">×</button>
+  <img id="lightbox-img" alt="">
+  <p id="lightbox-caption"></p>
+</dialog>
+
+<script>
+(function () {
+  var box = document.getElementById('lightbox');
+  var img = document.getElementById('lightbox-img');
+  var cap = document.getElementById('lightbox-caption');
+  document.querySelectorAll('.zoom').forEach(function (btn) {
+    var pic = btn.querySelector('img');
+    btn.setAttribute('aria-label', 'Enlarge: ' + pic.alt);
+    btn.addEventListener('click', function () {
+      img.src = pic.src; img.alt = pic.alt;
+      var fig = btn.closest('figure');
+      var fc = fig && fig.querySelector('figcaption');
+      cap.textContent = fc ? fc.textContent : '';
+      if (box.showModal) box.showModal(); else box.setAttribute('open', '');
+    });
+  });
+  document.getElementById('lightbox-close').addEventListener('click', function () { box.close(); });
+  box.addEventListener('click', function (e) { if (e.target === box) box.close(); });
+
+  // Highlight the section being read in the contents rail.
+  var links = {};
+  document.querySelectorAll('#toc-list a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && links[e.target.id]) {
+          Object.keys(links).forEach(function (k) { links[k].classList.remove('active'); });
+          links[e.target.id].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    document.querySelectorAll('main > section').forEach(function (s) { obs.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
