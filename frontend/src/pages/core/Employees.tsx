@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
-import { Users, Plus, Pencil, Trash2 } from 'lucide-react'
+import { Users, Plus, Pencil, Trash2, KeyRound, Copy } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
 import { Table, Thead, Tbody, Th, Td, Tr } from '@/components/ui/Table'
@@ -15,6 +15,8 @@ import { PageSpinner } from '@/components/ui/Spinner'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { fmt } from '@/lib/utils'
 import api from '@/lib/api'
+import { grantableStaffRoles } from '@/lib/roles'
+import { useAuth } from '@/context/AuthContext'
 
 interface Employee {
   id: string
@@ -40,7 +42,13 @@ interface Employee {
     nationality: string
     date_of_birth: string | null
   }
+  /** The linked login account, or null if this employee can't sign in yet. */
+  login: { id: string; username: string; role: string; is_active: boolean } | null
 }
+
+/** Who the "Login Access" form is creating a login for. */
+interface LoginTarget { id: string; name: string; email: string }
+interface CreatedLogin { username: string; password?: string }
 
 interface OrgUnit { id: string; name: string }
 interface Grade { id: string; grade_code: string; grade_name: string }
@@ -60,6 +68,27 @@ const emptyPersonForm = {
   date_of_birth: '',
 }
 
+const emptyLoginForm = {
+  username: '',
+  role: 'EMPLOYEE',
+  role_codes: [] as string[],
+  passwordMode: 'generate' as 'generate' | 'set',
+  password: '',
+}
+
+function suggestedUsername(email: string) {
+  return email.split('@')[0].toLowerCase().replace(/[^a-z0-9._-]/g, '')
+}
+
+/** The most useful message from a DRF error response. */
+function apiErrorMessage(err: unknown, fallback: string) {
+  const data = (err as { response?: { data?: Record<string, unknown> } })?.response?.data
+  if (!data) return fallback
+  if (typeof data.detail === 'string') return data.detail
+  const first = Object.values(data)[0]
+  return Array.isArray(first) && typeof first[0] === 'string' ? first[0] : fallback
+}
+
 const emptyEmpForm = {
   employee_number: '',
   hire_date: '',
@@ -72,15 +101,22 @@ const emptyEmpForm = {
 
 export default function Employees() {
   const qc = useQueryClient()
+  const { user } = useAuth()
+  const roleOptions = grantableStaffRoles(user?.roles ?? [])
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<Employee | null>(null)
-  const [step, setStep] = useState<1 | 2>(1)
+  const [step, setStep] = useState<1 | 2 | 3>(1)
   const [personForm, setPersonForm] = useState(emptyPersonForm)
   const [empForm, setEmpForm] = useState(emptyEmpForm)
   const [createdPersonId, setCreatedPersonId] = useState<string | null>(null)
+  const [loginTarget, setLoginTarget] = useState<LoginTarget | null>(null)
+  const [loginForm, setLoginForm] = useState(emptyLoginForm)
+  const [createdLogin, setCreatedLogin] = useState<CreatedLogin | null>(null)
+  // true when the modal was opened from the list just to add a login
+  const [loginOnly, setLoginOnly] = useState(false)
 
   const params = {
     page,
@@ -116,13 +152,25 @@ export default function Employees() {
   })
 
   const createEmployee = useMutation({
-    mutationFn: (body: object) => api.post('/core/employees/', body),
-    onSuccess: () => {
+    mutationFn: (body: object) => api.post('/core/employees/', body).then(r => r.data as Employee),
+    onSuccess: (emp) => {
       toast.success('Employee created')
       qc.invalidateQueries({ queryKey: ['employees'] })
-      closeModal()
+      openLoginStep({ id: emp.id, name: personForm.legal_name, email: personForm.email })
+      setStep(3)
     },
     onError: () => toast.error('Failed to create employee'),
+  })
+
+  const createLogin = useMutation({
+    mutationFn: ({ employeeId, body }: { employeeId: string; body: object }) =>
+      api.post(`/core/employees/${employeeId}/create_login/`, body).then(r => r.data),
+    onSuccess: (data) => {
+      toast.success('Login created')
+      qc.invalidateQueries({ queryKey: ['employees'] })
+      setCreatedLogin({ username: data.user.username, password: data.generated_password })
+    },
+    onError: (err) => toast.error(apiErrorMessage(err, 'Failed to create login')),
   })
 
   const updatePerson = useMutation({
@@ -179,13 +227,58 @@ export default function Employees() {
     setModalOpen(true)
   }
 
+  function openLoginStep(target: LoginTarget) {
+    setLoginTarget(target)
+    setLoginForm({ ...emptyLoginForm, username: suggestedUsername(target.email) })
+    setCreatedLogin(null)
+  }
+
+  function openCreateLogin(emp: Employee) {
+    setEditing(null)
+    setLoginOnly(true)
+    openLoginStep({ id: emp.id, name: emp.full_name, email: emp.person_detail?.email ?? '' })
+    setStep(3)
+    setModalOpen(true)
+  }
+
   function closeModal() {
     setModalOpen(false)
     setEditing(null)
     setPersonForm(emptyPersonForm)
     setEmpForm(emptyEmpForm)
     setCreatedPersonId(null)
+    setLoginTarget(null)
+    setLoginForm(emptyLoginForm)
+    setCreatedLogin(null)
+    setLoginOnly(false)
     setStep(1)
+  }
+
+  function handleStep3(e: React.FormEvent) {
+    e.preventDefault()
+    if (!loginTarget) return
+    createLogin.mutate({
+      employeeId: loginTarget.id,
+      body: {
+        username: loginForm.username,
+        role: loginForm.role,
+        role_codes: loginForm.role_codes.filter(c => c !== loginForm.role),
+        ...(loginForm.passwordMode === 'set' ? { password: loginForm.password } : {}),
+      },
+    })
+  }
+
+  function toggleExtraRole(code: string) {
+    setLoginForm(prev => ({
+      ...prev,
+      role_codes: prev.role_codes.includes(code) ? prev.role_codes.filter(c => c !== code) : [...prev.role_codes, code],
+    }))
+  }
+
+  function copyCredentials() {
+    if (!createdLogin) return
+    const text = `Username: ${createdLogin.username}${createdLogin.password ? `\nPassword: ${createdLogin.password}` : ''}`
+    navigator.clipboard.writeText(text).then(() => toast.success('Copied')).catch(() => toast.error('Copy failed — select the text instead'))
   }
 
   async function handleStep1(e: React.FormEvent) {
@@ -195,7 +288,8 @@ export default function Employees() {
       return
     }
     try {
-      const person = await createPerson.mutateAsync(personForm)
+      // A blank date must go as null — the API rejects an empty string.
+      const person = await createPerson.mutateAsync({ ...personForm, date_of_birth: personForm.date_of_birth || null } as unknown as typeof emptyPersonForm)
       setCreatedPersonId(person.id)
       setStep(2)
     } catch {
@@ -283,6 +377,7 @@ export default function Employees() {
                     <Th>Department</Th>
                     <Th>Grade</Th>
                     <Th>Hire Date</Th>
+                    <Th>Login</Th>
                     <Th></Th>
                   </tr>
                 </Thead>
@@ -296,6 +391,17 @@ export default function Employees() {
                       <Td className="text-gray-500">{emp.org_unit_display ?? '—'}</Td>
                       <Td className="text-gray-500">{emp.grade_display ?? '—'}</Td>
                       <Td className="text-gray-500">{fmt(emp.hire_date)}</Td>
+                      <Td>
+                        {emp.login ? (
+                          <span className={`font-mono text-xs ${emp.login.is_active ? 'text-gray-700' : 'text-gray-400 line-through'}`} title={emp.login.is_active ? 'Can sign in' : 'Login deactivated'}>
+                            {emp.login.username}
+                          </span>
+                        ) : (
+                          <button onClick={() => openCreateLogin(emp)} className="inline-flex items-center gap-1 text-xs font-medium text-orange-600 hover:text-orange-700 hover:underline">
+                            <KeyRound size={13} /> Create login
+                          </button>
+                        )}
+                      </Td>
                       <Td>
                         <div className="flex items-center gap-2 justify-end">
                           <button onClick={() => openEdit(emp)} className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="Edit">
@@ -319,24 +425,86 @@ export default function Employees() {
       <Modal
         open={modalOpen}
         onClose={closeModal}
-        title={editing ? `Edit — ${editing.full_name}` : 'Add Employee'}
+        title={editing ? `Edit — ${editing.full_name}` : loginOnly ? `Create login — ${loginTarget?.name ?? ''}` : 'Add Employee'}
       >
-        {/* Step indicator */}
-        <div className="flex items-center gap-3 mb-6">
-          {[1, 2].map(n => (
-            <div key={n} className="flex items-center gap-2">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step === n ? 'bg-orange-600 text-white' : step > n ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                {n}
+        {/* Step indicator — the login step only exists when adding an employee */}
+        {!loginOnly && (
+          <div className="flex items-center gap-3 mb-6">
+            {(editing ? [1, 2] : [1, 2, 3]).map((n, i, all) => (
+              <div key={n} className="flex items-center gap-2">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step === n ? 'bg-orange-600 text-white' : step > n ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                  {n}
+                </div>
+                <span className={`text-xs font-medium ${step === n ? 'text-orange-700' : 'text-gray-400'}`}>
+                  {n === 1 ? 'Personal Info' : n === 2 ? 'Employment Details' : 'Login Access'}
+                </span>
+                {i < all.length - 1 && <div className="w-8 h-px bg-gray-200 ml-1" />}
               </div>
-              <span className={`text-xs font-medium ${step === n ? 'text-orange-700' : 'text-gray-400'}`}>
-                {n === 1 ? 'Personal Info' : 'Employment Details'}
-              </span>
-              {n < 2 && <div className="w-8 h-px bg-gray-200 ml-1" />}
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {step === 1 ? (
+        {step === 3 ? (
+          createdLogin ? (
+            <div className="space-y-4">
+              <p className="text-sm text-gray-600">
+                <span className="font-medium text-gray-900">{loginTarget?.name}</span> can now sign in.
+                {createdLogin.password
+                  ? ' Give them these details securely. The password is shown only once — they can ask an administrator to reset it later.'
+                  : ' They sign in with the password you set.'}
+              </p>
+              <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 font-mono text-sm space-y-1 select-all">
+                <div>Username: {createdLogin.username}</div>
+                {createdLogin.password && <div>Password: {createdLogin.password}</div>}
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <Button type="button" variant="secondary" onClick={copyCredentials}><Copy size={15} />Copy</Button>
+                <Button type="button" onClick={closeModal}>Done</Button>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleStep3} className="space-y-4">
+              <p className="text-sm text-gray-600">
+                Give <span className="font-medium text-gray-900">{loginTarget?.name}</span> a login so they can use the system — no need to add them again on the Users page.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <Input label="Username" required value={loginForm.username} onChange={e => setLoginForm(prev => ({ ...prev, username: e.target.value }))} />
+                <Select label="Primary Role" value={loginForm.role} onChange={e => setLoginForm(prev => ({ ...prev, role: e.target.value }))}>
+                  {roleOptions.map(r => <option key={r.code} value={r.code}>{r.label}</option>)}
+                </Select>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-2">Additional Roles <span className="font-normal text-gray-400">(optional)</span></p>
+                <div className="grid grid-cols-3 gap-x-3 gap-y-1.5 rounded-lg border border-gray-200 bg-gray-50 p-3 max-h-40 overflow-y-auto">
+                  {roleOptions.filter(r => r.code !== loginForm.role).map(r => (
+                    <label key={r.code} className="flex items-center gap-2 text-xs text-gray-700">
+                      <input type="checkbox" checked={loginForm.role_codes.includes(r.code)} onChange={() => toggleExtraRole(r.code)} className="accent-orange-600" />
+                      {r.label}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-700">Password</p>
+                <label className="flex items-center gap-2 text-sm text-gray-700">
+                  <input type="radio" name="passwordMode" checked={loginForm.passwordMode === 'generate'} onChange={() => setLoginForm(prev => ({ ...prev, passwordMode: 'generate' }))} className="accent-orange-600" />
+                  Generate one for me
+                </label>
+                <label className="flex items-center gap-2 text-sm text-gray-700">
+                  <input type="radio" name="passwordMode" checked={loginForm.passwordMode === 'set'} onChange={() => setLoginForm(prev => ({ ...prev, passwordMode: 'set' }))} className="accent-orange-600" />
+                  Set it myself
+                </label>
+                {loginForm.passwordMode === 'set' && (
+                  <Input type="password" required minLength={8} value={loginForm.password} onChange={e => setLoginForm(prev => ({ ...prev, password: e.target.value }))} placeholder="At least 8 characters" />
+                )}
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <Button type="button" variant="secondary" onClick={closeModal}>{loginOnly ? 'Cancel' : 'Skip for now'}</Button>
+                <Button type="submit" loading={createLogin.isPending}>Create Login</Button>
+              </div>
+            </form>
+          )
+        ) : step === 1 ? (
           <form onSubmit={handleStep1} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <Input label="Full Legal Name" required value={personForm.legal_name} onChange={setPerson('legal_name')} placeholder="e.g. Ahmad bin Razif" />

@@ -13,25 +13,8 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Plus, Search, Users, Pencil, Trash2 } from 'lucide-react'
 import { fmt } from '@/lib/utils'
 import api from '@/lib/api'
+import { ALL_ROLES } from '@/lib/roles'
 import toast from 'react-hot-toast'
-
-const ALL_ROLES = [
-  { code: 'SYSTEM_ADMIN',    label: 'System Admin' },
-  { code: 'HR_ADMIN',        label: 'HR Admin' },
-  { code: 'HR_MAKER',        label: 'HR Maker' },
-  { code: 'HR_CHECKER',      label: 'HR Checker' },
-  { code: 'HIRING_MANAGER',  label: 'Hiring Manager' },
-  { code: 'INTERVIEWER',     label: 'Interviewer' },
-  { code: 'RECRUITER',       label: 'Recruiter' },
-  { code: 'FINANCE_CHECKER', label: 'Finance Checker' },
-  { code: 'TALENT_COMMITTEE',label: 'Talent Committee' },
-  { code: 'HR_PERFORMANCE',  label: 'HR Performance' },
-  { code: 'LD_OFFICER',      label: 'L&D Officer' },
-  { code: 'LD_CHECKER',      label: 'L&D Checker' },
-  { code: 'MANAGER',         label: 'Manager' },
-  { code: 'EMPLOYEE',        label: 'Employee' },
-  { code: 'APPLICANT',       label: 'Applicant' },
-]
 
 type User = {
   id: string
