@@ -1,3 +1,7 @@
+import re
+import secrets
+
+from django.db import transaction
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -5,7 +9,9 @@ from rest_framework.viewsets import ModelViewSet
 from apps.audit.mixins import AuditMixin
 from rest_framework.decorators import action
 
+from apps.accounts.models import CustomUser
 from apps.accounts.permissions import IsHRStaff, IsHRMaker, IsHRChecker, IsInternalUser, IsSystemAdmin
+from apps.accounts.serializers import UserCreateSerializer, UserSerializer
 from apps.audit.utils import log_action
 from apps.workflow.engine import WorkflowEngine
 from apps.workflow.models import WorkflowRequest
@@ -203,14 +209,104 @@ class PersonViewSet(AuditMixin, ModelViewSet):
     search_fields = ['legal_name', 'email', 'phone']
 
 
+# Employment statuses after which the employee may no longer sign in.
+LEAVER_STATUSES = {Employee.STATUS_TERMINATED, Employee.STATUS_RESIGNED, Employee.STATUS_RETIRED}
+
+# Roles only certain callers may hand out when creating a login from an employee.
+ROLE_GRANTERS = {
+    CustomUser.ROLE_SYSTEM_ADMIN: {CustomUser.ROLE_SYSTEM_ADMIN},
+    CustomUser.ROLE_HR_ADMIN: {CustomUser.ROLE_HR_ADMIN, CustomUser.ROLE_SYSTEM_ADMIN},
+}
+
+
+def _default_username(email):
+    """The work email's local part, made unique with a numeric suffix if taken."""
+    base = re.sub(r'[^a-z0-9._-]', '', email.split('@')[0].lower()) or 'user'
+    candidate, n = base, 1
+    while CustomUser.objects.filter(username__iexact=candidate).exists():
+        n += 1
+        candidate = f'{base}{n}'
+    return candidate
+
+
 class EmployeeViewSet(AuditMixin, ModelViewSet):
     queryset = Employee.objects.select_related(
-        'person', 'manager__person', 'position', 'org_unit', 'grade'
+        'person__user', 'manager__person', 'position', 'org_unit', 'grade'
     ).order_by('employee_number')
     serializer_class = EmployeeSerializer
     permission_classes = [IsHRStaff]
     filterset_fields = ['employment_status', 'org_unit', 'grade', 'manager']
     search_fields = ['employee_number', 'person__legal_name', 'person__email']
+
+    def perform_update(self, serializer):
+        was_leaver = serializer.instance.employment_status in LEAVER_STATUSES
+        employee = serializer.save()
+        # A leaver's login stops working (and stops using a plan seat) as soon
+        # as HR records that they've left. Reactivation stays a deliberate step
+        # on the Users page.
+        user = employee.person.user if employee.person_id else None
+        if employee.employment_status in LEAVER_STATUSES and not was_leaver and user and user.is_active:
+            user.is_active = False
+            user.save(update_fields=['is_active'])
+            log_action(self.request, 'LOGIN_DEACTIVATED', 'CustomUser', str(user.id), module='core_hr',
+                       extra={'employee': str(employee.id), 'reason': employee.employment_status})
+
+    @action(detail=True, methods=['post'])
+    def create_login(self, request, pk=None):
+        """Creates a login account for this employee and links it to them, so HR
+        doesn't have to add the same person again on the Users page.
+
+        Body (all optional): username (default: the work email's local part),
+        role (primary role, default EMPLOYEE), role_codes (extra roles), and
+        password (default: generated and returned once in the response)."""
+        employee = self.get_object()
+        person = employee.person
+        if person.user_id:
+            return Response({'detail': 'This employee already has a login account.'}, status=status.HTTP_409_CONFLICT)
+
+        role = request.data.get('role') or CustomUser.ROLE_EMPLOYEE
+        role_codes = request.data.get('role_codes') or []
+        if not isinstance(role_codes, list):
+            return Response({'role_codes': ['Must be a list of role codes.']}, status=status.HTTP_400_BAD_REQUEST)
+        for code in {role, *role_codes}:
+            allowed = ROLE_GRANTERS.get(code)
+            if allowed and not request.user.has_role(*allowed):
+                return Response(
+                    {'detail': f'You are not allowed to grant the {code} role.'},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+        password = request.data.get('password') or ''
+        generated = not password
+        if generated:
+            password = secrets.token_urlsafe(9)
+        first_name, _, last_name = person.legal_name.partition(' ')
+
+        serializer = UserCreateSerializer(data={
+            'username': request.data.get('username') or _default_username(person.email),
+            'email': person.email,
+            'first_name': first_name,
+            'last_name': last_name,
+            'phone': person.phone,
+            'password': password,
+            'role': role,
+            'role_codes': role_codes,
+            'user_type': CustomUser.USER_TYPE_INTERNAL,
+            'is_active': employee.employment_status not in LEAVER_STATUSES,
+        })
+        serializer.is_valid(raise_exception=True)  # includes the plan's seat limit
+        with transaction.atomic():
+            user = serializer.save()
+            person.user = user
+            person.save(update_fields=['user'])
+        log_action(request, 'LOGIN_CREATED', 'CustomUser', str(user.id), module='core_hr',
+                   after_json={'username': user.username, 'role': user.role, 'roles': sorted(user.role_codes)},
+                   extra={'employee': str(employee.id)})
+
+        body = {'user': UserSerializer(user).data}
+        if generated:
+            body['generated_password'] = password
+        return Response(body, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['get'])
     def assignments(self, request, pk=None):

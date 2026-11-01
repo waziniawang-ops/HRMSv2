@@ -97,6 +97,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     org_unit_display = serializers.CharField(source='org_unit.name', read_only=True, default='')
     grade_display = serializers.CharField(source='grade.grade_name', read_only=True, default='')
     manager_display = serializers.CharField(source='manager.person.legal_name', read_only=True, default='')
+    login = serializers.SerializerMethodField()
 
     class Meta:
         model = Employee
@@ -104,9 +105,16 @@ class EmployeeSerializer(serializers.ModelSerializer):
             'id', 'employee_number', 'full_name', 'person', 'person_detail',
             'hire_date', 'employment_status', 'employment_type', 'manager', 'manager_display',
             'position', 'position_display', 'org_unit', 'org_unit_display',
-            'grade', 'grade_display', 'termination_date', 'created_at',
+            'grade', 'grade_display', 'termination_date', 'login', 'created_at',
         ]
         read_only_fields = ['id', 'created_at']
+
+    def get_login(self, obj) -> dict | None:
+        """The employee's linked login account, or None if they can't sign in yet."""
+        user = obj.person.user if obj.person_id else None
+        if not user:
+            return None
+        return {'id': str(user.id), 'username': user.username, 'role': user.role, 'is_active': user.is_active}
 
 
 class EmployeeAssignmentSerializer(serializers.ModelSerializer):
